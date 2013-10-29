@@ -1,0 +1,371 @@
+{
+    "type" : "FeatureCollection",
+    "features" : [
+            {
+                "geometry" : {
+                    "type" : "LineString",
+                    "coordinates" : [
+                            [ 2.349715679883957, 48.868330896482234 ],
+                            [ 2.349949032068252, 48.86799920045414 ],
+                            [ 2.3498833179473877, 48.86788628215571 ] ]
+                },
+                "type" : "Feature",
+                "id" : 730352,
+                "properties" : {
+                    "description" : "La galerie couverte est créée dans le prolongement du passage du Caire — lors de la démolition du couvent des Filles-Dieu au début du XIXe siècle — et doit son nom à sa proximité avec la rue Sainte-Foy.\r\n\r\nLe dallage de la galerie, comme celui de celles qui lui sont attenantes, provient de celui du couvent des Filles-Dieu.\r\n",
+                    "color" : "",
+                    "datalayer_id" : 4298,
+                    "icon" : {},
+                    "options" : {
+                        "opacity" : null,
+                        "fillOpacity" : null,
+                        "weight" : null,
+                        "color" : "",
+                        "dashArray" : "",
+                        "smoothFactor" : null,
+                        "stroke" : true,
+                        "fillColor" : "",
+                        "fill" : false
+                    },
+                    "name" : "Galerie Sainte-Foy",
+                    "type" : "passage"
+                }
+            },
+            {
+                "geometry" : {
+                    "type" : "LineString",
+                    "coordinates" : [
+                            [ 2.3488010466098785, 48.86807683163654 ],
+                            [ 2.3498350381851196, 48.868368829664504 ] ]
+                },
+                "type" : "Feature",
+                "id" : 730353,
+                "properties" : {
+                    "description" : "Le passage fut ouvert fin 1798 lors de la campagne de Napoléon en Égypte. L’engouement pour l’Égypte qui suivit explique son nom d'influence orientale, ainsi que la décoration de sa façade sur la place du Caire, ornée de trois effigies de la déesse Hathor, reconnaissable à ses oreilles de vache. Il fut un premier temps nommé « Passage de la Foire du Caire ».\r\n\r\nCe passage fut édifié à l’emplacement des bâtiments et du jardin du couvent des Filles-Dieu, à proximité de la Cour des miracles. À la création des galeries, ce furent même les pierres tombales des religieuses du couvent qui constituèrent une partie du dallage des galeries qui sont au nombre de trois : la galerie Saint-Denis, la galerie Sainte-Foy et la galerie du Caire.\r\n\r\nLa principale industrie de ce passage dès les années 1840 était l’imprimerie et la lithographie, situation qui s'accentua sous le Second Empire et contribua à le faire déserter par les flâneurs. Ces activités furent ensuite remplacées par la fabrication de mannequins pour vitrines de magasins de mode.\r\n\r\n(Source : http://fr.wikipedia.org/wiki/Passage_du_Caire)",
+                    "color" : "",
+                    "datalayer_id" : 4298,
+                    "icon" : {},
+                    "options" : {
+                        "opacity" : null,
+                        "fillOpacity" : null,
+                        "weight" : null,
+                        "color" : "",
+                        "dashArray" : "",
+                        "smoothFactor" : null,
+                        "stroke" : true,
+                        "fillColor" : "",
+                        "fill" : false
+                    },
+                    "name" : "Galerie du Caire",
+                    "type" : "passage"
+                }
+            },
+            {
+                "geometry" : {
+                    "type" : "LineString",
+                    "coordinates" : [ [ 2.3491322994232178, 48.8681659309133 ],
+                            [ 2.351149320602417, 48.86768249926906 ],
+                            [ 2.3516160249710083, 48.867573108978945 ] ]
+                },
+                "type" : "Feature",
+                "id" : 730351,
+                "properties" : {
+                    "description" : "Le passage fut ouvert fin 1798 lors de la campagne de Napoléon en Égypte. L’engouement pour l’Égypte qui suivit explique son nom d'influence orientale, ainsi que la décoration de sa façade sur la place du Caire, ornée de trois effigies de la déesse Hathor, reconnaissable à ses oreilles de vache. Il fut un premier temps nommé « Passage de la Foire du Caire ».\r\n\r\nCe passage fut édifié à l’emplacement des bâtiments et du jardin du couvent des Filles-Dieu, à proximité de la Cour des miracles. À la création des galeries, ce furent même les pierres tombales des religieuses du couvent qui constituèrent une partie du dallage des galeries qui sont au nombre de trois : la galerie Saint-Denis, la galerie Sainte-Foy et la galerie du Caire.\r\n\r\nLa principale industrie de ce passage dès les années 1840 était l’imprimerie et la lithographie, situation qui s'accentua sous le Second Empire et contribua à le faire déserter par les flâneurs. Ces activités furent ensuite remplacées par la fabrication de mannequins pour vitrines de magasins de mode.\r\n\r\n(Source : http://fr.wikipedia.org/wiki/Passage_du_Caire)",
+                    "color" : "",
+                    "datalayer_id" : 4298,
+                    "icon" : {},
+                    "options" : {
+                        "opacity" : null,
+                        "fillOpacity" : null,
+                        "weight" : null,
+                        "color" : "",
+                        "dashArray" : "",
+                        "smoothFactor" : null,
+                        "stroke" : true,
+                        "fillColor" : "",
+                        "fill" : false
+                    },
+                    "name" : "Passage du Caire",
+                    "type" : "passage"
+                }
+            },
+            {
+                "geometry" : {
+                    "type" : "Polygon",
+                    "coordinates" : [ [ [ 2.348294109106064, 48.868142994481 ],
+                            [ 2.3486709594726562, 48.86825326569402 ],
+                            [ 2.348818480968475, 48.86805213081883 ],
+                            [ 2.348790317773819, 48.86802125477958 ],
+                            [ 2.348294109106064, 48.868142994481 ] ] ]
+                },
+                "type" : "Feature",
+                "id" : 185543,
+                "properties" : {
+                    "description" : "\r\nAu 2, place du Caire, sur la façade, observez bien: parmi les hiéroglyphes, se trouve un profil d'homme nanti d'un nez démesuré, celui d'un certain Bouginier. C'était un peintre, qui fréquentait l'atelier de Gros. Connu pour son mauvais caractère, il fut caricaturé par ses camarades, et son appendice nasal plus important que la moyenne fut crayonné par eux sur tous les murs de Paris, et logiquement reproduit sur cette façade. Des tags, en quelque sorte...\r\n\r\n(Source : http://www.parislenezenlair.fr/histoire-de-paris/anecdotes/130-anecdotes-2e-arrondissement.html)",
+                    "color" : "",
+                    "datalayer_id" : 4298,
+                    "icon" : {},
+                    "options" : {
+                        "opacity" : null,
+                        "fillOpacity" : null,
+                        "weight" : null,
+                        "color" : "",
+                        "dashArray" : "",
+                        "smoothFactor" : null,
+                        "stroke" : true,
+                        "fillColor" : "",
+                        "fill" : true
+                    },
+                    "name" : "Place du Caire",
+                    "type" : "place"
+                }
+            },
+            {
+                "geometry" : {
+                    "type" : "LineString",
+                    "coordinates" : [ [ 2.3498323559761047, 48.8677442517466 ],
+                            [ 2.3494353890419, 48.86693969921077 ] ]
+                },
+                "type" : "Feature",
+                "id" : 730350,
+                "properties" : {
+                    "description" : "Un des noms de la voie au XIIIe siècle fut celui de « rue Gratte-Cul », car le quartier, alors hors les murs, était spécialisé dans la prostitution (interdite théoriquement dans Paris depuis 1256). À la fin du XVIIe siècle la rue fut prolongée jusqu'à la rue Thévenot (disparue lors de la percée de l'actuelle rue Réaumur sous Haussmann)\r\n\r\nPar le décret du 9 mai 1881, la rue a reçu le nom de Denis Gaston Dussoubs, tué le 4 décembre 1851 sur une barricade de la rue Montorgueil, en protestant contre le coup d’État de Louis-Napoléon Bonaparte.\r\n\r\n(Source : http://fr.wikipedia.org/wiki/Rue_Dussoubs)",
+                    "color" : "",
+                    "datalayer_id" : 4298,
+                    "icon" : {},
+                    "options" : {
+                        "opacity" : null,
+                        "fillOpacity" : null,
+                        "weight" : null,
+                        "color" : "",
+                        "dashArray" : "",
+                        "smoothFactor" : null,
+                        "stroke" : true,
+                        "fillColor" : "",
+                        "fill" : false
+                    },
+                    "name" : "Rue Dussoubs",
+                    "type" : "rue"
+                }
+            },
+            {
+                "geometry" : {
+                    "type" : "LineString",
+                    "coordinates" : [ [ 2.35257625579834, 48.869672655052376 ],
+                            [ 2.352173924446106, 48.86888577667734 ],
+                            [ 2.3515355587005615, 48.86736491389516 ],
+                            [ 2.351149320602417, 48.866549768876176 ],
+                            [ 2.3505806922912598, 48.865702850895744 ],
+                            [ 2.3502320051193237, 48.86486297641044 ],
+                            [ 2.3500442504882812, 48.863881928701325 ],
+                            [ 2.349995970726013, 48.863610196258506 ],
+                            [ 2.3497170209884644, 48.8630631979058 ],
+                            [ 2.349362969398498, 48.86217034258988 ],
+                            [ 2.348949909210205, 48.861383346238455 ],
+                            [ 2.3483383655548096, 48.860356350326136 ],
+                            [ 2.3480647802352905, 48.85973873095367 ],
+                            [ 2.348054051399231, 48.85971049674306 ],
+                            [ 2.348005771636963, 48.85968226251652 ],
+                            [ 2.347630262374878, 48.85888110970094 ],
+                            [ 2.3476141691207886, 48.85876111213982 ] ]
+                },
+                "type" : "Feature",
+                "id" : 730346,
+                "properties" : {
+                    "description" : "La rue Saint-Denis est l'une des plus anciennes rues de Paris : son axe est tracé dès le Ier siècle par les Romains. Elle s'étend vers le nord au Moyen Âge.HistoriqueAncienne voie romaine conduisant à Saint-Denis, Pontoise et Rouen, concurrente de la route de Flandre (voir rue Saint-Martin) sur qui elle eut l'avantage en raison du déplacement du Grand Pont (voir pont au Change) et du développement de l'abbaye royale de Saint-Denis. Bordée de maisons dès 1134, elle a porté les noms de la Sellerie de Paris et de la Sellerie de la Grande Rue (XIIIe siècle) ; grand'rue de Paris ; grande rue ou rue des Saints Innocents et grant chaussée de Monsieur ou grant chaussée de Monseigneur Saint-Denis (XIVe siècle). Elle a été aussi la première rue de Paris à être pavée. Ayant pris l'avantage sur la rue Saint-Martin, cette rue a été bordée de centres religieux, dont la plupart ont été détruits, comme le Saint-Sépulcre, Saint-Magloire, le cloître Sainte-Opportune ou les Saints-Innocents. C'était la voie triomphale des entrées royales dans la capitalePendant la Révolution française, on l'appelait rue de Franciade.La Poste aux chevaux lui conserve son rôle de voie essentielle aux grands voyages, puisque le seul relais installé dans Paris l’est rue Saint-Denis, à l’hôtel du Grand Cerf. C’est donc par la rue Saint-Denis que de nombreux voyageurs, arrivant à Paris par les voitures de poste, découvrent la capitale.(Source : http://fr.wikipedia.org/wiki/Rue_Saint-Denis_%28Paris%29)",
+                    "color" : "",
+                    "datalayer_id" : 4298,
+                    "icon" : "[object Object]",
+                    "options" : "[object Object]",
+                    "name" : "Rue Saint Denis",
+                    "type" : "rue"
+                }
+            },
+            {
+                "geometry" : {
+                    "type" : "LineString",
+                    "coordinates" : [
+                            [ 2.3521792888641353, 48.86889812688195 ],
+                            [ 2.3517152667045593, 48.868866369206785 ],
+                            [ 2.351653575897217, 48.86887342646967 ],
+                            [ 2.3498618602752686, 48.8683917659933 ] ]
+                },
+                "type" : "Feature",
+                "id" : 730354,
+                "properties" : {
+                    "description" : "La rue Sainte-Foy s'est appelée \"rue du Rempart\" dès la construction de l'enceinte de Charles V car elle était établie au sommet de la levée de terre du rempart. (Voir passage Sainte-Foy).\r\n\r\n(Source : http://fr.wikipedia.org/wiki/Rue_Sainte-Foy)",
+                    "color" : "",
+                    "datalayer_id" : 4298,
+                    "icon" : {},
+                    "options" : {
+                        "opacity" : null,
+                        "fillOpacity" : null,
+                        "weight" : null,
+                        "color" : "",
+                        "dashArray" : "",
+                        "smoothFactor" : null,
+                        "stroke" : true,
+                        "fillColor" : "",
+                        "fill" : false
+                    },
+                    "name" : "Rue Sainte-Foy",
+                    "type" : "rue"
+                }
+            },
+            {
+                "geometry" : {
+                    "type" : "LineString",
+                    "coordinates" : [ [ 2.341482639312744, 48.86586517795234 ],
+                            [ 2.3441755771636963, 48.866899118367364 ],
+                            [ 2.3480969667434692, 48.86811300066902 ],
+                            [ 2.352152466773987, 48.86931273912494 ],
+                            [ 2.3523563146591187, 48.869316267725026 ] ]
+                },
+                "type" : "Feature",
+                "id" : 730345,
+                "properties" : {
+                    "description" : "Rue formée sur le tracé du remblai de l'enceinte de Charles V, abbatue en 1634.\r\n\r\nDepuis le 2 octobre 1865, cette rue dans le voisinage de la place du Caire célèbre la bataille d’Aboukir qui eut lieu le 25 juillet 1799 entre l'Armée française d'Orient et les Turcs ottomans en Égypte. Le général Napoléon Bonaparte, qui a vécu dans cette rue, y remporta une victoire sur l'Empire ottoman\r\n\r\nPrécédemment rue des Fossés Montmartre, entre la place des Victoires et la rue Montmartre, rue Neuve Saint-Eustache, entre la rue Montmartre et la rue des Petits Carreaux, et rue Bourbon-Villeneuve, entre la rue des Petits Carreaux et la rue Saint-Denis.\r\n\r\nLa rue des Fossés Montmartre a porté primitivement le nom de rue du Fossé ou rue des Fossés et sous la Révolution, celui de rue des Fossés Montmarat. La rue Neuve Saint-Eustache, ouverte en 1633, a été dénommée successivement rue Saint-Côme, rue du Milieu du Fossé puis rue Neuve Saint-Eustache (1641).\r\n\r\nLa rue Bourbon-Villeneuve, qui existait à la fin du 16ème siècle, a été dénommée successivement : rue Saint-Côme, rue du Milieu du Fossé, rue Bourbon (1639), rue Bourbon-Villeneuve, rue Neuve Egalité (1792), rue d'Aboukir (1807), rue Bourbon-Villeneuve (1814), rue de Villeneuve (1830), rue d'Aboukir (1848) et rue de Bourbon-Villeneuve. \r\n\r\nNapoléon Bonaparte vécut en 1795 dans un modeste hôtel au numéro 11 de la rue d'Aboukir.\r\n\r\n(Source : http://www.parisrues.com/rues02/paris-02-rue-d-aboukir.html)",
+                    "color" : "",
+                    "datalayer_id" : 4298,
+                    "icon" : {},
+                    "options" : {
+                        "opacity" : null,
+                        "fillOpacity" : null,
+                        "weight" : null,
+                        "color" : "",
+                        "dashArray" : "",
+                        "smoothFactor" : null,
+                        "stroke" : true,
+                        "fillColor" : "",
+                        "fill" : false
+                    },
+                    "name" : "Rue d'Aboukir",
+                    "type" : "rue"
+                }
+            },
+            {
+                "geometry" : {
+                    "type" : "LineString",
+                    "coordinates" : [
+                            [ 2.349725067615509, 48.868575256245286 ],
+                            [ 2.3498860001564026, 48.86837941566373 ],
+                            [ 2.3502105474472046, 48.86824179749921 ],
+                            [ 2.351725995540619, 48.86784481990401 ] ]
+                },
+                "type" : "Feature",
+                "id" : 730347,
+                "properties" : {
+                    "description" : "Cette rue se trouve dans le deuxième arrondissement de Paris. Elle mesure 165 m de long et va de la rue Saint-Denis à la rue d’Aboukir.\r\n\r\nLa voie était déjà signalée en 1530 comme suivant le côté nord du couvent des Filles-Dieu installé à proximité depuis 1360. C’est en 1897 qu’elle reçut le nom de la ville égyptienne dont l’armée de Bonaparte d’était emparé en 1798. Aux 31 et 33 se trouvent de vieilles maisons ayant appartenu avant la Révolution aux Filles-Dieu qui les louaient. Elles furent alors vendues comme bien national.\r\n\r\n(Source : http://www.paristoric.com/fr/paris-visite/tourisme-arrondissements/paris-2eme-arrondissement/805-paris-2eme-la-rue-dalexandrie.html?5a45c556faee377297e74fad22b87ced=40c6ef818279e7bbfc837ad340f17467)",
+                    "color" : "",
+                    "datalayer_id" : 4298,
+                    "icon" : {},
+                    "options" : {
+                        "opacity" : null,
+                        "fillOpacity" : null,
+                        "weight" : null,
+                        "color" : "",
+                        "dashArray" : "",
+                        "smoothFactor" : null,
+                        "stroke" : true,
+                        "fillColor" : "",
+                        "fill" : false
+                    },
+                    "name" : "Rue d'Alexandrie",
+                    "type" : "rue"
+                }
+            },
+            {
+                "geometry" : {
+                    "type" : "LineString",
+                    "coordinates" : [
+                            [ 2.3482471704483032, 48.868137701456654 ],
+                            [ 2.3483906686306, 48.86788451780526 ],
+                            [ 2.348551601171493, 48.86762956851339 ],
+                            [ 2.3488976061344147, 48.86759692785281 ],
+                            [ 2.34894722700119, 48.8676181001756 ],
+                            [ 2.3489271104335785, 48.867811297207325 ],
+                            [ 2.348790317773819, 48.86801507956944 ] ]
+                },
+                "type" : "Feature",
+                "id" : 730348,
+                "properties" : {
+                    "description" : "Au moyen âge et jusqu’au début du XVIIIème siècle, les cours des miracles étaient les repaires des voleurs, mendiants, prostituées, proxénètes et autres marginaux peu recommandables. Il y en avait dans chaque grande ville et Paris en a compté jusqu’à 12 dont la plus célèbre était la Cour des Miracles dite de la rue Neuve-Saint-Sauveur (rue du Nil) en plein cœur du Sentier (2ème arr.)\r\n\r\nLe nom de cour des miracles vient du fait qu’après avoir fait la manche toute la journée, le soir en regagnant leur repaire, les mendiants aveugles se remettaient à voir, les estropiés et les paralysés ne l’étaient plus, tous les handicapes qui permettaient d’attendrir les parisiens, disparaissaient comme par miracle. Une véritable hiérarchie régissait la vie de ces cours, chaque mendiant ou voleur appartenait à une catégorie bien précise : les malingreux (faux malades), les orphelins, les prostituées, les coquillards (faux pèlerins)… et bien d’autres encore, tous obéissaient à un roi : le grand Coësre appelé aussi roi de Thunes.\r\n\r\nDans son roman Notre-Dame de Paris, Victor Hugo fait référence à la Cour des Miracles du Sentier qui se composait en fait de trois cours reliées entre elles, la principale était à l’emplacement exact de la boucle formée par les rues de Damiette et des Forges. On y accédait par l’actuelle rue du Nil, qui s’appela d’ailleurs rue de la Cour des Miracles entre 1603 et 1622, ou par une ruelle aujourd’hui disparue qui se trouvait à l’emplacement de l’immeuble du numéro 100 de la rue Réaumur. Le quartier se trouvait alors adossé aux remparts de Charles V dont le tracé correspond aux rues d’Aboukir et de Cléry.\r\nLouis XIII voulut assainir le lieu en 1630 en y perçant une rue qui traverserait la cour de part en part mais ses maçons furent assassinés avant le début des travaux. En 1667 Louis XIV chargea le lieutenant de police Gabriel Nicolas de La Reynie de nettoyer la place, il y parvint mais les famines dans les campagnes et les crises économiques successives firent revenir mendiants et voleurs.\r\nEn août 1784 on décida de raser toutes les maisons de la Cour des Miracles pour y construire une Halle de la Marée ou marché du Petit-Carreau, l’axe suivant les rues Montorgueil, Petits-Carreaux et Poissonnière étant la voie d’entrée dans Paris des produits de la mer en provenance du quart nord-ouest (Bretagne, Normandie, Nord), mais les mareyeurs boudèrent cet endroit à la réputation plus que douteuse si bien que le marché ne fut jamais achevé et ce fut finalement des ateliers de ferronnerie qui s’installèrent et donnèrent son nom à la rue des Forges.\r\n\r\nDe nos jours, mis à part une borne historique de la mairie de Paris, l’enseigne d’un restaurant et le tracé de la rue des Forges, rien n’indique la présence du plus célèbre repaire de bandits de Paris qui pendant près de cinq siècles terrorisa la ville entière.\r\nCertains noms de rues du vieux Paris témoignent encore du passé criminel de ces quartiers aujourd’hui bien tranquilles, c’est le cas de la rue du Vide Gousset dans le 2ème arrondissement et des rues de la Grande-Truanderie et de la Petite-Truanderie dans le 1er.\r\n\r\n(Source : http://www.gavroche-pere-et-fils.fr/la-cour-des-miracles/)",
+                    "color" : "",
+                    "datalayer_id" : 4298,
+                    "icon" : {},
+                    "options" : {
+                        "opacity" : null,
+                        "fillOpacity" : null,
+                        "weight" : null,
+                        "color" : "",
+                        "dashArray" : "",
+                        "smoothFactor" : null,
+                        "stroke" : true,
+                        "fillColor" : "",
+                        "fill" : false
+                    },
+                    "name" : "Rue de Damiette / Rue des Forges",
+                    "type" : "rue"
+                }
+            },
+            {
+                "geometry" : {
+                    "type" : "LineString",
+                    "coordinates" : [
+                            [ 2.3487943410873413, 48.86802478347073 ],
+                            [ 2.3498404026031494, 48.86774954481255 ],
+                            [ 2.3515570163726807, 48.86734727020416 ],
+                            [ 2.3528820276260376, 48.86705791278439 ] ]
+                },
+                "type" : "Feature",
+                "id" : 730343,
+                "properties" : {
+                    "description" : "Cette rue, qui relie la rue d'Aboukir au boulevard Sébastopol, avait été ouverte sur l'emplacement du couvent des Filles-Dieu. Elle est le débouché de la rue de Damiette et de la rue des Forges, qui circonscrivent un espace qui correspondait, au Moyen âge au coeur de la principale cour des Miracles de Paris.\r\n\r\n(source : http://www.cosmovisions.com/monuParisRueCaire.htm)",
+                    "color" : "",
+                    "datalayer_id" : 4298,
+                    "icon" : {},
+                    "options" : {
+                        "opacity" : null,
+                        "fillOpacity" : null,
+                        "weight" : null,
+                        "color" : "",
+                        "dashArray" : "",
+                        "smoothFactor" : null,
+                        "stroke" : true,
+                        "fillColor" : "",
+                        "fill" : false
+                    },
+                    "name" : "Rue du Caire",
+                    "type" : "rue"
+                }
+            },
+            {
+                "geometry" : {
+                    "type" : "LineString",
+                    "coordinates" : [
+                            [ 2.3483665287494655, 48.86789598608196 ],
+                            [ 2.347353994846344, 48.867620746715325 ] ]
+                },
+                "type" : "Feature",
+                "id" : 730349,
+                "properties" : {
+                    "description" : "Cette rue constituait une des anciennes entrées de la cour-des-Miracles qui serait située de nos jours à proximité de la rue de Damiette actuelle. Connue dès 1590 sous le vocable de cul-de-Sac de la Corderie, elle prit successivement les noms de rue Pierre-Boyer ; en 1603, Cour-des-Miracles\" ; en 1622, rue \"Neuve-Saint-Sauveur avant de prendre en 1867 son nom actuel. N°s 2, 6, 10, 12. Vieilles maisons (fenêtres à guillotine, mansardes à poulies, etc.).",
+                    "color" : "",
+                    "datalayer_id" : 4298,
+                    "icon" : {},
+                    "options" : {
+                        "opacity" : null,
+                        "fillOpacity" : null,
+                        "weight" : null,
+                        "color" : "",
+                        "dashArray" : "",
+                        "smoothFactor" : null,
+                        "stroke" : true,
+                        "fillColor" : "",
+                        "fill" : false
+                    },
+                    "name" : "Rue du Nil",
+                    "type" : "rue"
+                }
+            } ]
+}
