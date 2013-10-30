@@ -1,0 +1,195 @@
+{
+    "type" : "FeatureCollection",
+    "features" : [
+            {
+                "_id" : "kids-koding",
+                "type" : "Feature",
+                "geometry" : {
+                    "type" : "Point",
+                    "coordinates" : [ "2.3488426208496094", "48.86801419739649" ]
+                },
+                "properties" : {
+                    "name" : "Kids Koding",
+                    "address" : "48 rue du Caire",
+                    "postcode" : "75002",
+                    "city" : null,
+                    "creationyear" : null,
+                    "url" : null,
+                    "linkedin" : null,
+                    "id" : "kids-koding",
+                    "category" : null,
+                    "tags" : [],
+                    "description" : "Kids Koding\nde 17h à 18h30 atelier sur inscription\npuis à partir de 18h30 Kids Koding en open bar\n(en attente de la présentation de simplon)"
+                }
+            },
+            {
+                "_id" : "ecran-spire",
+                "type" : "Feature",
+                "geometry" : {
+                    "type" : "Point",
+                    "coordinates" : [ "2.3502776026725765",
+                            "48.868324721310316" ]
+                },
+                "properties" : {
+                    "name" : "Écran rue Saint-Spire",
+                    "address" : "3 rue Saint-Spire",
+                    "postcode" : null,
+                    "city" : null,
+                    "creationyear" : null,
+                    "url" : null,
+                    "linkedin" : null,
+                    "id" : "ecran-spire",
+                    "category" : null,
+                    "tags" : [],
+                    "description" : "Ecran/Camion\nde 18h à 22h\nContenu à définir, sharypic, vivapics, znappit, code en live, photos du quartier, film d'archive avec l'INA, annonceurs/partenaires, présentation de futur en Seine..."
+                }
+            },
+            {
+                "_id" : "airstream",
+                "type" : "Feature",
+                "geometry" : {
+                    "type" : "Point",
+                    "coordinates" : [ "2.349746525287628", "48.867670148764404" ]
+                },
+                "properties" : {
+                    "name" : "Airstream",
+                    "address" : "39 rue Dussoubs",
+                    "postcode" : null,
+                    "city" : null,
+                    "creationyear" : null,
+                    "url" : null,
+                    "linkedin" : null,
+                    "id" : "airstream",
+                    "category" : null,
+                    "tags" : [],
+                    "description" : "Airstream (caravane garée sur la place de livraison devant le NUMA)\nde 18h à 22h\nReprésentant du réseaux des Cantines, présentation de startups"
+                }
+            },
+            {
+                "_id" : "cafe-le-caire",
+                "type" : "Feature",
+                "geometry" : {
+                    "type" : "Point",
+                    "coordinates" : [ "2.3499101400375366",
+                            "48.867783067550604" ]
+                },
+                "properties" : {
+                    "name" : "Café le Caire",
+                    "address" : "32 rue du Caire",
+                    "postcode" : "75002",
+                    "city" : "Paris",
+                    "creationyear" : null,
+                    "url" : null,
+                    "linkedin" : null,
+                    "id" : "cafe-le-caire",
+                    "category" : null,
+                    "tags" : [],
+                    "description" : "Café le Caire\nBières, Vins et softs\n2,5€ le verre\nde 18h à 22h"
+                }
+            },
+            {
+                "_id" : "hotel-edgar",
+                "type" : "Feature",
+                "geometry" : {
+                    "type" : "Point",
+                    "coordinates" : [ "2.349977195262909", "48.868142994481" ]
+                },
+                "properties" : {
+                    "name" : "Hôtel Edgar",
+                    "address" : "31 rue d'Alexandrie",
+                    "postcode" : "75002",
+                    "city" : "Paris",
+                    "creationyear" : null,
+                    "url" : null,
+                    "linkedin" : null,
+                    "id" : "hotel-edgar",
+                    "category" : null,
+                    "tags" : [],
+                    "description" : "Hôtel Edgar\n31 rue d'Alexandrie\nBières, Vins et softs\n2,5€ le verre\nNourriture : détail à venir\nde 18h à 22h"
+                }
+            },
+            {
+                "_id" : "scene-place-du-caire",
+                "type" : "Feature",
+                "geometry" : {
+                    "type" : "Point",
+                    "coordinates" : [ 2.34, 48.85 ]
+                },
+                "properties" : {
+                    "name" : "Nouvelle entité",
+                    "address" : "4 place du Caire",
+                    "postcode" : null,
+                    "city" : null,
+                    "creationyear" : null,
+                    "url" : null,
+                    "linkedin" : null,
+                    "id" : "scene-place-du-caire",
+                    "category" : null,
+                    "tags" : [],
+                    "description" : "Scène place du Caire THYLACINE\nde 19h à 20h30\n(présentation dans la dropbox sous radio PIIAF)LEWIS EVANS\nde 20h30 à 22h\n(présentation dans la dropbox sous radio PIIAF)"
+                }
+            },
+            {
+                "_id" : "le-champollion",
+                "type" : "Feature",
+                "geometry" : {
+                    "type" : "Point",
+                    "coordinates" : [ "2.3487702012062073", "48.86810065027062" ]
+                },
+                "properties" : {
+                    "name" : "Le Champollion",
+                    "address" : "2 place du Caire",
+                    "postcode" : "75002",
+                    "city" : "Paris",
+                    "creationyear" : null,
+                    "url" : null,
+                    "linkedin" : null,
+                    "id" : "le-champollion",
+                    "category" : null,
+                    "tags" : [],
+                    "description" : "Le Champollion\nBières, Vins et softs\n2,5€ le verre\nde 18h à 22h"
+                }
+            },
+            {
+                "_id" : "arnaud-crassat",
+                "type" : "Feature",
+                "geometry" : {
+                    "type" : "Point",
+                    "coordinates" : [ "2.349156439304352", "48.86794185916256" ]
+                },
+                "properties" : {
+                    "name" : "Arnaud Crassat",
+                    "address" : "44 rue du Caire",
+                    "postcode" : null,
+                    "city" : null,
+                    "creationyear" : null,
+                    "url" : null,
+                    "linkedin" : null,
+                    "id" : "arnaud-crassat",
+                    "category" : null,
+                    "tags" : [],
+                    "description" : "Arnaud Crassat\nEntrée passage du Caire au 44 rue du Caire\nInstallation artistique d'Arnaud Crassat\n(Présentation de l'artiste dans la Dropbox)"
+                }
+            },
+            {
+                "_id" : "ut7",
+                "type" : "Feature",
+                "geometry" : {
+                    "type" : "Point",
+                    "coordinates" : [ "2.349175214767456", "48.8681694595943" ]
+                },
+                "properties" : {
+                    "name" : "Live coding UT7",
+                    "address" : "82 galerie du Caire",
+                    "postcode" : "75002",
+                    "city" : "Paris",
+                    "creationyear" : null,
+                    "url" : null,
+                    "linkedin" : null,
+                    "id" : "ut7",
+                    "category" : null,
+                    "tags" : [],
+                    "description" : "Live coding, par UT7\nde 18h à 22h\nCode en live dans la boutique et retransmission en direct sur la vitrine de la boutique et sur l'écran/camion de la place d'Alexandrie\n(Présentation d'UT7 dans la dropbox)"
+                }
+            } ]
+}

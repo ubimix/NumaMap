@@ -2,10 +2,10 @@
 
     var CONFIG = {
         maxZoom : 20,
-        mapElement : '#map-container .map',
-        descriptionElement : '#map-container .info',
+        container : '#map-container',
         dataUrl : './data/history.json',
         dataUrl : './data/data.json',
+        dataUrl : './data/program.json',
         tilesLayer : 'http://{s}.tile.cloudmade.com/d4fc77ea4a63471cab2423e66626cbb6/997/256/{z}/{x}/{y}.png',
         tilesLayer : 'http://{s}.tiles.mapbox.com/v3/guilhemoreau.map-057le4on/{z}/{x}/{y}.png',
         zone : [ [ 2.347533702850342, 48.86933038212292 ],
@@ -14,7 +14,10 @@
 
     var TEMPLATES = {
         'Point' : {
-            popup : '<strong><%=JSON.stringify(feature)%></strong>',
+            popup : '<div><strong data-action-click="focusDescription"><%=feature.properties.label||feature.properties.name%></strong></div>',
+            description : '<div><h3 data-action-click="focusDescription"><%=feature.properties.label||feature.properties.name%></h3>'
+                    + '<div><%=feature.properties.description%></div>'
+                    + '</div>',
             setLayerStyle : function(layer, feature) {
                 var icon = L
                         .divIcon({
@@ -108,14 +111,30 @@
                 _.extend(layer.options, {
                     color : "yellow",
                     weight : 1,
-                    fillOpacity: 0.7,
+                    fillOpacity : 0.7,
+                    opacity : 0.8
+                });
+            }
+        },
+        'Polygon:numa' : {
+            description : '<div><%=feature.properties.label%></div>',
+            popup : '<div><h3 data-action-click="focusDescription">NUMA</h3></div>',
+            setLayerStyle : function(layer, feature) {
+                _.extend(layer.options, {
+                    color : "yellow",
+                    weight : 1,
+                    fillOpacity : 0.7,
                     opacity : 0.8
                 });
             }
         },
         'Polygon:scene' : {
-            description : '<div>SCENE: <%=feature.properties.description%></div>',
-            popup : '<div>COUCOU: <%=feature.properties%></div>',
+            description : '<div><h3>'
+                    + '<a href="javascript:void(0);" data-action-click="openPopup">'
+                    + '<%=feature.properties.label%>' + '</a>'
+                    + '</h3></div></div>',
+            popup : '<div><h3><a href="javascript:void(0);" data-action-click="focusDescription">'
+                    + '<%=feature.properties.label%>' + '</a></h3></div></div>',
             setLayerStyle : function(layer, feature) {
                 _.extend(layer.options, {
                     color : 'white',
@@ -131,13 +150,30 @@
     /* ---------------------------------------------------------------------- */
 
     /**
+     * This method is used to re-size the map element to fit to the screen. It
+     * is called each time when the main window changes its size.
+     */
+    function updateSize() {
+        var container = $(CONFIG.container);
+        var shift = container.find('.navbar').height() || 0;
+        shift += 20;
+        var height = $(window).height() - shift;
+        container.find('.map-block').each(function() {
+            var el = $(this);
+            el.height(height);
+        })
+    }
+
+    /**
      * Loads data and visualizes them on the map. This method is called when the
      * DOM construction is finished.
      */
     $(function() {
+        $(window).resize(_.throttle(updateSize, 100));
         var map = new NumaMap(CONFIG, TEMPLATES);
         $.getJSON(CONFIG.dataUrl, function(data) {
             map.addLayer(data);
+            updateSize();
         }).error(function(err) {
             console.log('LOADING ERROR:', err)
         })
@@ -145,6 +181,113 @@
 
     /* ---------------------------------------------------------------------- */
 
+    /** Class representation of a feature visualized on the map. */
+    function LayerInfo(options) {
+        this.options = options;
+    }
+    _.extend(LayerInfo.prototype, {
+
+        /** Returns a unique identifier of the feature */
+        getId : function() {
+            var feature = this.options.feature;
+            if (!feature.id) {
+                feature.id = _.uniqueId('feature-');
+            }
+            return feature.id;
+        },
+
+        /** Sets a new "active" lat/lng pair for this layer */
+        setLatLng : function(latlng) {
+            this.latlng = latlng;
+        },
+
+        /** Returns an "active" lat/lng pair for this layer */
+        getLatLng : function() {
+            var latlng = this.latlng;
+            if (!latlng) {
+                latlng = this.options.layer.getBounds().getCenter();
+            }
+            return latlng;
+        },
+        /**
+         * Checks the specified feature and returns <code>true</code> if it is
+         * a point.
+         */
+        isPoint : function() {
+            var feature = this.getFeature();
+            if (!feature)
+                return false;
+            var type = feature.geometry.type;
+            return (type == 'Point')
+        },
+
+        /** Returns a map layer associated with this feature */
+        getLayer : function() {
+            return this.options.layer;
+        },
+
+        /** Returns the internal feature (as a JSON object) */
+        getFeature : function() {
+            return this.options.feature;
+        },
+
+        /** Renders this feature using the specified field of the template */
+        render : function(field) {
+            var template = this.getTemplate();
+            if (!template)
+                return null;
+            var str = template[field];
+            if (!str)
+                return null;
+            var feature = this.getFeature();
+            var html = _.template(str, {
+                feature : feature,
+                template : template
+            })
+            html = $(html);
+            return html;
+        },
+
+        /**
+         * Returns a template object corresponding to the specified feature. It
+         * can retur <code>null</code> if there is no templates for this type
+         * of features.
+         */
+        getTemplate : function() {
+            var array = this._getFeatureTypeArray();
+            var template = null;
+            while (array.length) {
+                var type = array.join(':');
+                template = this.options.templates[type];
+                if (template)
+                    break;
+                array.pop();
+            }
+            return template;
+        },
+
+        /**
+         * Detects the type of the specified feature and returns an array of
+         * 'type segments'. These type segments are used to recursively detect
+         * template objects corresponding to this feature. This method is used
+         * internally by the 'getTemplate(..)' method.
+         */
+        _getFeatureTypeArray : function() {
+            var feature = this.getFeature();
+            if (!feature)
+                return [];
+            var geometry = feature.geometry || {};
+            var array = [ (geometry.type || '') ];
+            var properties = feature.properties || {};
+            var type = properties.type || '';
+            if (type != '') {
+                array.push(type);
+            }
+            return array;
+        },
+    })
+
+    /* ---------------------------------------------------------------------- */
     /**
      * The main constructor of this class. It initializes the map in the
      * specified DOM element.
@@ -152,98 +295,141 @@
     function NumaMap(config, templates) {
         this.config = config;
         this.templates = templates;
-        this._openPopup = _.throttle(this._openPopup, 10);
+        this.openPopup = _.throttle(this.openPopup, 10, this);
         this._map = this._newMap();
         this._bindRezoomingCircle();
-        this._layerGroups = [];
+        this._featureGroups = [];
     }
+    _.extend(NumaMap.prototype, L.Mixin.Events);
     _.extend(NumaMap.prototype, {
         /** Adds a new logical layer to this map */
         addLayer : function(data) {
             var that = this;
+            var htmlContainer = $(that.config.container).find('.info');
+            htmlContainer.html('');
             var layer = L.geoJson(data, {
                 onEachFeature : function(feature, layer) {
-                    that._addFeature(feature, layer);
+                    var info = new LayerInfo({
+                        feature : feature,
+                        layer : layer,
+                        templates : that.templates
+                    });
+
+                    var html = that._renderLayer(info, 'description');
+                    if (html) {
+                        html.addClass('feature')
+                        var featureId = info.getId();
+                        html.attr('id', featureId);
+                        htmlContainer.append(html);
+                    }
+                    that._formatLayer(info);
                 }
             });
             layer.addTo(this._map);
-            this._layerGroups.push(layer);
+            this._featureGroups.push(layer);
+            console.log(htmlContainer.html())
             return layer;
         },
-        /* ------------------------------------------------------------------ */
-        // Private methods
-        /**
-         * Checks the specified feature and returns <code>true</code> if it is
-         * a point.
-         */
-        _isPoint : function(feature) {
-            if (!feature)
-                return false;
-            var type = feature.geometry.type;
-            return (type == 'Point')
-        },
-        /** Adds an individual feature and layer to this map */
-        _addFeature : function(feature, layer) {
+
+        /** Focus currently acitve description in the list. */
+        focusDescription : function() {
             var that = this;
-            var template = this._getFeatureTemplate(feature);
-            if (template && template.setLayerStyle) {
-                template.setLayerStyle(layer, feature);
-            }
-            layer.on('mouseover', function(e) {
-                that._closePopup();
-                that._setActiveLayer(feature, layer, e.latlng);
-                that._openPopup();
-            });
-            layer.on('click', function(e) {
-                that._setActiveLayer(feature, layer, e.latlng);
-                var html = that._renderDescription();
-                if (html) {
-                    var htmlContainer = $(that.config.descriptionElement);
-                    htmlContainer.html(html);
-                }
+            var active = this.getActiveLayer();
+            var featureId = active.getId();
+            var element = $('#' + featureId);
+            var container = element.parent();
+            var cls = 'feature-active';
+            container.find('.' + cls).each(function() {
+                $(this).removeClass(cls);
             })
+            var top = element.offsetParent();
+            container.animate({
+                scrollTop : top
+            }, 300);
+            element.addClass(cls);
         },
-        /** Sets the specified feature/layer as an active ones */
-        _setActiveLayer : function(feature, layer, latlng) {
-            this._activeFeature = feature;
-            this._activeLayer = layer;
-            this._activeLatLng = latlng;
-        },
+
         /** Closes already opened popups */
-        _closePopup : function() {
-            if (!this._activeLayer)
+        closePopup : function() {
+            var active = this.getActiveLayer();
+            if (!active)
                 return;
-            this._activeLayer.closePopup();
+            var layer = active.getLayer();
+            layer.closePopup();
             this._map.closePopup();
         },
+
         /** Opens a popup window on the currently active feature */
-        _openPopup : function() {
-            if (!this._activeFeature)
+        openPopup : function(center) {
+            var activeInfo = this.getActiveLayer();
+            if (!activeInfo)
                 return;
-            var isPoint = this._isPoint(this._activeFeature);
-            var html = this._renderPopup();
+            var isPoint = activeInfo.isPoint();
+            var html = this._renderLayer(activeInfo, 'popup');
             if (html) {
-                if (isPoint) {
-                    this._activeLayer.bindPopup($(html)[0]).openPopup();
-                } else {
-                    L.popup({
-                        offset : L.point(0, -20)
-                    }).setContent($(html)[0]).setLatLng(this._activeLatLng)
-                            .openOn(this._map);
+                var latlng = activeInfo.getLatLng();
+                var offset = new L.Point(0, -10);
+                new L.Rrose({
+                    offset : offset,
+                    closeButton : false,
+                    autoPan : true
+                }).setContent($(html)[0]).setLatLng(latlng).openOn(this._map);
+                if (center !== false) {
+                    this._map.panTo(latlng);
                 }
             }
+        },
+
+        /** Sets the specified feature/layer as an active ones */
+        setActiveLayer : function(info) {
+            this._activeLayer = info;
+        },
+
+        /** Returns the currently active layer information. */
+        getActiveLayer : function() {
+            return this._activeLayer;
+        },
+
+        /* ------------------------------------------------------------------ */
+        // Private methods
+        /** Returns an identifier of this feature */
+        _getFeatureId : function(feature) {
+            var featureId = feature.id = feature.id || _.uniqueId('feature-');
+            return featureId;
+        },
+
+        /** Adds an individual feature object to this map and in the side block */
+        _formatLayer : function(info) {
+            var feature = info.getFeature();
+            var template = info.getTemplate();
+            if (template && template.setLayerStyle) {
+                var layer = info.getLayer();
+                template.setLayerStyle(layer, feature);
+            }
+            var that = this;
+            layer.on('mouseover', function(e) {
+                that.closePopup();
+                info.setLatLng(e.latlng);
+                that.setActiveLayer(info);
+                that.openPopup(false);
+            });
+            layer.on('click', function(e) {
+                info.setLatLng(e.latlng);
+                that.setActiveLayer(info);
+                that.focusDescription();
+            })
         },
 
         /** Adds a circle allowing to re-zoom to the required region */
         _bindRezoomingCircle : function() {
             var that = this;
-            that._map.on('layers:show', function(e) {
+            that.on('layers:show', function(e) {
                 if (that._centerMarker) {
                     that._map.removeLayer(that._centerMarker);
                     that._centerMarker = null;
                 }
             })
-            that._map.on('layers:hide', function(e) {
+            that.on('layers:hide', function(e) {
                 if (!that._centerMarker) {
                     var center = e.center;
                     var minZoom = e.minZoom;
@@ -285,7 +471,7 @@
                         getLatLng(zone[1]));
                 return bounds;
             }
-            var element = $(that.config.mapElement);
+            var element = $(that.config.container).find('.map');
             element.html('');
             var map = L.map(element[0], {
                 loadingControl : true
@@ -298,7 +484,7 @@
             var bounds = getLatLngBounds(that.config.zone);
             var center = bounds.getCenter();
             map.fitBounds(bounds);
-            var minZoom = map.getZoom() - 1;
+            var minZoom = map.getZoom();
             var layersVisible = true;
             map.on('zoomend', function() {
                 var zoom = map.getZoom();
@@ -318,13 +504,14 @@
                         zoom : zoom,
                         minZoom : minZoom
                     }
-                    _.each(that._layerGroups, function(layer) {
+                    _.each(that._featureGroups, function(layer) {
                         if (layersVisible) {
                             map.addLayer(layer);
-                            map.fire('layers:show', event);
+                            that.fire('layers:show', event);
                         } else {
+                            that.closePopup();
                             map.removeLayer(layer);
-                            map.fire('layers:hide', event);
+                            that.fire('layers:hide', event);
                         }
                     })
                 }
@@ -334,70 +521,38 @@
             return map;
         },
         /**
-         * Detects the type of the specified feature and returns an array of
-         * 'type segments'. These type segments are used to recursively detect
-         * template objects corresponding to this feature. This method is used
-         * internally by the '_getFeatureTemplate(..)' method.
-         */
-        _getFeatureTypeArray : function(feature) {
-            if (!feature)
-                return [];
-            var geometry = feature.geometry || {};
-            var array = [ (geometry.type || '') ];
-            var properties = feature.properties || {};
-            var type = properties.type || '';
-            if (type != '') {
-                array.push(type);
-            }
-            return array;
-        },
-        /**
-         * Returns a template object corresponding to the specified feature. It
-         * can retur <code>null</code> if there is no templates for this type
-         * of features.
-         */
-        _getFeatureTemplate : function(feature) {
-            var array = this._getFeatureTypeArray(feature);
-            var template = null;
-            while (array.length) {
-                var type = array.join(':');
-                template = this.templates[type];
-                if (template)
-                    break;
-                array.pop();
-            }
-            return template;
-        },
-        /**
          * Renders the specified feature using the given template field. The
          * field parameter defines name of the template field used for
          * visualization.
          */
-        _renderFeature : function(feature, field) {
-            var template = this._getFeatureTemplate(feature);
-            if (!template)
-                return '';
-            var str = template[field];
-            if (!str)
-                return '';
-            return _.template(str, {
-                feature : feature,
-                template : template
+        _renderLayer : function(info, field) {
+            var html = info.render(field);
+            if (!html)
+                return;
+            var that = this;
+            function bindActions(e, event) {
+                var action = e.attr('data-action-' + event);
+                if (!action)
+                    return;
+                var method = that[action];
+                if (_.isFunction(method)) {
+                    e.on(event, function(evt) {
+                        that.setActiveLayer(info);
+                        method.call(that);
+                    });
+                }
+            }
+            // Bind actions to marked elements
+            html.find('[data-action-click]').each(function() {
+                bindActions($(this), 'click');
             })
-        },
-        /**
-         * Renders content of the pop-up window for the currently active
-         * feature.
-         */
-        _renderPopup : function() {
-            return this._renderFeature(this._activeFeature, 'popup');
-        },
-        /**
-         * Renders content of the detail window for the currently active
-         * feature.
-         */
-        _renderDescription : function() {
-            return this._renderFeature(this._activeFeature, 'description');
+            html.find('[data-action-mouseover]').each(function() {
+                bindActions($(this), 'mouseover');
+            })
+            html.find('[data-action-mouseout]').each(function() {
+                bindActions($(this), 'mouseout');
+            })
+            return html;
         }
 
     });

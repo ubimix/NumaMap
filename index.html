@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"></meta>
 <meta charset="utf-8"></meta>
 
+<!-- External CSS styles -->
 <link rel="stylesheet" href="./libs/leaflet/leaflet.css" />
-<!--[if lte IE 8]>
-        <link rel="stylesheet" href="./libs/leaflet/leaflet.ie.css" />
-    <![endif]-->
+<!--[if lte IE 8]><link rel="stylesheet" href="./libs/leaflet/leaflet.ie.css" /><![endif]-->
+<link rel="stylesheet" href="./libs/leaflet.rrose/leaflet.rrose.css" />
+<!--[if lte IE 8]><link rel="stylesheet" href="./libs/leaflet.rrose/leaflet.rrose.ie.css" /><![endif]-->
 <link href="./libs/leaflet.loading/src/Control.Loading.css"
 	rel="stylesheet"></link>
 <link href="./libs/bootstrap/css/bootstrap.min.css" rel="stylesheet"></link>
@@ -17,14 +18,17 @@
 <link href="./libs/font-awesome-4.0.1/css/font-awesome.min.css"
 	rel="stylesheet"></link>
 
+<!-- JavaScript libraries -->
 <script type="text/javascript" src="./libs/jquery/jquery.min.js"></script>
 <script type="text/javascript"
 	src="./libs/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="./libs/leaflet/leaflet.js"></script>
+<script type="text/javascript" src="./libs/leaflet.rrose/rrose-src.js"></script>
 <script type="text/javascript"
 	src="./libs/leaflet.loading/src/Control.Loading.js"></script>
 <script type="text/javascript" src="./libs/underscore/underscore-min.js"></script>
 
+<!-- Specific CSS styles -->
 <style type="text/css">
 html,body {
 	height: 100%;
@@ -33,43 +37,66 @@ html,body {
 	padding: 0;
 }
 
-#map-container {
-	border: 3px solid silver;
-	clear: both;
-	position: relative;
-}
-
-#map-container .map {
-	background-color: #eee;
-}
-
 #map-container .map-block {
 	height: 500px;
+	overflow: hidden;
 }
 
-#map-container .map-block .loading {
+#map-container .info {
+	overflow-y: auto;
+}
+
+#map-container  .loading {
 	margin-top: 15%;
 	margin-left: 35%;
 }
 
-#map-container .info {
-	position: absolute;
-	z-index: 50;
-	top: 0;
-	right: 1%;
-	width: 25%;
-	background-color: white;
-	opacity: 0.9;
-	overflow-y: auto;
+#map-container .info .feature {
+	margin-bottom: 0.5em;
 }
 
-#map-container .shadow {
-	-webkit-box-shadow: 0px 0px 12px rgba(50, 50, 50, 0.75);
-	-moz-box-shadow: 0px 0px 12px rgba(50, 50, 50, 0.75);
-	box-shadow: 0px 0px 12px rgba(50, 50, 50, 0.75);
+#map-container .info .feature.feature-active {
+	background-color: #eee;
+}
+
+.leaflet-rrose-content {
+	margin: 8px 15px;
+}
+
+.leaflet-rrose-content-wrapper {
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+}
+
+.leaflet-rrose-content-wrapper-sse,.leaflet-rrose-content-wrapper-ese {
+	-webkit-border-top-left-radius: 0;
+	-moz-border-radius-topleft: 0;
+	border-top-left-radius: 0;
+}
+
+.leaflet-rrose-content-wrapper-ssw,.leaflet-rrose-content-wrapper-wsw {
+	-webkit-border-top-right-radius: 0;
+	-moz-border-radius-topright: 0;
+	border-top-right-radius: 0;
+}
+
+.leaflet-rrose-content-wrapper-nnw,.leaflet-rrose-content-wrapper-wnw,.leaflet-rrose-content-wrapper-w
+	{
+	-webkit-border-bottom-right-radius: 0;
+	-moz-border-radius-bottomright: 0;
+	border-bottom-right-radius: 0;
+}
+
+.leaflet-rrose-content-wrapper-nne,.leaflet-rrose-content-wrapper-ene,.leaflet-rrose-content-wrapper-e
+	{
+	-webkit-border-bottom-left-radius: 0;
+	-moz-border-radius-bottomleft: 0;
+	border-bottom-left-radius: 0;
 }
 </style>
 
+<!-- The main code of the application -->
 <script type="text/javascript" src="./index.js"></script>
 
 </head>
@@ -81,67 +108,80 @@ html,body {
 		nec lectus eu urna molestie accumsan vel non lacus. Maecenas suscipit
 		lacinia sem id</p>
 
-	<div id="map-container">
-		<div class="map map-block">
-			<img class="loading" src="./libs/leaflet.loading/images/loading.gif" />
+	<div class="container-fluid" id="map-container">
+		<div class="navbar">
+			<div class="navbar-inner">
+				<a class="brand" href="#">Title</a>
+				<ul class="nav">
+					<li class="active"><a href="#">Home</a></li>
+					<li><a href="#">Link</a></li>
+					<li><a href="#">Link</a></li>
+				</ul>
+			</div>
 		</div>
-		<div class="info map-block">
-			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam
-				in mauris nulla. Fusce dui massa, commodo in molestie eu, vulputate
-				rhoncus felis. Vestibulum quis elit mattis, rutrum turpis eget,
-				elementum est. In dolor mi, vulputate non viverra sed, mattis non
-				odio. Quisque congue velit eget lacus dictum, sed porttitor arcu
-				facilisis. Ut pulvinar neque ligula, quis sagittis arcu blandit sit
-				amet. Quisque rutrum laoreet magna, in adipiscing arcu venenatis
-				eget. Quisque feugiat, nibh sit amet ultricies ultrices, risus
-				mauris tincidunt enim, eget dignissim enim mi vel elit. Curabitur
-				vel placerat nisl, id rhoncus eros. Aenean accumsan, diam ac
-				adipiscing congue, felis lorem ornare ligula, in commodo magna magna
-				sed neque. Suspendisse porttitor mattis ante ut posuere. Etiam eget
-				lacus enim. Nam aliquam metus justo, sed fringilla nulla congue non.
-				Pellentesque dapibus, risus eu porttitor pellentesque, orci ante
-				adipiscing risus, non scelerisque nibh nibh vitae eros. Morbi mollis
-				orci turpis, et tincidunt magna venenatis et.</p>
-			<p>Proin posuere ac turpis vel vestibulum. Morbi dui risus,
-				ullamcorper mattis luctus non, semper id nulla. Integer pharetra,
-				purus eget malesuada vestibulum, leo tellus vulputate diam, sed
-				condimentum orci tortor quis massa. Nam sit amet lacus risus. Mauris
-				nec lectus eu urna molestie accumsan vel non lacus. Maecenas
-				suscipit lacinia sem id pharetra. Praesent eleifend, sem feugiat
-				molestie gravida, massa velit porttitor dui, sit amet consequat nisi
-				urna at neque. Nunc suscipit sed eros a rhoncus. Maecenas commodo
-				nibh eu neque ornare, id eleifend nunc faucibus. Etiam accumsan
-				lectus et augue venenatis, sed commodo ipsum euismod. Donec gravida
-				suscipit metus, nec commodo leo faucibus non. Maecenas commodo orci
-				sed lacus cursus auctor.</p>
-			<p>Vestibulum id mi porta, sodales dui eu, scelerisque arcu.
-				Phasellus a lorem tincidunt, fringilla nulla non, ullamcorper
-				turpis. Cras a vulputate libero, eget adipiscing erat. Nulla
-				consequat volutpat velit at laoreet. Aenean at feugiat dolor.
-				Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
-				posuere cubilia Curae; Donec auctor, nisl in faucibus volutpat,
-				lacus augue sodales urna, in rutrum ante mauris non metus. Nunc id
-				tortor mi. Aenean mollis nunc in massa tincidunt, id convallis metus
-				bibendum.</p>
-			<p>Nam ut interdum dolor, vitae sagittis lorem. In dolor massa,
-				vulputate sed odio id, tristique tincidunt lorem. Integer sagittis,
-				quam in scelerisque aliquet, est lorem dignissim magna, a rutrum
-				diam felis sit amet velit. Suspendisse malesuada sem tellus, id
-				pharetra arcu fermentum quis. Nam eu sapien sollicitudin, aliquet
-				risus non, consectetur orci. Praesent varius lacus et egestas
-				feugiat. Mauris dapibus nunc nec eros elementum vulputate sit amet
-				id sapien. In hac habitasse platea dictumst. Aliquam pellentesque
-				est id orci fringilla, at rhoncus nisi auctor. Nunc ultrices non sem
-				vel pellentesque. Nunc vehicula dolor gravida libero mattis lacinia.</p>
-			<p>Praesent luctus ligula vitae purus euismod dictum. Morbi
-				fermentum felis sed velit dapibus, interdum gravida nunc sagittis.
-				Phasellus at pulvinar lectus. Donec eu nisl sed augue sollicitudin
-				tempus. Vivamus vitae eros vel eros suscipit euismod vitae quis
-				lorem. Fusce faucibus sem cursus dapibus tempor. Proin sollicitudin
-				ante at consequat consectetur. Phasellus ante odio, condimentum a
-				aliquet ut, tempus id nisl. Vestibulum sed justo id nunc tincidunt
-				hendrerit in sed urna. Sed ultrices nibh viverra lorem varius, non
-				euismod leo ornare.</p>
+		<div class="row-fluid">
+			<div class="span9 map-block map">
+				<img class="loading" src="./libs/leaflet.loading/images/loading.gif" />
+			</div>
+			<div class="span3 map-block info">
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam
+					in mauris nulla. Fusce dui massa, commodo in molestie eu, vulputate
+					rhoncus felis. Vestibulum quis elit mattis, rutrum turpis eget,
+					elementum est. In dolor mi, vulputate non viverra sed, mattis non
+					odio. Quisque congue velit eget lacus dictum, sed porttitor arcu
+					facilisis. Ut pulvinar neque ligula, quis sagittis arcu blandit sit
+					amet. Quisque rutrum laoreet magna, in adipiscing arcu venenatis
+					eget. Quisque feugiat, nibh sit amet ultricies ultrices, risus
+					mauris tincidunt enim, eget dignissim enim mi vel elit. Curabitur
+					vel placerat nisl, id rhoncus eros. Aenean accumsan, diam ac
+					adipiscing congue, felis lorem ornare ligula, in commodo magna
+					magna sed neque. Suspendisse porttitor mattis ante ut posuere.
+					Etiam eget lacus enim. Nam aliquam metus justo, sed fringilla nulla
+					congue non. Pellentesque dapibus, risus eu porttitor pellentesque,
+					orci ante adipiscing risus, non scelerisque nibh nibh vitae eros.
+					Morbi mollis orci turpis, et tincidunt magna venenatis et.</p>
+				<p>Proin posuere ac turpis vel vestibulum. Morbi dui risus,
+					ullamcorper mattis luctus non, semper id nulla. Integer pharetra,
+					purus eget malesuada vestibulum, leo tellus vulputate diam, sed
+					condimentum orci tortor quis massa. Nam sit amet lacus risus.
+					Mauris nec lectus eu urna molestie accumsan vel non lacus. Maecenas
+					suscipit lacinia sem id pharetra. Praesent eleifend, sem feugiat
+					molestie gravida, massa velit porttitor dui, sit amet consequat
+					nisi urna at neque. Nunc suscipit sed eros a rhoncus. Maecenas
+					commodo nibh eu neque ornare, id eleifend nunc faucibus. Etiam
+					accumsan lectus et augue venenatis, sed commodo ipsum euismod.
+					Donec gravida suscipit metus, nec commodo leo faucibus non.
+					Maecenas commodo orci sed lacus cursus auctor.</p>
+				<p>Vestibulum id mi porta, sodales dui eu, scelerisque arcu.
+					Phasellus a lorem tincidunt, fringilla nulla non, ullamcorper
+					turpis. Cras a vulputate libero, eget adipiscing erat. Nulla
+					consequat volutpat velit at laoreet. Aenean at feugiat dolor.
+					Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
+					posuere cubilia Curae; Donec auctor, nisl in faucibus volutpat,
+					lacus augue sodales urna, in rutrum ante mauris non metus. Nunc id
+					tortor mi. Aenean mollis nunc in massa tincidunt, id convallis
+					metus bibendum.</p>
+				<p>Nam ut interdum dolor, vitae sagittis lorem. In dolor massa,
+					vulputate sed odio id, tristique tincidunt lorem. Integer sagittis,
+					quam in scelerisque aliquet, est lorem dignissim magna, a rutrum
+					diam felis sit amet velit. Suspendisse malesuada sem tellus, id
+					pharetra arcu fermentum quis. Nam eu sapien sollicitudin, aliquet
+					risus non, consectetur orci. Praesent varius lacus et egestas
+					feugiat. Mauris dapibus nunc nec eros elementum vulputate sit amet
+					id sapien. In hac habitasse platea dictumst. Aliquam pellentesque
+					est id orci fringilla, at rhoncus nisi auctor. Nunc ultrices non
+					sem vel pellentesque. Nunc vehicula dolor gravida libero mattis
+					lacinia.</p>
+				<p>Praesent luctus ligula vitae purus euismod dictum. Morbi
+					fermentum felis sed velit dapibus, interdum gravida nunc sagittis.
+					Phasellus at pulvinar lectus. Donec eu nisl sed augue sollicitudin
+					tempus. Vivamus vitae eros vel eros suscipit euismod vitae quis
+					lorem. Fusce faucibus sem cursus dapibus tempor. Proin sollicitudin
+					ante at consequat consectetur. Phasellus ante odio, condimentum a
+					aliquet ut, tempus id nisl. Vestibulum sed justo id nunc tincidunt
+					hendrerit in sed urna. Sed ultrices nibh viverra lorem varius, non
+					euismod leo ornare.</p>
+			</div>
 		</div>
 	</div>
 
