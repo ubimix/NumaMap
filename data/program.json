@@ -109,27 +109,6 @@
                 }
             },
             {
-                "_id" : "scene-place-du-caire",
-                "type" : "Feature",
-                "geometry" : {
-                    "type" : "Point",
-                    "coordinates" : [ 2.34, 48.85 ]
-                },
-                "properties" : {
-                    "name" : "Nouvelle entité",
-                    "address" : "4 place du Caire",
-                    "postcode" : null,
-                    "city" : null,
-                    "creationyear" : null,
-                    "url" : null,
-                    "linkedin" : null,
-                    "id" : "scene-place-du-caire",
-                    "category" : null,
-                    "tags" : [],
-                    "description" : "Scène place du Caire THYLACINE\nde 19h à 20h30\n(présentation dans la dropbox sous radio PIIAF)LEWIS EVANS\nde 20h30 à 22h\n(présentation dans la dropbox sous radio PIIAF)"
-                }
-            },
-            {
                 "_id" : "le-champollion",
                 "type" : "Feature",
                 "geometry" : {

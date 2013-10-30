@@ -4,29 +4,37 @@
         maxZoom : 20,
         container : '#map-container',
         dataUrl : './data/history.json',
-        dataUrl : './data/data.json',
         dataUrl : './data/program.json',
+        dataUrl : './data/data.json',
         tilesLayer : 'http://{s}.tile.cloudmade.com/d4fc77ea4a63471cab2423e66626cbb6/997/256/{z}/{x}/{y}.png',
         tilesLayer : 'http://{s}.tiles.mapbox.com/v3/guilhemoreau.map-057le4on/{z}/{x}/{y}.png',
         zone : [ [ 2.347533702850342, 48.86933038212292 ],
                 [ 2.351717948913574, 48.86660622956524 ] ]
     };
 
+    var TEMPLATE_DEFAULT_DESCRIPTION = '<div>'
+            + '<h3 data-action-click="activateLayer"><%=feature.properties.label||feature.properties.name%></h3>'
+            + '<div><%=feature.properties.description%></div>' + '</div>';
+    var TEMPLATE_DEFAULT_POPUP = '<div><strong data-action-click="activateLayer"><%=feature.properties.label||feature.properties.name%></strong></div>';
+    var TEMPLATE_DEFAULT = {
+        popup : TEMPLATE_DEFAULT_POPUP,
+        description : TEMPLATE_DEFAULT_DESCRIPTION
+    }
     var TEMPLATES = {
-        'Point' : {
-            popup : '<div><strong data-action-click="focusDescription"><%=feature.properties.label||feature.properties.name%></strong></div>',
-            description : '<div><h3 data-action-click="focusDescription"><%=feature.properties.label||feature.properties.name%></h3>'
-                    + '<div><%=feature.properties.description%></div>'
-                    + '</div>',
-            setLayerStyle : function(layer, feature) {
-                var icon = L
-                        .divIcon({
-                            className : '',
-                            html : '<i class="fa fa-map-marker fa-lg" style="color: red;"></i>'
-                        });
-                layer.setIcon(icon);
-            }
-        },
+        'Point' : _
+                .extend(
+                        {},
+                        TEMPLATE_DEFAULT,
+                        {
+                            setLayerStyle : function(layer, feature) {
+                                var icon = L
+                                        .divIcon({
+                                            className : '',
+                                            html : '<i class="fa fa-map-marker fa-lg" style="color: red;"></i>'
+                                        });
+                                layer.setIcon(icon);
+                            }
+                        }),
         'Point:wc' : {
             popup : '<strong>WC</strong>',
             setLayerStyle : function(layer, feature) {
@@ -40,7 +48,10 @@
             }
         },
         'Point:security' : {
-            popup : '<strong>Agent de sécurité</strong>',
+            description : TEMPLATE_DEFAULT_DESCRIPTION,
+            description : '<div><a href="javascript:void(0);" data-action-click="activateLayer">'
+                    + 'Agent de sécurité' + '</a></div>',
+            popup : '<div><strong>Agent de sécurité</strong></div>',
             setLayerStyle : function(layer, feature) {
                 var icon = L.divIcon({
                     className : '',
@@ -50,7 +61,7 @@
             }
         },
         'Point:sos' : {
-            popup : '<strong>Sécurité</strong>',
+            popup : '<strong>Poste de secours</strong>',
             setLayerStyle : function(layer, feature) {
                 var icon = L
                         .divIcon({
@@ -61,7 +72,7 @@
             }
         },
         'Point:screen' : {
-            popup : '<div><%=JSON.stringify(feature)%></div>',
+            popup : TEMPLATE_DEFAULT_POPUP,
             setLayerStyle : function(layer, feature) {
                 var icon = L
                         .divIcon({
@@ -87,7 +98,8 @@
             }
         },
         'LineString:passage' : {
-            description : '<div><%=feature.properties.description%></div>',
+            popup : TEMPLATE_DEFAULT_POPUP,
+            description : TEMPLATE_DEFAULT_DESCRIPTION,
             setLayerStyle : function(layer, feature) {
                 _.extend(layer.options, {
                     color : "yellow",
@@ -97,7 +109,8 @@
             }
         },
         'LineString:rue' : {
-            description : '<div><%=feature.properties.description%></div>',
+            popup : TEMPLATE_DEFAULT_POPUP,
+            description : TEMPLATE_DEFAULT_DESCRIPTION,
             setLayerStyle : function(layer, feature) {
                 _.extend(layer.options, {
                     color : "yellow",
@@ -117,8 +130,12 @@
             }
         },
         'Polygon:numa' : {
-            description : '<div><%=feature.properties.label%></div>',
-            popup : '<div><h3 data-action-click="focusDescription">NUMA</h3></div>',
+            description : '<div><h3><a href="javascript:void(0);" data-action-click="activateLayer">'
+                    + '<%=feature.properties.label%>'
+                    + '</a></h3>'
+                    + '<div data-action-click="expandLayer">Popup</div>'
+                    + '</div>',
+            popup : '<div><h3 data-action-click="activateLayer">NUMA</h3></div>',
             setLayerStyle : function(layer, feature) {
                 _.extend(layer.options, {
                     color : "yellow",
@@ -129,11 +146,8 @@
             }
         },
         'Polygon:scene' : {
-            description : '<div><h3>'
-                    + '<a href="javascript:void(0);" data-action-click="openPopup">'
-                    + '<%=feature.properties.label%>' + '</a>'
-                    + '</h3></div></div>',
-            popup : '<div><h3><a href="javascript:void(0);" data-action-click="focusDescription">'
+            description : TEMPLATE_DEFAULT_DESCRIPTION,
+            popup : '<div><h3><a href="javascript:void(0);" data-action-click="activateLayer">'
                     + '<%=feature.properties.label%>' + '</a></h3></div></div>',
             setLayerStyle : function(layer, feature) {
                 _.extend(layer.options, {
@@ -205,7 +219,12 @@
         getLatLng : function() {
             var latlng = this.latlng;
             if (!latlng) {
-                latlng = this.options.layer.getBounds().getCenter();
+                var layer = this.options.layer;
+                if (layer.getLatLng) {
+                    latlng = layer.getLatLng();
+                } else if (layer.getBounds) {
+                    latlng = layer.getBounds().getCenter();
+                }
             }
             return latlng;
         },
@@ -299,6 +318,19 @@
         this._map = this._newMap();
         this._bindRezoomingCircle();
         this._featureGroups = [];
+        this.on('layer:focus:off', function(e) {
+            this.closePopup(e.layer);
+        }, this);
+        this.on('layer:focus:on', function(e) {
+            this.openPopup(e.layer, e.center);
+        }, this);
+        this.on('layer:active:on', function(e) {
+            this.focusDescription(e.layer);
+        }, this)
+        this.on('layer:expand:on', function(e) {
+            var json = e.layer.getFeature();
+            alert(JSON.stringify(json))
+        }, this)
     }
     _.extend(NumaMap.prototype, L.Mixin.Events);
     _.extend(NumaMap.prototype, {
@@ -314,7 +346,6 @@
                         layer : layer,
                         templates : that.templates
                     });
-
                     var html = that._renderLayer(info, 'description');
                     if (html) {
                         html.addClass('feature')
@@ -332,10 +363,9 @@
         },
 
         /** Focus currently acitve description in the list. */
-        focusDescription : function() {
+        focusDescription : function(info) {
             var that = this;
-            var active = this.getActiveLayer();
-            var featureId = active.getId();
+            var featureId = info.getId();
             var element = $('#' + featureId);
             var container = element.parent();
             var cls = 'feature-active';
@@ -350,48 +380,64 @@
         },
 
         /** Closes already opened popups */
-        closePopup : function() {
-            var active = this.getActiveLayer();
-            if (!active)
+        closePopup : function(info) {
+            if (!info)
                 return;
-            var layer = active.getLayer();
+            var layer = info.getLayer();
             layer.closePopup();
             this._map.closePopup();
         },
 
         /** Opens a popup window on the currently active feature */
-        openPopup : function(center) {
-            var activeInfo = this.getActiveLayer();
-            if (!activeInfo)
+        openPopup : function(info, center) {
+            if (!info)
                 return;
-            var isPoint = activeInfo.isPoint();
-            var html = this._renderLayer(activeInfo, 'popup');
+            var isPoint = info.isPoint();
+            var html = this._renderLayer(info, 'popup');
             if (html) {
-                var latlng = activeInfo.getLatLng();
+                var latlng = info.getLatLng();
                 var offset = new L.Point(0, -10);
                 new L.Rrose({
                     offset : offset,
                     closeButton : false,
                     autoPan : true
                 }).setContent($(html)[0]).setLatLng(latlng).openOn(this._map);
-                if (center !== false) {
+                if (center) {
                     this._map.panTo(latlng);
                 }
             }
         },
 
-        /** Sets the specified feature/layer as an active ones */
-        setActiveLayer : function(info) {
-            this._activeLayer = info;
+        /** Focus the specified layer */
+        focusLayer : function(e) {
+            this._switchLayer('layer:focus', '_focusedLayer', e);
         },
-
-        /** Returns the currently active layer information. */
-        getActiveLayer : function() {
-            return this._activeLayer;
+        /** Focus the specified layer */
+        activateLayer : function(e) {
+            var copy = _.clone(e);
+            copy.center = true;
+            this.focusLayer(copy);
+            this._switchLayer('layer:active', '_activeLayer', e);
+        },
+        /** Expand layer information */
+        expandLayer : function(e) {
+            this._switchLayer('layer:expand', '_expandedLayer', e);
         },
 
         /* ------------------------------------------------------------------ */
         // Private methods
+        /** An internal method used to activate/deactivate layers */
+        _switchLayer : function(prefix, field, e) {
+            if (this[field] && this[field].layer != e.layer) {
+                this.fire(prefix + ':off', this[field]);
+                delete this[field];
+            }
+            if (e) {
+                this[field] = e;
+                this.fire(prefix + ':on', this[field]);
+            }
+        },
+
         /** Returns an identifier of this feature */
         _getFeatureId : function(feature) {
             var featureId = feature.id = feature.id || _.uniqueId('feature-');
@@ -408,15 +454,16 @@
             }
             var that = this;
             layer.on('mouseover', function(e) {
-                that.closePopup();
                 info.setLatLng(e.latlng);
-                that.setActiveLayer(info);
-                that.openPopup(false);
+                that.focusLayer({
+                    layer : info
+                });
             });
             layer.on('click', function(e) {
                 info.setLatLng(e.latlng);
-                that.setActiveLayer(info);
-                that.focusDescription();
+                that.activateLayer({
+                    layer : info
+                });
             })
         },
 
@@ -537,8 +584,9 @@
                 var method = that[action];
                 if (_.isFunction(method)) {
                     e.on(event, function(evt) {
-                        that.setActiveLayer(info);
-                        method.call(that);
+                        method.call(that, {
+                            layer : info
+                        });
                     });
                 }
             }

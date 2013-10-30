@@ -190,8 +190,8 @@
                 "type" : "Feature",
                 "properties" : {
                     "type" : "scene",
-                    "label" : "scene 1",
-                    "description" : "scene 1"
+                    "label" : "Scene Place du Caire",
+                    "description" : "Scène place du Caire THYLACINE\nde 19h à 20h30\n(présentation dans la dropbox sous radio PIIAF)LEWIS EVANS\nde 20h30 à 22h\n(présentation dans la dropbox sous radio PIIAF)"
                 },
                 "geometry" : {
                     "type" : "Polygon",
@@ -205,7 +205,8 @@
             {
                 "type" : "Feature",
                 "properties" : {
-                    "type" : "screen"
+                    "type" : "screen",
+                    "label" : "Ecran 1"
                 },
                 "geometry" : {
                     "type" : "Point",
@@ -215,7 +216,8 @@
             {
                 "type" : "Feature",
                 "properties" : {
-                    "type" : "screen"
+                    "type" : "screen",
+                    "label" : "Ecran 2"
                 },
                 "geometry" : {
                     "type" : "Point",
