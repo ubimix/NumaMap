@@ -5,7 +5,8 @@
                 "type" : "Feature",
                 "properties" : {
                     "type" : "numa",
-                    "label" : "Numa"
+                    "label" : "Numa",
+                    "fullContent" : "This is a full description of this feature"
                 },
                 "geometry" : {
                     "type" : "Polygon",

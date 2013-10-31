@@ -16,6 +16,18 @@
             + '<h3 data-action-click="activateLayer"><%=feature.properties.label||feature.properties.name%></h3>'
             + '<div><%=feature.properties.description%></div>' + '</div>';
     var TEMPLATE_DEFAULT_POPUP = '<div><strong data-action-click="activateLayer"><%=feature.properties.label||feature.properties.name%></strong></div>';
+    var TEMPLATE_DEFAULT_DIALOG = '<% var dialogId=info.getId("-dialog"); %>'
+            + '<div id="<%=dialogId%>" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="<%=dialogId%>-title" aria-hidden="true">'
+            + ' <div class="modal-header">'
+            + ' <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'
+            + ' <h3 id="<%=dialogId%>-title"><%=feature.properties.label%></h3>'
+            + ' </div>'
+            + ' <div class="modal-body">'
+            + ' <%=feature.properties.fullContent%> '
+            + ' </div>'
+            + '<div class="modal-footer">'
+            + '<button class="btn" data-dismiss="modal" aria-hidden="true">OK</button>'
+            + '</div>' + '</div>';
     var TEMPLATE_DEFAULT = {
         popup : TEMPLATE_DEFAULT_POPUP,
         description : TEMPLATE_DEFAULT_DESCRIPTION
@@ -26,7 +38,8 @@
                         {},
                         TEMPLATE_DEFAULT,
                         {
-                            setLayerStyle : function(layer, feature) {
+                            updateLayer : function(info) {
+                                var layer = info.getLayer();
                                 var icon = L
                                         .divIcon({
                                             className : '',
@@ -37,7 +50,8 @@
                         }),
         'Point:wc' : {
             popup : '<strong>WC</strong>',
-            setLayerStyle : function(layer, feature) {
+            updateLayer : function(info) {
+                var layer = info.getLayer();
                 var icon = L
                         .divIcon({
                             className : '',
@@ -48,11 +62,9 @@
             }
         },
         'Point:security' : {
-            description : TEMPLATE_DEFAULT_DESCRIPTION,
-            description : '<div><a href="javascript:void(0);" data-action-click="activateLayer">'
-                    + 'Agent de sécurité' + '</a></div>',
             popup : '<div><strong>Agent de sécurité</strong></div>',
-            setLayerStyle : function(layer, feature) {
+            updateLayer : function(info) {
+                var layer = info.getLayer();
                 var icon = L.divIcon({
                     className : '',
                     html : '<i class="fa fa-star-o" style="color: red;"></i>'
@@ -62,7 +74,8 @@
         },
         'Point:sos' : {
             popup : '<strong>Poste de secours</strong>',
-            setLayerStyle : function(layer, feature) {
+            updateLayer : function(info) {
+                var layer = info.getLayer();
                 var icon = L
                         .divIcon({
                             className : '',
@@ -73,7 +86,8 @@
         },
         'Point:screen' : {
             popup : TEMPLATE_DEFAULT_POPUP,
-            setLayerStyle : function(layer, feature) {
+            updateLayer : function(info) {
+                var layer = info.getLayer();
                 var icon = L
                         .divIcon({
                             className : '',
@@ -83,13 +97,12 @@
             }
         },
         'LineString' : {
-            description : '<div><%=feature.properties.description%></div>',
-            setLayerStyle : function(layer, feature) {
-            }
+            description : '<div><%=feature.properties.description%></div>'
         },
         'LineString:barrage' : {
             popup : '<div>Barrage</div>',
-            setLayerStyle : function(layer, feature) {
+            updateLayer : function(info) {
+                var layer = info.getLayer();
                 _.extend(layer.options, {
                     color : "gray",
                     dashArray : "5,5",
@@ -100,7 +113,8 @@
         'LineString:passage' : {
             popup : TEMPLATE_DEFAULT_POPUP,
             description : TEMPLATE_DEFAULT_DESCRIPTION,
-            setLayerStyle : function(layer, feature) {
+            updateLayer : function(info) {
+                var layer = info.getLayer();
                 _.extend(layer.options, {
                     color : "yellow",
                     dashArray : "5,5",
@@ -111,7 +125,8 @@
         'LineString:rue' : {
             popup : TEMPLATE_DEFAULT_POPUP,
             description : TEMPLATE_DEFAULT_DESCRIPTION,
-            setLayerStyle : function(layer, feature) {
+            updateLayer : function(info) {
+                var layer = info.getLayer();
                 _.extend(layer.options, {
                     color : "yellow",
                     weight : 10
@@ -120,7 +135,8 @@
         },
         'Polygon' : {
             description : '<div><%=feature.properties.label%></div>',
-            setLayerStyle : function(layer, feature) {
+            updateLayer : function(info) {
+                var layer = info.getLayer();
                 _.extend(layer.options, {
                     color : "yellow",
                     weight : 1,
@@ -133,10 +149,12 @@
             description : '<div><h3><a href="javascript:void(0);" data-action-click="activateLayer">'
                     + '<%=feature.properties.label%>'
                     + '</a></h3>'
-                    + '<div data-action-click="expandLayer">Popup</div>'
+                    + '<div data-action-click="expandLayer">Dialog</div>'
                     + '</div>',
             popup : '<div><h3 data-action-click="activateLayer">NUMA</h3></div>',
-            setLayerStyle : function(layer, feature) {
+            dialog : TEMPLATE_DEFAULT_DIALOG,
+            updateLayer : function(info) {
+                var layer = info.getLayer();
                 _.extend(layer.options, {
                     color : "yellow",
                     weight : 1,
@@ -149,7 +167,8 @@
             description : TEMPLATE_DEFAULT_DESCRIPTION,
             popup : '<div><h3><a href="javascript:void(0);" data-action-click="activateLayer">'
                     + '<%=feature.properties.label%>' + '</a></h3></div></div>',
-            setLayerStyle : function(layer, feature) {
+            updateLayer : function(info) {
+                var layer = info.getLayer();
                 _.extend(layer.options, {
                     color : 'white',
                     fillColor : 'white',
@@ -196,18 +215,22 @@
     /* ---------------------------------------------------------------------- */
 
     /** Class representation of a feature visualized on the map. */
-    function LayerInfo(options) {
+    function FeatureInfo(options) {
         this.options = options;
     }
-    _.extend(LayerInfo.prototype, {
+    _.extend(FeatureInfo.prototype, {
 
         /** Returns a unique identifier of the feature */
-        getId : function() {
+        getId : function(suffix) {
             var feature = this.options.feature;
             if (!feature.id) {
                 feature.id = _.uniqueId('feature-');
             }
-            return feature.id;
+            var id = feature.id;
+            if (suffix) {
+                id += suffix;
+            }
+            return id;
         },
 
         /** Sets a new "active" lat/lng pair for this layer */
@@ -260,6 +283,7 @@
                 return null;
             var feature = this.getFeature();
             var html = _.template(str, {
+                info : this,
                 feature : feature,
                 template : template
             })
@@ -316,21 +340,9 @@
         this.templates = templates;
         this.openPopup = _.throttle(this.openPopup, 10, this);
         this._map = this._newMap();
-        this._bindRezoomingCircle();
         this._featureGroups = [];
-        this.on('layer:focus:off', function(e) {
-            this.closePopup(e.layer);
-        }, this);
-        this.on('layer:focus:on', function(e) {
-            this.openPopup(e.layer, e.center);
-        }, this);
-        this.on('layer:active:on', function(e) {
-            this.focusDescription(e.layer);
-        }, this)
-        this.on('layer:expand:on', function(e) {
-            var json = e.layer.getFeature();
-            alert(JSON.stringify(json))
-        }, this)
+        this._bindRezoomingCircle();
+        this._bindEvents();
     }
     _.extend(NumaMap.prototype, L.Mixin.Events);
     _.extend(NumaMap.prototype, {
@@ -339,13 +351,15 @@
             var that = this;
             var htmlContainer = $(that.config.container).find('.info');
             htmlContainer.html('');
-            var layer = L.geoJson(data, {
+            var array = [];
+            var group = L.geoJson(data, {
                 onEachFeature : function(feature, layer) {
-                    var info = new LayerInfo({
+                    var info = new FeatureInfo({
                         feature : feature,
                         layer : layer,
                         templates : that.templates
                     });
+                    array.push(info);
                     var html = that._renderLayer(info, 'description');
                     if (html) {
                         html.addClass('feature')
@@ -356,10 +370,9 @@
                     that._formatLayer(info);
                 }
             });
-            layer.addTo(this._map);
-            this._featureGroups.push(layer);
-            console.log(htmlContainer.html())
-            return layer;
+            this._map.addLayer(group);
+            this._featureGroups.push(array);
+            return group;
         },
 
         /** Focus currently acitve description in the list. */
@@ -377,15 +390,6 @@
                 scrollTop : top
             }, 300);
             element.addClass(cls);
-        },
-
-        /** Closes already opened popups */
-        closePopup : function(info) {
-            if (!info)
-                return;
-            var layer = info.getLayer();
-            layer.closePopup();
-            this._map.closePopup();
         },
 
         /** Opens a popup window on the currently active feature */
@@ -408,26 +412,61 @@
             }
         },
 
+        /** Closes already opened popups */
+        closePopup : function(info) {
+            if (info) {
+                var layer = info.getLayer();
+                layer.closePopup();
+            }
+            this._map.closePopup();
+        },
+
+        /**
+         * Opens a dialog box with additional information about the specified
+         * feature.
+         */
+        openDialog : function(info) {
+            if (!info)
+                return;
+            console.log('OpenDialog', info)
+            var feature = info.getFeature();
+            // if (!feature.properties.fullContent)
+            // return;
+            var html = this._renderLayer(info, 'dialog');
+            if (html) {
+                $(html).modal('show');
+            }
+        },
+
+        /** Closes already opened popups */
+        closeDialog : function(info) {
+            if (!info)
+                return;
+            // console.log('CloseDialog', info)
+            var dialogId = info.getId('-dialog');
+            $('#' + dialogId).modal('hide');
+        },
+
         /** Focus the specified layer */
         focusLayer : function(e) {
-            this._switchLayer('layer:focus', '_focusedLayer', e);
+            this._fireLayerEvent('layer:focus', '_focusedLayer', e);
         },
         /** Focus the specified layer */
         activateLayer : function(e) {
             var copy = _.clone(e);
             copy.center = true;
             this.focusLayer(copy);
-            this._switchLayer('layer:active', '_activeLayer', e);
+            this._fireLayerEvent('layer:active', '_activeLayer', e);
         },
         /** Expand layer information */
         expandLayer : function(e) {
-            this._switchLayer('layer:expand', '_expandedLayer', e);
+            this._fireLayerEvent('layer:expand', '_expandedLayer', e);
         },
 
         /* ------------------------------------------------------------------ */
         // Private methods
         /** An internal method used to activate/deactivate layers */
-        _switchLayer : function(prefix, field, e) {
+        _fireLayerEvent : function(prefix, field, e) {
             if (this[field] && this[field].layer != e.layer) {
                 this.fire(prefix + ':off', this[field]);
                 delete this[field];
@@ -448,11 +487,11 @@
         _formatLayer : function(info) {
             var feature = info.getFeature();
             var template = info.getTemplate();
-            if (template && template.setLayerStyle) {
-                var layer = info.getLayer();
-                template.setLayerStyle(layer, feature);
+            if (template && template.updateLayer) {
+                template.updateLayer(info);
             }
             var that = this;
+            var layer = info.getLayer();
             layer.on('mouseover', function(e) {
                 info.setLatLng(e.latlng);
                 that.focusLayer({
@@ -465,6 +504,36 @@
                     layer : info
                 });
             })
+        },
+
+        /**
+         * Binds event handlers showing/hiding popups and additional information
+         * in side panels.
+         */
+        _bindEvents : function() {
+            // Show popup when a layer is focused (mouseover)
+            this.on('layer:focus:on', function(e) {
+                this.openPopup(e.layer, e.center);
+            }, this);
+            // Hide popup when user removes the focus from the currently active
+            // feature/layer
+            this.on('layer:focus:off', function(e) {
+                this.closePopup(e.layer);
+            }, this);
+            // Shows description associated with the activated feature.
+            // (Corresponds to user's clicks)
+            this.on('layer:active:on', function(e) {
+                this.focusDescription(e.layer);
+            }, this)
+            // Expand (open a popup) with additional information about the
+            // feature.
+            this.on('layer:expand:on', function(e) {
+                this.openDialog(e.layer);
+            }, this)
+            // Closes a dialog box associated with the feature.
+            this.on('layer:expand:off', function(e) {
+                this.closeDialog(e.layer);
+            }, this)
         },
 
         /** Adds a circle allowing to re-zoom to the required region */
@@ -504,6 +573,7 @@
                 }
             })
         },
+
         /** Creates and returns a new map */
         _newMap : function() {
             var that = this;
@@ -551,13 +621,22 @@
                         zoom : zoom,
                         minZoom : minZoom
                     }
-                    _.each(that._featureGroups, function(layer) {
+                    _.each(that._featureGroups, function(features) {
                         if (layersVisible) {
-                            map.addLayer(layer);
+                            _.each(features, function(info) {
+                                var layer = info.getLayer();
+                                map.addLayer(layer);
+                            })
                             that.fire('layers:show', event);
                         } else {
-                            that.closePopup();
-                            map.removeLayer(layer);
+                            _.each(features, function(info) {
+                                that.closePopup(info);
+                                that.closeDialog(info);
+                                var layer = info.getLayer();
+                                map.removeLayer(layer);
+                                // var layer = info.getLayer();
+                                // map.addLayer(layer);
+                            })
                             that.fire('layers:hide', event);
                         }
                     })
@@ -567,6 +646,7 @@
             // map.setMaxBounds(bounds);
             return map;
         },
+
         /**
          * Renders the specified feature using the given template field. The
          * field parameter defines name of the template field used for
