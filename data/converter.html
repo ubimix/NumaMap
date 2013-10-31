@@ -1,0 +1,59 @@
+
+<html>
+
+<head>
+<script type="text/javascript" src="../libs/jquery/jquery.min.js"></script>
+<script type="text/javascript"
+	src="../libs/underscore/underscore-min.js"></script>
+</head>
+
+<body>
+
+
+	<script>
+        var sources = [ 'history', 'data', 'program' ];
+
+
+        _.each(sources, function(source, index) {
+            document.write('<h1>' + source + '</h1>');
+            $('body').append($('<div><textarea id="'+source+'" cols="90" rows="30"></textarea></div>'));
+            $.get('./' + source + '.json', function(data) {
+                var header = '<!DOCTYPE html><html><head><title>'+source+'</title><meta charset="utf-8"></meta><link href="./main.css" rel="stylesheet"></link></head><body>';
+                var output = header;
+                var template = _.template($('#object-template').text());
+                _.each(data.features, function(item, index) {
+                    output += template({
+                        data : item,
+                        title : source
+                    });
+                });
+                var footer = '</body></html>';
+                output += footer;
+                $('#' + source).val(output);
+            }, 'json');
+        });
+    </script>
+
+
+	<script type="text/template" id="object-template">
+
+<article data-type="<%= data.properties.type %>">
+<header>
+    <h1><%= data.properties.name %></h1>
+</header>
+<address data-geometry="<%= data.geometry.type %>" data-coordinates="<%= JSON.stringify(data.geometry.coordinates,null,2) %>"></address>
+<aside>
+<% if (data.properties.description) {_.each(data.properties.description.split('\n'),function(paragraph, index) {if (index ==0 && paragraph.trim().length>0) print('\n<p>'+paragraph+'</p>')})} %>
+</aside>
+<section>
+<% if (data.properties.description) {_.each(data.properties.description.split('\n'),function(paragraph) {if (paragraph.trim().length>0) print('\n<p>'+paragraph+'</p>')})} %>
+</section>
+<footer>
+</footer>
+</article>
+
+</script>
+
+</body>
+
+</html>
