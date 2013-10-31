@@ -3,10 +3,10 @@
     var CONFIG = {
         maxZoom : 20,
         container : '#map-container',
-        // dataUrl : './data/history.json',
-        // dataUrl : './data/program.json',
         dataUrls : [ './data/history.json', './data/program.json',
                 './data/data.json' ],
+        dataUrls : [ './data/history.html', './data/program.html',
+                './data/data.html' ],
         tilesLayer : 'http://{s}.tile.cloudmade.com/d4fc77ea4a63471cab2423e66626cbb6/997/256/{z}/{x}/{y}.png',
         tilesLayer : 'http://{s}.tiles.mapbox.com/v3/guilhemoreau.map-057le4on/{z}/{x}/{y}.png',
         zone : [ [ 2.347533702850342, 48.86933038212292 ],
@@ -31,25 +31,26 @@
             + '</div>' + '</div>';
     var TEMPLATE_DEFAULT = {
         popup : TEMPLATE_DEFAULT_POPUP,
-        description : TEMPLATE_DEFAULT_DESCRIPTION
+        description : TEMPLATE_DEFAULT_DESCRIPTION,
+        dialog : TEMPLATE_DEFAULT_DIALOG
+    }
+    function tmpl(options) {
+        return _.extend({}, TEMPLATE_DEFAULT, options)
+
     }
     var TEMPLATES = {
-        'Point' : _
-                .extend(
-                        {},
-                        TEMPLATE_DEFAULT,
-                        {
-                            updateLayer : function(info) {
-                                var layer = info.getLayer();
-                                var icon = L
-                                        .divIcon({
-                                            className : '',
-                                            html : '<i class="fa fa-map-marker fa-lg" style="color: red;"></i>'
-                                        });
-                                layer.setIcon(icon);
-                            }
-                        }),
-        'Point:wc' : {
+        'Point' : tmpl({
+            updateLayer : function(info) {
+                var layer = info.getLayer();
+                var icon = L
+                        .divIcon({
+                            className : '',
+                            html : '<i class="fa fa-map-marker fa-lg" style="color: red;"></i>'
+                        });
+                layer.setIcon(icon);
+            }
+        }),
+        'Point:wc' : tmpl({
             popup : '<strong>WC</strong>',
             updateLayer : function(info) {
                 var layer = info.getLayer();
@@ -61,8 +62,8 @@
                         });
                 layer.setIcon(icon);
             }
-        },
-        'Point:security' : {
+        }),
+        'Point:security' : tmpl({
             popup : '<div><strong>Agent de sécurité</strong></div>',
             updateLayer : function(info) {
                 var layer = info.getLayer();
@@ -72,8 +73,8 @@
                 });
                 layer.setIcon(icon);
             }
-        },
-        'Point:sos' : {
+        }),
+        'Point:sos' : tmpl({
             popup : '<strong>Poste de secours</strong>',
             updateLayer : function(info) {
                 var layer = info.getLayer();
@@ -84,8 +85,8 @@
                         });
                 layer.setIcon(icon);
             }
-        },
-        'Point:screen' : {
+        }),
+        'Point:screen' : tmpl({
             popup : TEMPLATE_DEFAULT_POPUP,
             updateLayer : function(info) {
                 var layer = info.getLayer();
@@ -96,11 +97,11 @@
                         });
                 layer.setIcon(icon);
             }
-        },
-        'LineString' : {
+        }),
+        'LineString' : tmpl({
             description : '<div><%=feature.properties.description%></div>'
-        },
-        'LineString:barrage' : {
+        }),
+        'LineString:barrage' : tmpl({
             popup : '<div>Barrage</div>',
             updateLayer : function(info) {
                 var layer = info.getLayer();
@@ -110,10 +111,8 @@
                     weight : 3
                 });
             }
-        },
-        'LineString:passage' : {
-            popup : TEMPLATE_DEFAULT_POPUP,
-            description : TEMPLATE_DEFAULT_DESCRIPTION,
+        }),
+        'LineString:passage' : tmpl({
             updateLayer : function(info) {
                 var layer = info.getLayer();
                 _.extend(layer.options, {
@@ -122,10 +121,8 @@
                     weight : 5
                 });
             }
-        },
-        'LineString:rue' : {
-            popup : TEMPLATE_DEFAULT_POPUP,
-            description : TEMPLATE_DEFAULT_DESCRIPTION,
+        }),
+        'LineString:rue' : tmpl({
             updateLayer : function(info) {
                 var layer = info.getLayer();
                 _.extend(layer.options, {
@@ -133,8 +130,8 @@
                     weight : 10
                 });
             }
-        },
-        'Polygon' : {
+        }),
+        'Polygon' : tmpl({
             description : '<div><%=feature.properties.label%></div>',
             updateLayer : function(info) {
                 var layer = info.getLayer();
@@ -145,15 +142,14 @@
                     opacity : 0.8
                 });
             }
-        },
-        'Polygon:numa' : {
+        }),
+        'Polygon:numa' : tmpl({
             description : '<div><h3><a href="javascript:void(0);" data-action-click="activateLayer">'
                     + '<%=feature.properties.label%>'
                     + '</a></h3>'
                     + '<div data-action-click="expandLayer">Dialog</div>'
                     + '</div>',
             popup : '<div><h3 data-action-click="activateLayer">NUMA</h3></div>',
-            dialog : TEMPLATE_DEFAULT_DIALOG,
             updateLayer : function(info) {
                 var layer = info.getLayer();
                 _.extend(layer.options, {
@@ -163,9 +159,8 @@
                     opacity : 0.8
                 });
             }
-        },
-        'Polygon:scene' : {
-            description : TEMPLATE_DEFAULT_DESCRIPTION,
+        }),
+        'Polygon:scene' : tmpl({
             popup : '<div><h3><a href="javascript:void(0);" data-action-click="activateLayer">'
                     + '<%=feature.properties.label%>' + '</a></h3></div></div>',
             updateLayer : function(info) {
@@ -178,7 +173,7 @@
                     opacity : 0.2
                 });
             }
-        }
+        })
     }
 
     /* ---------------------------------------------------------------------- */
@@ -200,9 +195,9 @@
     }
 
     /** Return a promise for the data loaded from the specified URL */
-    function loadJSON(url) {
+    function load(url) {
         var deferred = Q.defer();
-        $.getJSON(url, function(data) {
+        $.get(url, function(data) {
             deferred.resolve(data);
         }).fail(function(error) {
             deferred.reject(error);
@@ -210,6 +205,57 @@
         return deferred.promise.then(function(data) {
             return data;
         });
+    }
+
+    /**
+     * Parses the specified HTML content and transforms it into a valid GeoJSON
+     * feature object
+     */
+    function parseHTML(url, data) {
+        var str = '' + data;
+        var e = $('<div></div>').append(data);
+        var features = [];
+        var json = {
+            id : url,
+            type : "FeatureCollection",
+            features : features
+        };
+        var label = e.find('title').text();
+        json.label = label;
+        e.find('article').each(function() {
+            article = $(this);
+            var address = article.find('address');
+            var geometry = {
+                type : address.data('geometry') || 'Point',
+                coordinates : address.data('coordinates')
+            };
+            var properties = {
+                type : article.data('type')
+            }
+            var feature = {
+                type : "Feature",
+                geometry : geometry,
+                properties : properties
+            };
+            features.push(feature);
+            // Fill individual properties
+            var str;
+            str = article.find('header').text();
+            if (str) {
+                properties.label = str;
+            }
+            str = article.find('aside').html();
+            if (str) {
+                properties.description = str;
+            }
+            str = article.find('section').html();
+            if (str) {
+                properties.fullContent = str;
+            }
+            console.log(JSON.stringify(feature))
+        })
+        console.log(json)
+        return json;
     }
 
     /**
@@ -222,7 +268,14 @@
         Q
         // Loads data for all map layers
         .all(_.map(CONFIG.dataUrls, function(url) {
-            return loadJSON(url);
+            return load(url).then(function(data) {
+                if (_.isObject(data)) {
+                    return data;
+                }
+                var str = data + '';
+                var obj = parseHTML(url, str);
+                return obj;
+            });
         }))
         // Visualize data for all layers on the map
         .then(function(layersData) {
@@ -397,12 +450,15 @@
         focusDescription : function() {
             var featureId = this.getId();
             var element = $('#' + featureId);
-            var container = element.parent();
+            if (!element[0])
+                return;
             var cls = 'feature-active';
+            var container = this.getApp().getListContainer();
             container.find('.' + cls).each(function() {
                 $(this).removeClass(cls);
             })
-            var top = element.offsetParent();
+            var top = element.position().top + container.scrollTop()
+                    - container.position().top;
             container.animate({
                 scrollTop : top
             }, 300);
@@ -689,14 +745,14 @@
                     }
                 })
                 showGroup = data.visible;
+                if (showGroup) {
+                    li.addClass('active');
+                } else {
+                    li.removeClass('active');
+                }
             }
             if (showGroup) {
                 group.show();
-            }
-            if (group.isVisible()) {
-                li.addClass('active');
-            } else {
-                li.removeClass('active');
             }
             return group;
         },
