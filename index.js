@@ -3,9 +3,10 @@
     var CONFIG = {
         maxZoom : 20,
         container : '#map-container',
-        dataUrl : './data/history.json',
-        dataUrl : './data/program.json',
-        dataUrl : './data/data.json',
+        // dataUrl : './data/history.json',
+        // dataUrl : './data/program.json',
+        dataUrls : [ './data/history.json', './data/program.json',
+                './data/data.json' ],
         tilesLayer : 'http://{s}.tile.cloudmade.com/d4fc77ea4a63471cab2423e66626cbb6/997/256/{z}/{x}/{y}.png',
         tilesLayer : 'http://{s}.tiles.mapbox.com/v3/guilhemoreau.map-057le4on/{z}/{x}/{y}.png',
         zone : [ [ 2.347533702850342, 48.86933038212292 ],
@@ -195,6 +196,21 @@
             var el = $(this);
             el.height(height);
         })
+        return Q();
+    }
+
+    /** Return a promise for the data loaded from the specified URL */
+    function loadJSON(url) {
+        var deferred = Q.defer();
+        $.getJSON(url, function(data) {
+            deferred.resolve(data);
+        }).fail(function(error) {
+            deferred.reject(error);
+        });
+        return deferred.promise.then(function(data) {
+            console.log('LOADED:', url, data)
+            return data;
+        });
     }
 
     /**
@@ -204,19 +220,51 @@
     $(function() {
         $(window).resize(_.throttle(updateSize, 100));
         var map = new NumaMap(CONFIG, TEMPLATES);
-        $.getJSON(CONFIG.dataUrl, function(data) {
-            map.addLayer(data);
-            updateSize();
-        }).error(function(err) {
-            console.log('LOADING ERROR:', err)
+        Q
+        // Loads data for all map layers
+        .all(_.map(CONFIG.dataUrls, function(url) {
+            return loadJSON(url);
+        }))
+        // Visualize data for all layers on the map
+        .then(function(layersData) {
+            _.each(layersData, function(data) {
+                map.addLayer(data);
+            })
         })
+        // Refresh the map size after the data loading is finished
+        .then(function() {
+            updateSize();
+        })
+        // Handle errors
+        .fail(function(error) {
+            console.log('LOADING ERROR:', error)
+        }).done();
     });
 
     /* ---------------------------------------------------------------------- */
 
     /** Class representation of a feature visualized on the map. */
     function FeatureInfo(options) {
+        var that = this;
         this.options = options;
+        var template = that.getTemplate();
+        if (template && template.updateLayer) {
+            template.updateLayer(that);
+        }
+        var layer = this.getLayer();
+        layer.on('mouseover', function(e) {
+            that.setLatLng(e.latlng);
+            that.focusLayer({
+                layer : that
+            });
+        });
+        layer.on('click', function(e) {
+            that.setLatLng(e.latlng);
+            that.activateLayer({
+                layer : that
+            });
+        })
+
     }
     _.extend(FeatureInfo.prototype, {
 
@@ -251,6 +299,7 @@
             }
             return latlng;
         },
+
         /**
          * Checks the specified feature and returns <code>true</code> if it is
          * a point.
@@ -263,6 +312,12 @@
             return (type == 'Point')
         },
 
+        /** Returns the map corresponding to this layer */
+        getMap : function() {
+            var group = this.getGroup();
+            return group.getMap();
+        },
+
         /** Returns a map layer associated with this feature */
         getLayer : function() {
             return this.options.layer;
@@ -271,6 +326,17 @@
         /** Returns the internal feature (as a JSON object) */
         getFeature : function() {
             return this.options.feature;
+        },
+
+        /** Returns the main application */
+        getApp : function() {
+            var group = this.getGroup();
+            return group.getApp();
+        },
+
+        /** Returns a FeatureGroup object */
+        getGroup : function() {
+            return this.options.group;
         },
 
         /** Renders this feature using the specified field of the template */
@@ -288,7 +354,107 @@
                 template : template
             })
             html = $(html);
+
+            var that = this;
+            function bindActions(e, event) {
+                var action = e.attr('data-action-' + event);
+                if (!action)
+                    return;
+                var method = that[action];
+                if (_.isFunction(method)) {
+                    e.on(event, function(evt) {
+                        method.call(that);
+                    });
+                }
+            }
+            // Bind actions to marked elements
+            html.find('[data-action-click]').each(function() {
+                bindActions($(this), 'click');
+            })
+            html.find('[data-action-mouseover]').each(function() {
+                bindActions($(this), 'mouseover');
+            })
+            html.find('[data-action-mouseout]').each(function() {
+                bindActions($(this), 'mouseout');
+            })
             return html;
+        },
+
+        /**
+         * Render description and return the resulting jQuery wrapper for the
+         * view.
+         */
+        renderDescription : function() {
+            var html = this.render('description');
+            if (html) {
+                html.addClass('feature')
+                var featureId = this.getId();
+                html.attr('id', featureId);
+            }
+            return html;
+        },
+
+        /** Focus currently acitve description (changes its class names). */
+        focusDescription : function() {
+            var featureId = this.getId();
+            var element = $('#' + featureId);
+            var container = element.parent();
+            var cls = 'feature-active';
+            container.find('.' + cls).each(function() {
+                $(this).removeClass(cls);
+            })
+            var top = element.offsetParent();
+            container.animate({
+                scrollTop : top
+            }, 300);
+            element.addClass(cls);
+        },
+
+        /** Opens a popup window on the this feature. */
+        openPopup : function(center) {
+            var isPoint = this.isPoint();
+            var html = this.render('popup');
+            if (html) {
+                var latlng = this.getLatLng();
+                var offset = new L.Point(0, -10);
+                var map = this.getMap();
+                new L.Rrose({
+                    offset : offset,
+                    closeButton : false,
+                    autoPan : true
+                }).setContent($(html)[0]).setLatLng(latlng).openOn(map);
+                if (center) {
+                    map.panTo(latlng);
+                }
+            }
+        },
+
+        /** Closes already opened popups */
+        closePopup : function() {
+            var layer = this.getLayer();
+            layer.closePopup();
+            // ???
+            var map = this.getMap();
+            map.closePopup();
+        },
+
+        /**
+         * Opens a dialog box with additional information about this feature.
+         */
+        openDialog : function() {
+            // var feature = this.getFeature();
+            // if (!feature.properties.fullContent)
+            // return;
+            var html = this.render('dialog');
+            if (html) {
+                $(html).modal('show');
+            }
+        },
+
+        /** Closes already opened popups */
+        closeDialog : function() {
+            var dialogId = info.getId('-dialog');
+            $('#' + dialogId).modal('hide');
         },
 
         /**
@@ -299,9 +465,11 @@
         getTemplate : function() {
             var array = this._getFeatureTypeArray();
             var template = null;
+            var app = this.getApp();
+            var templates = app.getTemplates();
             while (array.length) {
                 var type = array.join(':');
-                template = this.options.templates[type];
+                template = templates[type];
                 if (template)
                     break;
                 array.pop();
@@ -328,134 +496,16 @@
             }
             return array;
         },
-    })
 
-    /* ---------------------------------------------------------------------- */
-    /**
-     * The main constructor of this class. It initializes the map in the
-     * specified DOM element.
-     */
-    function NumaMap(config, templates) {
-        this.config = config;
-        this.templates = templates;
-        this.openPopup = _.throttle(this.openPopup, 10, this);
-        this._map = this._newMap();
-        this._featureGroups = [];
-        this._bindRezoomingCircle();
-        this._bindEvents();
-    }
-    _.extend(NumaMap.prototype, L.Mixin.Events);
-    _.extend(NumaMap.prototype, {
-        /** Adds a new logical layer to this map */
-        addLayer : function(data) {
-            var that = this;
-            var htmlContainer = $(that.config.container).find('.info');
-            htmlContainer.html('');
-            var array = [];
-            var group = L.geoJson(data, {
-                onEachFeature : function(feature, layer) {
-                    var info = new FeatureInfo({
-                        feature : feature,
-                        layer : layer,
-                        templates : that.templates
-                    });
-                    array.push(info);
-                    var html = that._renderLayer(info, 'description');
-                    if (html) {
-                        html.addClass('feature')
-                        var featureId = info.getId();
-                        html.attr('id', featureId);
-                        htmlContainer.append(html);
-                    }
-                    that._formatLayer(info);
-                }
-            });
-            this._map.addLayer(group);
-            this._featureGroups.push(array);
-            return group;
-        },
-
-        /** Focus currently acitve description in the list. */
-        focusDescription : function(info) {
-            var that = this;
-            var featureId = info.getId();
-            var element = $('#' + featureId);
-            var container = element.parent();
-            var cls = 'feature-active';
-            container.find('.' + cls).each(function() {
-                $(this).removeClass(cls);
-            })
-            var top = element.offsetParent();
-            container.animate({
-                scrollTop : top
-            }, 300);
-            element.addClass(cls);
-        },
-
-        /** Opens a popup window on the currently active feature */
-        openPopup : function(info, center) {
-            if (!info)
-                return;
-            var isPoint = info.isPoint();
-            var html = this._renderLayer(info, 'popup');
-            if (html) {
-                var latlng = info.getLatLng();
-                var offset = new L.Point(0, -10);
-                new L.Rrose({
-                    offset : offset,
-                    closeButton : false,
-                    autoPan : true
-                }).setContent($(html)[0]).setLatLng(latlng).openOn(this._map);
-                if (center) {
-                    this._map.panTo(latlng);
-                }
-            }
-        },
-
-        /** Closes already opened popups */
-        closePopup : function(info) {
-            if (info) {
-                var layer = info.getLayer();
-                layer.closePopup();
-            }
-            this._map.closePopup();
-        },
-
-        /**
-         * Opens a dialog box with additional information about the specified
-         * feature.
-         */
-        openDialog : function(info) {
-            if (!info)
-                return;
-            console.log('OpenDialog', info)
-            var feature = info.getFeature();
-            // if (!feature.properties.fullContent)
-            // return;
-            var html = this._renderLayer(info, 'dialog');
-            if (html) {
-                $(html).modal('show');
-            }
-        },
-
-        /** Closes already opened popups */
-        closeDialog : function(info) {
-            if (!info)
-                return;
-            // console.log('CloseDialog', info)
-            var dialogId = info.getId('-dialog');
-            $('#' + dialogId).modal('hide');
-        },
-
+        /* ------------------------------------------------------------------ */
+        // Activation/deactivation methods firing events
         /** Focus the specified layer */
         focusLayer : function(e) {
             this._fireLayerEvent('layer:focus', '_focusedLayer', e);
         },
         /** Focus the specified layer */
         activateLayer : function(e) {
-            var copy = _.clone(e);
-            copy.center = true;
-            this.focusLayer(copy);
+            this.focusLayer(e);
             this._fireLayerEvent('layer:active', '_activeLayer', e);
         },
         /** Expand layer information */
@@ -467,43 +517,145 @@
         // Private methods
         /** An internal method used to activate/deactivate layers */
         _fireLayerEvent : function(prefix, field, e) {
-            if (this[field] && this[field].layer != e.layer) {
-                this.fire(prefix + ':off', this[field]);
-                delete this[field];
-            }
-            if (e) {
-                this[field] = e;
-                this.fire(prefix + ':on', this[field]);
-            }
-        },
-
-        /** Returns an identifier of this feature */
-        _getFeatureId : function(feature) {
-            var featureId = feature.id = feature.id || _.uniqueId('feature-');
-            return featureId;
-        },
-
-        /** Adds an individual feature object to this map and in the side block */
-        _formatLayer : function(info) {
-            var feature = info.getFeature();
-            var template = info.getTemplate();
-            if (template && template.updateLayer) {
-                template.updateLayer(info);
-            }
-            var that = this;
-            var layer = info.getLayer();
-            layer.on('mouseover', function(e) {
-                info.setLatLng(e.latlng);
-                that.focusLayer({
-                    layer : info
-                });
+            var app = this.getApp();
+            var event = _.clone(e || {});
+            event = _.extend(event, {
+                layer : this
             });
-            layer.on('click', function(e) {
-                info.setLatLng(e.latlng);
-                that.activateLayer({
-                    layer : info
-                });
-            })
+            if (app[field] && app[field].layer != this) {
+                app.fire(prefix + ':off', app[field]);
+                delete app[field];
+            }
+            app[field] = event;
+            app.fire(prefix + ':on', app[field]);
+        },
+    })
+
+    /* ---------------------------------------------------------------------- */
+    /** Class representation of a feature visualized on the map. */
+    function FeatureGroup(options, data) {
+        this.options = options;
+        this.features = {};
+        this.setData(data);
+    }
+    _.extend(FeatureGroup.prototype, {
+
+        /** Returns the main application */
+        getApp : function() {
+            return this.options.app;
+        },
+
+        /** Returns the map corresponding to this group */
+        getMap : function() {
+            var app = this.getApp();
+            return app.getMap();
+        },
+
+        /** Returns a unique identifier of this group */
+        getId : function(suffix) {
+            if (!this.id) {
+                this.id = _.uniqueId('feature-group-');
+            }
+            var id = this.id;
+            if (suffix) {
+                id += suffix;
+            }
+            return id;
+        },
+
+        /** Adds all features in this group */
+        setData : function(data) {
+            this.hide();
+            delete this.groupLayer;
+            var that = this;
+            this.groupLayer = L.geoJson(data, {
+                onEachFeature : function(feature, layer) {
+                    var info = new FeatureInfo({
+                        group : that,
+                        feature : feature,
+                        layer : layer
+                    });
+                    var id = info.getId();
+                    that.features[id] = info;
+                }
+            });
+        },
+
+        /** Shows this group on the map and in the list */
+        show : function() {
+            if (this.groupLayer) {
+                var map = this.getMap();
+                map.addLayer(this.groupLayer);
+            }
+            var container = this.getApp().getListContainer();
+            this.groupContainer = $('<div></div>');
+            container.append(this.groupContainer);
+            _.each(this.features, function(info) {
+                var html = info.renderDescription();
+                this.groupContainer.append(html);
+            }, this);
+        },
+
+        /** Hides this group of features from the map and from the list */
+        hide : function() {
+            if (this.groupLayer) {
+                var map = this.getMap();
+                map.removeLayer(this.groupLayer);
+            }
+            if (this.groupContainer) {
+                this.groupContainer.remove();
+                delete this.groupContainer;
+            }
+        },
+
+    });
+
+    /* ---------------------------------------------------------------------- */
+    /**
+     * The main constructor of this class. It initializes the map in the
+     * specified DOM element.
+     */
+    function NumaMap(config, templates) {
+        this.config = config;
+        this.templates = templates;
+        this.openPopup = _.throttle(this.openPopup, 10, this);
+        this._map = this._newMap();
+        this._featureGroups = {};
+        this._bindEvents();
+    }
+    _.extend(NumaMap.prototype, L.Mixin.Events);
+    _.extend(NumaMap.prototype, {
+
+        /** Returns the map */
+        getMap : function() {
+            return this._map;
+        },
+
+        /**
+         * Returns templates for this application. Used by the "render" method
+         * in individual features (see the FeatureInfo class).
+         */
+        getTemplates : function() {
+            return this.templates;
+        },
+
+        /** Returns the DOM element using as a container for list items */
+        getListContainer : function() {
+            var htmlContainer = $(this.config.container).find('.info');
+            return htmlContainer;
+        },
+
+        /** Adds a new logical layer to this map */
+        addLayer : function(data) {
+            var that = this;
+            var map = this._map;
+            var group = new FeatureGroup({
+                app : this
+            }, data);
+            var groupId = group.getId();
+            this._featureGroups[groupId] = group;
+            group.show();
+            return group;
         },
 
         /**
@@ -511,66 +663,71 @@
          * in side panels.
          */
         _bindEvents : function() {
+            var that = this;
             // Show popup when a layer is focused (mouseover)
-            this.on('layer:focus:on', function(e) {
-                this.openPopup(e.layer, e.center);
-            }, this);
+            that.on('layer:focus:on', function(e) {
+                e.layer.openPopup(e.center);
+            }, that);
             // Hide popup when user removes the focus from the currently active
             // feature/layer
-            this.on('layer:focus:off', function(e) {
-                this.closePopup(e.layer);
-            }, this);
+            that.on('layer:focus:off', function(e) {
+                e.layer.closePopup();
+            }, that);
             // Shows description associated with the activated feature.
             // (Corresponds to user's clicks)
-            this.on('layer:active:on', function(e) {
-                this.focusDescription(e.layer);
-            }, this)
+            that.on('layer:active:on', function(e) {
+                e.layer.focusDescription();
+            }, that)
             // Expand (open a popup) with additional information about the
             // feature.
-            this.on('layer:expand:on', function(e) {
-                this.openDialog(e.layer);
-            }, this)
+            that.on('layer:expand:on', function(e) {
+                e.layer.openDialog();
+            }, that)
             // Closes a dialog box associated with the feature.
-            this.on('layer:expand:off', function(e) {
-                this.closeDialog(e.layer);
-            }, this)
-        },
+            that.on('layer:expand:off', function(e) {
+                e.layer.closeDialog();
+            }, that)
 
-        /** Adds a circle allowing to re-zoom to the required region */
-        _bindRezoomingCircle : function() {
-            var that = this;
+            // Adds a circle allowing to re-zoom to the required region
             that.on('layers:show', function(e) {
-                if (that._centerMarker) {
-                    that._map.removeLayer(that._centerMarker);
-                    that._centerMarker = null;
-                }
+                if (!that._centerMarker)
+                    return;
+                that._map.removeLayer(that._centerMarker);
+                that._centerMarker = null;
+                _.each(that._featureGroups, function(group) {
+                    group.show();
+                })
             })
             that.on('layers:hide', function(e) {
-                if (!that._centerMarker) {
-                    var center = e.center;
-                    var minZoom = e.minZoom;
-                    var circle = L.circleMarker(center, {
-                        // fillColor : 'yellow',
-                        fillOpacity : 0.1,
-                        weight : 20,
-                        color : 'yellow',
-                        opacity : 0.5,
-                        radius : 100
-                    });
-                    circle.on('click', function() {
-                        that._map.setView(center, minZoom);
-                    })
-                    var myIcon = L.divIcon({
-                        className : '',
-                    // html : "<strong style='color: white; white-space:
-                    // nowrap;'>C'est ici!</strong>"
-                    });
-                    var label = L.marker(center, {
-                        icon : myIcon
-                    });
-                    that._centerMarker = L.layerGroup([ circle, label ]);
-                    that._map.addLayer(that._centerMarker);
-                }
+                if (that._centerMarker)
+                    return;
+
+                var center = e.center;
+                var minZoom = e.minZoom;
+                var circle = L.circleMarker(center, {
+                    // fillColor : 'yellow',
+                    fillOpacity : 0.1,
+                    weight : 20,
+                    color : 'yellow',
+                    opacity : 0.5,
+                    radius : 100
+                });
+                circle.on('click', function() {
+                    that._map.setView(center, minZoom);
+                })
+                var myIcon = L.divIcon({
+                    className : '',
+                // html : "<strong style='color: white; white-space:
+                // nowrap;'>C'est ici!</strong>"
+                });
+                var label = L.marker(center, {
+                    icon : myIcon
+                });
+                that._centerMarker = L.layerGroup([ circle, label ]);
+                that._map.addLayer(that._centerMarker);
+                _.each(that._featureGroups, function(group) {
+                    group.hide();
+                })
             })
         },
 
@@ -621,66 +778,14 @@
                         zoom : zoom,
                         minZoom : minZoom
                     }
-                    _.each(that._featureGroups, function(features) {
-                        if (layersVisible) {
-                            _.each(features, function(info) {
-                                var layer = info.getLayer();
-                                map.addLayer(layer);
-                            })
-                            that.fire('layers:show', event);
-                        } else {
-                            _.each(features, function(info) {
-                                that.closePopup(info);
-                                that.closeDialog(info);
-                                var layer = info.getLayer();
-                                map.removeLayer(layer);
-                                // var layer = info.getLayer();
-                                // map.addLayer(layer);
-                            })
-                            that.fire('layers:hide', event);
-                        }
-                    })
+                    if (layersVisible) {
+                        that.fire('layers:show', event);
+                    } else {
+                        that.fire('layers:hide', event);
+                    }
                 }
             });
-            // bounds = map.getBounds();
-            // map.setMaxBounds(bounds);
             return map;
-        },
-
-        /**
-         * Renders the specified feature using the given template field. The
-         * field parameter defines name of the template field used for
-         * visualization.
-         */
-        _renderLayer : function(info, field) {
-            var html = info.render(field);
-            if (!html)
-                return;
-            var that = this;
-            function bindActions(e, event) {
-                var action = e.attr('data-action-' + event);
-                if (!action)
-                    return;
-                var method = that[action];
-                if (_.isFunction(method)) {
-                    e.on(event, function(evt) {
-                        method.call(that, {
-                            layer : info
-                        });
-                    });
-                }
-            }
-            // Bind actions to marked elements
-            html.find('[data-action-click]').each(function() {
-                bindActions($(this), 'click');
-            })
-            html.find('[data-action-mouseover]').each(function() {
-                bindActions($(this), 'mouseover');
-            })
-            html.find('[data-action-mouseout]').each(function() {
-                bindActions($(this), 'mouseout');
-            })
-            return html;
         }
 
     });
