@@ -41,7 +41,7 @@
 <header>
     <h1><%= data.properties.name %></h1>
 </header>
-<address data-geometry="<%= data.geometry.type %>" data-coordinates="<%= JSON.stringify(data.geometry.coordinates,null,2) %>"></address>
+<address data-geometry="<%= data.geometry.type %>" data-coordinates="<%= JSON.stringify(data.geometry.coordinates,null,2).replace(/"/gim,'') %>"></address>
 <aside>
 <% if (data.properties.description) {_.each(data.properties.description.split('\n'),function(paragraph, index) {if (index ==0 && paragraph.trim().length>0) print('\n<p>'+paragraph+'</p>')})} %>
 </aside>
