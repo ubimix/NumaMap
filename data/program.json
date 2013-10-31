@@ -1,4 +1,6 @@
 {
+    "label": "Programmation",
+    "visible": true,
     "type" : "FeatureCollection",
     "features" : [
             {
