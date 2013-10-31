@@ -580,6 +580,20 @@
             });
         },
 
+        /** Returns <code>true</code> if this group is visible */
+        isVisible : function() {
+            return this.visible ? true : false;
+        },
+
+        /** Toggles the visibility of this group */
+        toggle : function() {
+            if (this.isVisible()) {
+                this.hide();
+            } else {
+                this.show();
+            }
+        },
+
         /** Shows this group on the map and in the list */
         show : function() {
             if (this.groupLayer) {
@@ -593,6 +607,7 @@
                 var html = info.renderDescription();
                 this.groupContainer.append(html);
             }, this);
+            this.visible = true;
         },
 
         /** Hides this group of features from the map and from the list */
@@ -605,6 +620,7 @@
                 this.groupContainer.remove();
                 delete this.groupContainer;
             }
+            this.visible = false;
         },
 
     });
@@ -623,7 +639,6 @@
         this._bindEvents();
         // FIXME:
         this.getListContainer().html('')
-        
     }
     _.extend(NumaMap.prototype, L.Mixin.Events);
     _.extend(NumaMap.prototype, {
@@ -656,7 +671,33 @@
             }, data);
             var groupId = group.getId();
             this._featureGroups[groupId] = group;
-            group.show();
+
+            var showGroup = false;
+            // FIXME:
+            var nav = $(this.config.container).find('.navbar .nav');
+            if (data.label) {
+                var ref = $('<a href="javascript:void(0);"></a>').text(
+                        data.label);
+                var li = $('<li data-ref="' + groupId + '"></li>').append(ref);
+                nav.append(li);
+                ref.click(function(e) {
+                    group.toggle();
+                    if (group.isVisible()) {
+                        li.addClass('active');
+                    } else {
+                        li.removeClass('active');
+                    }
+                })
+                showGroup = data.visible;
+            }
+            if (showGroup) {
+                group.show();
+            }
+            if (group.isVisible()) {
+                li.addClass('active');
+            } else {
+                li.removeClass('active');
+            }
             return group;
         },
 
