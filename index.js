@@ -208,7 +208,6 @@
             deferred.reject(error);
         });
         return deferred.promise.then(function(data) {
-            console.log('LOADED:', url, data)
             return data;
         });
     }
@@ -228,7 +227,7 @@
         // Visualize data for all layers on the map
         .then(function(layersData) {
             _.each(layersData, function(data) {
-                map.addLayer(data);
+                map.addFeatureGroup(data);
             })
         })
         // Refresh the map size after the data loading is finished
@@ -622,6 +621,9 @@
         this._map = this._newMap();
         this._featureGroups = {};
         this._bindEvents();
+        // FIXME:
+        this.getListContainer().html('')
+        
     }
     _.extend(NumaMap.prototype, L.Mixin.Events);
     _.extend(NumaMap.prototype, {
@@ -646,7 +648,7 @@
         },
 
         /** Adds a new logical layer to this map */
-        addLayer : function(data) {
+        addFeatureGroup : function(data) {
             var that = this;
             var map = this._map;
             var group = new FeatureGroup({
