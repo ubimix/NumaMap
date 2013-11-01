@@ -1,12 +1,14 @@
 (function(mapConfig) {
 
     var CONFIG = {
+        debug : false,
         maxZoom : 20,
         container : '#map-container',
         dataUrls : [ './data/history.json', './data/program.json',
                 './data/data.json' ],
         dataUrls : [ './data/data.html', './data/history.html',
-                './data/program.html', './data/info-pratique.html' ],
+                './data/program.html', './data/info-pratique.html',
+                './data/example.html' ],
         tilesLayer : 'http://{s}.tile.cloudmade.com/d4fc77ea4a63471cab2423e66626cbb6/997/256/{z}/{x}/{y}.png',
         tilesLayer : 'http://{s}.tiles.mapbox.com/v3/guilhemoreau.map-057le4on/{z}/{x}/{y}.png',
         zone : [ [ 2.347533702850342, 48.86933038212292 ],
@@ -245,7 +247,6 @@
                 }
             })
             if (hasOptions) {
-                console.log('OPTIONS:', options)
                 copy(options, geometry, 'options');
             }
 
@@ -880,7 +881,7 @@
                     // fillColor : 'yellow',
                     fillOpacity : 0.1,
                     weight : 20,
-                    color : 'yellow',
+                    color : 'white',
                     opacity : 0.5,
                     radius : 100
                 });
@@ -931,6 +932,7 @@
             var map = L.map(element[0], {
                 loadingControl : true
             });
+
             L.tileLayer(that.config.tilesLayer, {
                 attribution : that.config.attribution,
                 maxZoom : that.config.maxZoom
@@ -966,6 +968,18 @@
                     }
                 }
             });
+
+            /* Show a small popup with the click position */
+            if (this.config.debug) {
+                var popup = L.popup();
+                map.on('click', function(e) {
+                    popup.setLatLng(e.latlng).setContent(
+                            "<strong>" + e.latlng.lng + ',' + e.latlng.lat
+                                    + "</strong>").openOn(map);
+                });
+
+            }
+
             return map;
         },
 
@@ -986,7 +1000,6 @@
         },
         /** An internal method used to activate/deactivate layers */
         _fireLayerEvent : function(prefix, field, e) {
-            console.log(prefix, field, e)
             var app = this;
             if (app[field] && app[field].layer != e.layer) {
                 if (app[field].layer) {
