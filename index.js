@@ -3,14 +3,12 @@
     var CONFIG = {
         maxZoom : 20,
         container : '#map-container',
-        dataUrls : [ './data/history.json', './data/program.json',
-                './data/data.json' ],
-        dataUrls : [ './data/data.html', './data/history.html',
-                './data/program.html', './data/info-pratique.html' ],
+        dataUrls : [ './data/numa.html', './data/program.html',
+                     './data/history.html','./data/info.html','./data/partners.html' ],
         tilesLayer : 'http://{s}.tile.cloudmade.com/d4fc77ea4a63471cab2423e66626cbb6/997/256/{z}/{x}/{y}.png',
         tilesLayer : 'http://{s}.tiles.mapbox.com/v3/guilhemoreau.map-057le4on/{z}/{x}/{y}.png',
-        zone : [ [ 2.347533702850342, 48.86933038212292 ],
-                [ 2.351717948913574, 48.86660622956524 ] ]
+        zone : [ [ 2.347303032875061,48.86909749404887 ],
+                [ 2.352399230003357,48.86683207168444 ] ]
     };
 
     var TEMPLATE_DEFAULT_DESCRIPTION = '<div data-type="<%=feature.geometry.type%>:<%=feature.properties.type%>">'
@@ -49,7 +47,7 @@
                 var icon = L
                         .divIcon({
                             className : '',
-                            html : '<i class="fa fa-map-marker fa-lg" style="color: red;"></i>'
+                            html : '<i class="fa fa-map-marker fa-lg" style="color: #00adef;"></i>'
                         });
                 layer.setIcon(icon);
             }
@@ -96,7 +94,7 @@
                 var icon = L
                         .divIcon({
                             className : '',
-                            html : '<i class="fa fa-film fa-lg" style="color: blue;"></i>'
+                            html : '<i class="fa fa-film fa-lg" style="color: #00adef;"></i>'
                         });
                 layer.setIcon(icon);
             }
@@ -107,11 +105,41 @@
                 var icon = L
                         .divIcon({
                             className : '',
-                            html : '<i class="fa fa-coffee fa-lg" style="color: white;"></i>'
+                            html : '<i class="fa fa-glass fa-lg" style="color: white;"></i>'
                         });
                 layer.setIcon(icon);
             }
         }),
+        'Point:atelier' : tmpl({
+            updateLayer : function(info) {
+                var layer = info.getLayer();
+                var icon = L
+                        .divIcon({
+                            className : '',
+                            html : '<i class="fa fa-lightbulb-o fa-lg" style="color: #fff200;"></i>'
+                        });
+                layer.setIcon(icon);
+            }
+        }),
+        'Point:organization' : tmpl({
+            description : '<div data-type="<%=feature.geometry.type%>:<%=feature.properties.type%>">'
+                + '<h3><a href="javascript:void(0);" data-action-click="activateLayer"><%=feature.properties.label||feature.properties.name%></a></h3>'
+                + '<div class="visible-when-active">'
+                + '<div class="pull-right"><%=feature.properties.address%></div>'
+                + '<div style="clear:both;"><%=feature.properties.description%></div>'
+                + '<% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
+                + '</div>' + '</div>',
+            updateLayer : function(info) {
+                var layer = info.getLayer();
+                var icon = L
+                        .divIcon({
+                            className : '',
+                            html : '<i class="fa fa-glass fa-lg" style="color: white;"></i>'
+                        });
+                layer.setIcon(icon);
+            }
+        }),
+
         'LineString' : {
             description : '<div><%=feature.properties.description%></div>'
         },
@@ -120,8 +148,8 @@
             updateLayer : function(info) {
                 var layer = info.getLayer();
                 _.extend(layer.options, {
-                    color : "gray",
-                    dashArray : "5,5",
+                    color : 'red',
+                    dashArray : '5,5',
                     weight : 3
                 });
             }
@@ -130,8 +158,8 @@
             updateLayer : function(info) {
                 var layer = info.getLayer();
                 _.extend(layer.options, {
-                    color : "yellow",
-                    dashArray : "5,5",
+                    color : 'yellow',
+                    dashArray : '5,5',
                     opacity : 0.1,
                     weight : 5
                 });
@@ -142,20 +170,19 @@
                 var layer = info.getLayer();
                 _.extend(layer.options, {
                     opacity : 0.1,
-                    color : "yellow",
+                    color : 'yellow',
                     weight : 10
                 });
             }
         }),
         'Polygon' : tmpl({
-            description : '<div><%=feature.properties.label%></div>',
             updateLayer : function(info) {
                 var layer = info.getLayer();
                 _.extend(layer.options, {
-                    color : "yellow",
+                    color : 'yellow',
                     weight : 1,
-                    fillOpacity : 0.7,
-                    opacity : 0.8
+                    fillOpacity : 0.1,
+                    opacity : 0.1
                 });
             }
         }),
@@ -164,7 +191,7 @@
             updateLayer : function(info) {
                 var layer = info.getLayer();
                 _.extend(layer.options, {
-                    color : "yellow",
+                    color : '#ec008c',
                     weight : 1,
                     fillOpacity : 0.7,
                     opacity : 0.8
@@ -172,14 +199,14 @@
             }
         }),
         'Polygon:scene' : tmpl({
-            popup : '<div><strong><a href="javascript:void(0);" data-action-click="activateLayer">'
-                    + '<%=feature.properties.label%>'
-                    + '</a></strong></div></div>',
+//            popup : '<div><strong><a href="javascript:void(0);" data-action-click="activateLayer">'
+//                    + '<%=feature.properties.label%>'
+//                    + '</a></strong></div></div>',
             updateLayer : function(info) {
                 var layer = info.getLayer();
                 _.extend(layer.options, {
-                    color : 'white',
-                    fillColor : 'white',
+                    color : '#00adef',
+                    fillColor : '#00adef',
                     fillOpacity : 0.5,
                     weight : 2,
                     opacity : 0.2
@@ -936,6 +963,14 @@
                     }
                 }
             });
+            
+            map.on('click', function(event) {
+                var popup = L.popup()
+                .setLatLng(event.latlng)
+                .setContent('<p>'+event.latlng.lng+','+event.latlng.lat+'</p>')
+                .openOn(map);               
+            });
+            
             return map;
         },
 
