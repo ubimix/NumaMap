@@ -5,8 +5,8 @@
         container : '#map-container',
         dataUrls : [ './data/history.json', './data/program.json',
                 './data/data.json' ],
-        dataUrls : [ './data/history.html', './data/program.html',
-                './data/data.html' ],
+        dataUrls : [ './data/data.html', './data/history.html',
+                './data/program.html', './data/info-pratique.html' ],
         tilesLayer : 'http://{s}.tile.cloudmade.com/d4fc77ea4a63471cab2423e66626cbb6/997/256/{z}/{x}/{y}.png',
         tilesLayer : 'http://{s}.tiles.mapbox.com/v3/guilhemoreau.map-057le4on/{z}/{x}/{y}.png',
         zone : [ [ 2.347533702850342, 48.86933038212292 ],
@@ -101,6 +101,17 @@
                 layer.setIcon(icon);
             }
         }),
+        'Point:cafe' : tmpl({
+            updateLayer : function(info) {
+                var layer = info.getLayer();
+                var icon = L
+                        .divIcon({
+                            className : '',
+                            html : '<i class="fa fa-coffee fa-lg" style="color: white;"></i>'
+                        });
+                layer.setIcon(icon);
+            }
+        }),
         'LineString' : {
             description : '<div><%=feature.properties.description%></div>'
         },
@@ -149,11 +160,6 @@
             }
         }),
         'Polygon:numa' : tmpl({
-            description : '<div><h3><a href="javascript:void(0);" data-action-click="activateLayer">'
-                    + '<%=feature.properties.label%>'
-                    + '</a></h3>'
-                    + '<div data-action-click="expandLayer">Dialog</div>'
-                    + '</div>',
             popup : '<div><h3 data-action-click="activateLayer">NUMA</h3></div>',
             updateLayer : function(info) {
                 var layer = info.getLayer();
@@ -228,6 +234,9 @@
         };
         var label = e.find('title').text();
         json.label = label;
+        var meta = e.find('meta[name="visible"]');
+        var visible = meta.attr('content') == 'true';
+        json.visible = visible;
         function isEmpty(str) {
             return !str || str.replace(/^s+|\s+$/gi, '') == '';
         }
@@ -249,7 +258,7 @@
             };
             var properties = {
                 type : article.data('type')
-            }
+            } // 
             var feature = {
                 type : "Feature",
                 geometry : geometry,
@@ -262,7 +271,7 @@
             copy(article.find('aside').html(), properties, 'description');
             copy(article.find('section').html(), properties, 'fullContent');
             copy(article.find('footer').html(), properties, 'references');
-            console.log(' * ', JSON.stringify(feature))
+            // console.log(' * ', JSON.stringify(feature))
         })
         return json;
     }
@@ -745,9 +754,6 @@
             }, data);
             var groupId = group.getId();
             this._featureGroups[groupId] = group;
-
-            var showGroup = false;
-
             // FIXME:
             var nav = $(this.config.container).find('.navbar .nav');
             if (data.label) {
@@ -759,17 +765,16 @@
                     // that.fire('group:toggle', )
                     that.toggleGroupVisibility(groupId);
                 })
-                showGroup = data.visible;
+                that.on('groupVisibilityChanged', function() {
+                    var visible = that.getGroupVisibility(groupId);
+                    if (visible) {
+                        li.addClass('active');
+                    } else {
+                        li.removeClass('active');
+                    }
+                })
             }
-            that.setGroupVisibility(groupId, showGroup);
-            that.on('groupVisibilityChanged', function() {
-                var visible = that.getGroupVisibility(groupId);
-                if (visible) {
-                    li.addClass('active');
-                } else {
-                    li.removeClass('active');
-                }
-            })
+            that.setGroupVisibility(groupId, data.visible);
             return group;
         },
 
