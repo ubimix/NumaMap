@@ -42,74 +42,61 @@
         return _.extend({}, TEMPLATE_DEFAULT, options)
 
     }
+    function setDivIcon(layer, html) {
+        if (layer.setIcon) {
+            var icon = L.divIcon({
+                className : '',
+                html : html
+            });
+            layer.setIcon(icon);
+        }
+    }
     var TEMPLATES = {
         'Point' : tmpl({
             updateLayer : function(info) {
                 var layer = info.getLayer();
-                var icon = L
-                        .divIcon({
-                            className : '',
-                            html : '<i class="fa fa-map-marker fa-lg" style="color: red;"></i>'
-                        });
-                layer.setIcon(icon);
+                setDivIcon(layer, '<i class="fa fa-map-marker fa-lg"'
+                        + ' style="color: red;"></i>');
             }
         }),
         'Point:wc' : {
             popup : '<strong>WC</strong>',
             updateLayer : function(info) {
                 var layer = info.getLayer();
-                var icon = L
-                        .divIcon({
-                            className : '',
-                            html : '<span style="color: maroon; white-space: nowrap;"><i class="fa fa-male fa-lg"></i>'
-                                    + '<i class="fa fa-female fa-lg"></i></span>'
-                        });
-                layer.setIcon(icon);
+                setDivIcon(layer,
+                        '<span style="color: maroon; white-space: nowrap;">'
+                                + '<i class="fa fa-male fa-lg"></i>'
+                                + '<i class="fa fa-female fa-lg"></i></span>');
             }
         },
         'Point:security' : {
             popup : '<div><strong>Agent de sécurité</strong></div>',
             updateLayer : function(info) {
                 var layer = info.getLayer();
-                var icon = L.divIcon({
-                    className : '',
-                    html : '<i class="fa fa-star-o" style="color: red;"></i>'
-                });
-                layer.setIcon(icon);
+                setDivIcon(layer,
+                        '<i class="fa fa-star-o" style="color: red;"></i>');
             }
         },
         'Point:sos' : {
             popup : '<strong>Poste de secours</strong>',
             updateLayer : function(info) {
                 var layer = info.getLayer();
-                var icon = L
-                        .divIcon({
-                            className : '',
-                            html : '<i class="fa fa-plus-square" style="color: red;"></i>'
-                        });
-                layer.setIcon(icon);
+                setDivIcon(layer,
+                        '<i class="fa fa-plus-square" style="color: red;"></i>');
             }
         },
         'Point:screen' : tmpl({
             updateLayer : function(info) {
                 var layer = info.getLayer();
-                var icon = L
-                        .divIcon({
-                            className : '',
-                            html : '<i class="fa fa-film fa-lg" style="color: blue;"></i>'
-                        });
-                layer.setIcon(icon);
+                setDivIcon(layer,
+                        '<i class="fa fa-film fa-lg" style="color: blue;"></i>');
             }
         }),
         'Point:cafe' : tmpl({
             updateLayer : function(info) {
                 var layer = info.getLayer();
-                var icon = L
-                        .divIcon({
-                            className : '',
-                            html : '<i class="fa fa-coffee fa-lg" style="color: white;"></i>'
-                        });
-                layer.setIcon(icon);
+                setDivIcon(layer,
+                        '<i class="fa fa-coffee fa-lg" style="color: white;"></i>');
             }
         }),
         'LineString' : {
@@ -224,22 +211,44 @@
         function isEmpty(str) {
             return !str || str.replace(/^s+|\s+$/gi, '') == '';
         }
-        function copy(str, to, toProperty) {
-            if (!str)
+        function copy(value, to, toProperty) {
+            if (value === undefined)
                 return null;
-            str = str.replace(/^\s*|\s*$/gim, '').replace(/\s+/gim, ' ');
-            if (str == '')
-                return null;
-            to[toProperty] = str;
-            return str;
+            if (_.isString(value)) {
+                value = value.replace(/^\s*|\s*$/gim, '')
+                        .replace(/\s+/gim, ' ');
+                if (value == '')
+                    return null;
+            }
+            to[toProperty] = value;
+            return value;
         }
         e.find('article').each(function() {
             article = $(this);
             var address = article.find('address');
-            var geometry = {
-                type : address.data('geometry') || 'Point',
-                coordinates : address.data('coordinates')
-            };
+            var geometry = {};
+            // Copies the type of this marker
+            copy(address.data('geometry') || 'Point', geometry, 'type');
+            // Copies coordinates
+            copy(address.data('coordinates'), geometry, 'coordinates');
+
+            // Transforms all 'data-xxx' attributes of the "address" element
+            // into a set of options
+            var options = {};
+            var hasOptions = false;
+            $.each(address[0].attributes, function(index, attr) {
+                var name = attr.name;
+                if (name != 'data-geometry' && name != 'data-coordinates') {
+                    hasOptions = true;
+                    name = name.substring('data-'.length);
+                    options[name] = attr.value;
+                }
+            })
+            if (hasOptions) {
+                console.log('OPTIONS:', options)
+                copy(options, geometry, 'options');
+            }
+
             var properties = {
                 type : article.data('type')
             } // 
@@ -642,6 +651,27 @@
             delete this.groupLayer;
             var that = this;
             this.groupLayer = L.geoJson(data, {
+                pointToLayer : function(featureData, latlng) {
+                    var layer;
+                    var options = featureData.geometry.options || {};
+                    var radius = options.radius;
+                    if (radius) {
+                        layer = new L.Circle(latlng, radius);
+                    } else {
+                        layer = new L.Marker(latlng);
+                    }
+                    _.each(options, function(value, key) {
+                        var array = key.split('-');
+                        var str = array[0];
+                        for ( var i = 1; i < array.length; i++) {
+                            var segment = array[i];
+                            str += segment[0].toUpperCase()
+                                    + segment.substring(1);
+                        }
+                        layer.options[str] = value;
+                    })
+                    return layer;
+                },
                 onEachFeature : function(feature, layer) {
                     var info = new FeatureInfo({
                         group : that,
