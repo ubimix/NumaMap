@@ -53,13 +53,31 @@ html,body {
 }
 
 #map-container .info .feature {
-	margin-bottom: 0.5em;
+    margin-right: 0.5em;
+	padding: 0 0.5em;
+	border: 3px solid white;
 }
 
 #map-container .info .feature.feature-active {
-	background-color: #eee;
+    border-color: #eee;
 }
 
+#map-container .info .feature .visible-when-active {
+	display: none;
+}
+
+#map-container .info .feature.feature-active .visible-when-active {
+	display: block;
+}
+
+/* Content styles */
+.references, .references p {
+	font-size: smaller;
+	text-align: right;
+	color: gray;
+}
+
+/* Leaflet-specific styles */
 .leaflet-rrose-content {
 	margin: 8px 15px;
 }

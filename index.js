@@ -13,9 +13,12 @@
                 [ 2.351717948913574, 48.86660622956524 ] ]
     };
 
-    var TEMPLATE_DEFAULT_DESCRIPTION = '<div>'
-            + '<h3 data-action-click="activateLayer"><%=feature.properties.label||feature.properties.name%></h3>'
-            + '<div><%=feature.properties.description%></div>' + '</div>';
+    var TEMPLATE_DEFAULT_DESCRIPTION = '<div data-type="<%=feature.geometry.type%>:<%=feature.properties.type%>">'
+            + '<h3><a href="javascript:void(0);" data-action-click="activateLayer"><%=feature.properties.label||feature.properties.name%></a></h3>'
+            + '<div class="visible-when-active">'
+            + '<div><%=feature.properties.description%></div>'
+            + '<% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
+            + '</div>' + '</div>';
     var TEMPLATE_DEFAULT_POPUP = '<div><strong data-action-click="activateLayer"><%=feature.properties.label||feature.properties.name%></strong></div>';
     var TEMPLATE_DEFAULT_DIALOG = '<% var dialogId=info.getId("-dialog"); %>'
             + '<div id="<%=dialogId%>" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="<%=dialogId%>-title" aria-hidden="true">'
@@ -24,7 +27,8 @@
             + ' <h3 id="<%=dialogId%>-title"><%=feature.properties.label%></h3>'
             + ' </div>'
             + ' <div class="modal-body">'
-            + ' <%=feature.properties.fullContent%> '
+            + ' <div><%=feature.properties.fullContent%></div>'
+            + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
             + ' </div>'
             + '<div class="modal-footer">'
             + '<button class="btn" data-dismiss="modal" aria-hidden="true">OK</button>'
@@ -50,7 +54,7 @@
                 layer.setIcon(icon);
             }
         }),
-        'Point:wc' : tmpl({
+        'Point:wc' : {
             popup : '<strong>WC</strong>',
             updateLayer : function(info) {
                 var layer = info.getLayer();
@@ -62,8 +66,8 @@
                         });
                 layer.setIcon(icon);
             }
-        }),
-        'Point:security' : tmpl({
+        },
+        'Point:security' : {
             popup : '<div><strong>Agent de sécurité</strong></div>',
             updateLayer : function(info) {
                 var layer = info.getLayer();
@@ -73,8 +77,8 @@
                 });
                 layer.setIcon(icon);
             }
-        }),
-        'Point:sos' : tmpl({
+        },
+        'Point:sos' : {
             popup : '<strong>Poste de secours</strong>',
             updateLayer : function(info) {
                 var layer = info.getLayer();
@@ -85,9 +89,8 @@
                         });
                 layer.setIcon(icon);
             }
-        }),
+        },
         'Point:screen' : tmpl({
-            popup : TEMPLATE_DEFAULT_POPUP,
             updateLayer : function(info) {
                 var layer = info.getLayer();
                 var icon = L
@@ -98,10 +101,10 @@
                 layer.setIcon(icon);
             }
         }),
-        'LineString' : tmpl({
+        'LineString' : {
             description : '<div><%=feature.properties.description%></div>'
-        }),
-        'LineString:barrage' : tmpl({
+        },
+        'LineString:barrage' : {
             popup : '<div>Barrage</div>',
             updateLayer : function(info) {
                 var layer = info.getLayer();
@@ -111,13 +114,14 @@
                     weight : 3
                 });
             }
-        }),
+        },
         'LineString:passage' : tmpl({
             updateLayer : function(info) {
                 var layer = info.getLayer();
                 _.extend(layer.options, {
                     color : "yellow",
                     dashArray : "5,5",
+                    opacity : 0.1,
                     weight : 5
                 });
             }
@@ -126,6 +130,7 @@
             updateLayer : function(info) {
                 var layer = info.getLayer();
                 _.extend(layer.options, {
+                    opacity : 0.1,
                     color : "yellow",
                     weight : 10
                 });
@@ -161,8 +166,9 @@
             }
         }),
         'Polygon:scene' : tmpl({
-            popup : '<div><h3><a href="javascript:void(0);" data-action-click="activateLayer">'
-                    + '<%=feature.properties.label%>' + '</a></h3></div></div>',
+            popup : '<div><strong><a href="javascript:void(0);" data-action-click="activateLayer">'
+                    + '<%=feature.properties.label%>'
+                    + '</a></strong></div></div>',
             updateLayer : function(info) {
                 var layer = info.getLayer();
                 _.extend(layer.options, {
@@ -222,6 +228,18 @@
         };
         var label = e.find('title').text();
         json.label = label;
+        function isEmpty(str) {
+            return !str || str.replace(/^s+|\s+$/gi, '') == '';
+        }
+        function copy(str, to, toProperty) {
+            if (!str)
+                return null;
+            str = str.replace(/^\s*|\s*$/gim, '').replace(/\s+/gim, ' ');
+            if (str == '')
+                return null;
+            to[toProperty] = str;
+            return str;
+        }
         e.find('article').each(function() {
             article = $(this);
             var address = article.find('address');
@@ -239,22 +257,13 @@
             };
             features.push(feature);
             // Fill individual properties
-            var str;
-            str = article.find('header').text();
-            if (str) {
-                properties.label = str;
-            }
-            str = article.find('aside').html();
-            if (str) {
-                properties.description = str;
-            }
-            str = article.find('section').html();
-            if (str) {
-                properties.fullContent = str;
-            }
-            console.log(JSON.stringify(feature))
+            copy(address.html(), properties, 'address');
+            copy(article.find('header').text(), properties, 'label');
+            copy(article.find('aside').html(), properties, 'description');
+            copy(article.find('section').html(), properties, 'fullContent');
+            copy(article.find('footer').html(), properties, 'references');
+            console.log(' * ', JSON.stringify(feature))
         })
-        console.log(json)
         return json;
     }
 
@@ -432,6 +441,12 @@
             return html;
         },
 
+        /** Hides popups and dialog boxes associated with this feature */
+        hide : function() {
+            this.closeDialog();
+            this.closePopup();
+        },
+
         /**
          * Render description and return the resulting jQuery wrapper for the
          * view.
@@ -508,7 +523,7 @@
 
         /** Closes already opened popups */
         closeDialog : function() {
-            var dialogId = info.getId('-dialog');
+            var dialogId = this.getId('-dialog');
             $('#' + dialogId).modal('hide');
         },
 
@@ -556,33 +571,26 @@
         // Activation/deactivation methods firing events
         /** Focus the specified layer */
         focusLayer : function(e) {
-            this._fireLayerEvent('layer:focus', '_focusedLayer', e);
+            var app = this.getApp();
+            app._focusLayer(this._expandEvent(e));
         },
         /** Focus the specified layer */
         activateLayer : function(e) {
-            this.focusLayer(e);
-            this._fireLayerEvent('layer:active', '_activeLayer', e);
+            var app = this.getApp();
+            app._activateLayer(this._expandEvent(e));
         },
         /** Expand layer information */
         expandLayer : function(e) {
-            this._fireLayerEvent('layer:expand', '_expandedLayer', e);
-        },
-
-        /* ------------------------------------------------------------------ */
-        // Private methods
-        /** An internal method used to activate/deactivate layers */
-        _fireLayerEvent : function(prefix, field, e) {
             var app = this.getApp();
+            app._expandLayer(this._expandEvent(e));
+        },
+        /** Copies an event and adds this layer to it */
+        _expandEvent : function(e) {
             var event = _.clone(e || {});
             event = _.extend(event, {
                 layer : this
             });
-            if (app[field] && app[field].layer != this) {
-                app.fire(prefix + ':off', app[field]);
-                delete app[field];
-            }
-            app[field] = event;
-            app.fire(prefix + ':on', app[field]);
+            return event;
         },
     })
 
@@ -652,6 +660,9 @@
 
         /** Shows this group on the map and in the list */
         show : function() {
+            if (this.isVisible()) {
+                return;
+            }
             if (this.groupLayer) {
                 var map = this.getMap();
                 map.addLayer(this.groupLayer);
@@ -668,6 +679,12 @@
 
         /** Hides this group of features from the map and from the list */
         hide : function() {
+            if (!this.isVisible()) {
+                return;
+            }
+            _.each(this.features, function(info) {
+                info.hide();
+            });
             if (this.groupLayer) {
                 var map = this.getMap();
                 map.removeLayer(this.groupLayer);
@@ -692,6 +709,7 @@
         this.openPopup = _.throttle(this.openPopup, 10, this);
         this._map = this._newMap();
         this._featureGroups = {};
+        this._groupVisibility = {};
         this._bindEvents();
         // FIXME:
         this.getListContainer().html('')
@@ -729,6 +747,7 @@
             this._featureGroups[groupId] = group;
 
             var showGroup = false;
+
             // FIXME:
             var nav = $(this.config.container).find('.navbar .nav');
             if (data.label) {
@@ -737,24 +756,39 @@
                 var li = $('<li data-ref="' + groupId + '"></li>').append(ref);
                 nav.append(li);
                 ref.click(function(e) {
-                    group.toggle();
-                    if (group.isVisible()) {
-                        li.addClass('active');
-                    } else {
-                        li.removeClass('active');
-                    }
+                    // that.fire('group:toggle', )
+                    that.toggleGroupVisibility(groupId);
                 })
                 showGroup = data.visible;
-                if (showGroup) {
+            }
+            that.setGroupVisibility(groupId, showGroup);
+            that.on('groupVisibilityChanged', function() {
+                var visible = that.getGroupVisibility(groupId);
+                if (visible) {
                     li.addClass('active');
                 } else {
                     li.removeClass('active');
                 }
-            }
-            if (showGroup) {
-                group.show();
-            }
+            })
             return group;
+        },
+
+        /** Returns the visibility of the group with the specified identifier */
+        getGroupVisibility : function(groupId) {
+            return this._groupVisibility[groupId] ? true : false;
+        },
+        /** Toggles the visibility of a group with the specified identifier. */
+        toggleGroupVisibility : function(groupId) {
+            var visible = this._groupVisibility[groupId] ? true : false;
+            this.setGroupVisibility(groupId, !visible);
+        },
+        /** Changes the visibility of the group with the specified identifier. */
+        setGroupVisibility : function(groupId, visible) {
+            var alreadyVisible = this._groupVisibility[groupId];
+            this._groupVisibility[groupId] = visible;
+            if (alreadyVisible != visible) {
+                this.fire('groupVisibilityChanged');
+            }
         },
 
         /**
@@ -793,9 +827,8 @@
                     return;
                 that._map.removeLayer(that._centerMarker);
                 that._centerMarker = null;
-                _.each(that._featureGroups, function(group) {
-                    group.show();
-                })
+                that._groupVisibilityBlocked = false;
+                that.fire('groupVisibilityChanged');
             })
             that.on('layers:hide', function(e) {
                 if (that._centerMarker)
@@ -824,8 +857,17 @@
                 });
                 that._centerMarker = L.layerGroup([ circle, label ]);
                 that._map.addLayer(that._centerMarker);
-                _.each(that._featureGroups, function(group) {
-                    group.hide();
+                that._groupVisibilityBlocked = true;
+                that.fire('groupVisibilityChanged');
+            })
+            that.on('groupVisibilityChanged', function() {
+                _.each(that._featureGroups, function(group, groupId) {
+                    var visible = that.getGroupVisibility(groupId);
+                    if (visible && !that._groupVisibilityBlocked) {
+                        group.show();
+                    } else {
+                        group.hide();
+                    }
                 })
             })
         },
@@ -885,8 +927,38 @@
                 }
             });
             return map;
-        }
+        },
 
+        /* ------------------------------------------------------------------ */
+        // Layer-specific event methods
+        /** Focus the specified layer */
+        _focusLayer : function(e) {
+            this._fireLayerEvent('layer:focus', '_focusedLayer', e);
+        },
+        /** Focus the specified layer */
+        _activateLayer : function(e) {
+            this._focusLayer(e);
+            this._fireLayerEvent('layer:active', '_activeLayer', e);
+        },
+        /** Expand layer information */
+        _expandLayer : function(e) {
+            this._fireLayerEvent('layer:expand', '_expandedLayer', e);
+        },
+        /** An internal method used to activate/deactivate layers */
+        _fireLayerEvent : function(prefix, field, e) {
+            console.log(prefix, field, e)
+            var app = this;
+            if (app[field] && app[field].layer != e.layer) {
+                if (app[field].layer) {
+                    app.fire(prefix + ':off', app[field]);
+                }
+                delete app[field];
+            }
+            if (e.layer) {
+                app[field] = e;
+                app.fire(prefix + ':on', app[field]);
+            }
+        }
     });
 
 })();
