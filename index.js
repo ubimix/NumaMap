@@ -190,22 +190,6 @@
 
     /* ---------------------------------------------------------------------- */
 
-    /**
-     * This method is used to re-size the map element to fit to the screen. It
-     * is called each time when the main window changes its size.
-     */
-    function updateSize() {
-        var container = $(CONFIG.container);
-        var shift = container.find('.navbar').height() || 0;
-        shift += 20;
-        var height = $(window).height() - shift;
-        container.find('.map-block').each(function() {
-            var el = $(this);
-            el.height(height);
-        })
-        return Q();
-    }
-
     /** Return a promise for the data loaded from the specified URL */
     function load(url) {
         var deferred = Q.defer();
@@ -281,8 +265,25 @@
      * DOM construction is finished.
      */
     $(function() {
-        $(window).resize(_.throttle(updateSize, 100));
         var map = new NumaMap(CONFIG, TEMPLATES);
+        /**
+         * This method is used to re-size the map element to fit to the screen.
+         * It is called each time when the main window changes its size.
+         */
+        function updateSize() {
+            var container = $(CONFIG.container);
+            var shift = container.find('.navbar').height() || 0;
+            shift += 20;
+            var height = $(window).height() - shift;
+            container.find('.map-block').each(function() {
+                var el = $(this);
+                el.height(height);
+            })
+            map.refreshView();
+            return Q();
+        }
+
+        $(window).resize(_.throttle(updateSize, 100));
         Q
         // Loads data for all map layers
         .all(_.map(CONFIG.dataUrls, function(url) {
@@ -720,7 +721,6 @@
         this._featureGroups = {};
         this._groupVisibility = {};
         this._bindEvents();
-        // FIXME:
         this.getListContainer().html('')
     }
     _.extend(NumaMap.prototype, L.Mixin.Events);
@@ -729,6 +729,11 @@
         /** Returns the map */
         getMap : function() {
             return this._map;
+        },
+
+        /** Refreshes this map view */
+        refreshView : function() {
+            this._map.invalidateSize();
         },
 
         /**
