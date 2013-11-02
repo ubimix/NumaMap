@@ -15,21 +15,22 @@
                 [ 2.351717948913574, 48.86660622956524 ] ]
     };
 
-    var TEMPLATE_DEFAULT_DESCRIPTION = '<div data-type="<%=feature.geometry.type%>:<%=feature.properties.type%>">'
+    var TEMPLATE_DEFAULT_DESCRIPTION = ''
+            + '<div data-type="<%=feature.geometry.type%>:<%=feature.properties.type%>">'
             + '<h3><a href="javascript:void(0);" data-action-click="activateLayer"><%=feature.properties.label||feature.properties.name%></a></h3>'
             + '<div class="visible-when-active">'
-            + '<div><%=feature.properties.description%></div>'
-            + '<% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
+            + ' <%=feature.properties.description%>'
+            + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
             + '</div>' + '</div>';
-    var TEMPLATE_DEFAULT_POPUP = '<div><strong data-action-click="activateLayer"><%=feature.properties.label||feature.properties.name%></strong></div>';
-    var TEMPLATE_DEFAULT_DIALOG = '<% var dialogId=info.getId("-dialog"); %>'
+    var TEMPLATE_DEFAULT_POPUP = '<strong data-action-click="activateLayer"><%=feature.properties.label||feature.properties.name%></strong>';
+    var TEMPLATE_DEFAULT_DIALOG = '<% var dialogId=obj.getId("-dialog"); %>'
             + '<div id="<%=dialogId%>" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="<%=dialogId%>-title" aria-hidden="true">'
             + ' <div class="modal-header">'
             + ' <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'
             + ' <h3 id="<%=dialogId%>-title"><%=feature.properties.label%></h3>'
             + ' </div>'
             + ' <div class="modal-body">'
-            + ' <div><%=feature.properties.fullContent%></div>'
+            + ' <%=feature.properties.fullContent%>'
             + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
             + ' </div>'
             + '<div class="modal-footer">'
@@ -127,6 +128,49 @@
             }
         }),
         'LineString:rue' : tmpl({
+            popup : '<strong data-action-click="activateLayer"><%=feature.properties.label||feature.properties.name%></strong>',
+            dialog : '<% var dialogId=obj.getId("-dialog"); %>'
+                    + '<div id="<%=dialogId%>" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="<%=dialogId%>-title" aria-hidden="true">'
+                    + ' <div class="modal-header">'
+                    + ' <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'
+                    + ' <h3 id="<%=dialogId%>-title"><%=feature.properties.label%></h3>'
+                    + ' </div>'
+                    + ' <div class="modal-body">'
+                    + ' <% var next=obj.getNext();  var prev=obj.getPrevious(); %>'
+                    + ' <div class="row-fluid">'
+                    + '     <div class="span1">'
+                    + '         <% if (prev){%><button class="btn btn-mini" data-action-click="! var o=obj.getPrevious();if(o)o.expandLayer()">&laquo;</button><% } %>'
+                    + '     </div>'
+                    + '     <div class="span10">'
+                    + '         <%=feature.properties.fullContent%>'
+                    + '     </div>'
+                    + '     <div class="span1">'
+                    + '         <% if (next){ %><button class="btn btn-mini" data-action-click="! var o=obj.getNext();if(o)o.expandLayer()">&raquo;</button><% } %>'
+                    + '     </div>'
+                    + ' </div>'
+                    + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
+                    + ' </div>'
+                    + '<div class="modal-footer">'
+                    + '<button class="btn" data-dismiss="modal" aria-hidden="true">OK</button>'
+                    + '</div>' + '</div>',
+            description : ''
+                    + '<div data-type="<%=feature.geometry.type%>:<%=feature.properties.type%>">'
+                    + '<h3><a href="javascript:void(0);" data-action-click="activateLayer"><%=feature.properties.label||feature.properties.name%></a></h3>'
+                    + '<div class="visible-when-active">'
+                    + ' <% var next=obj.getNext();  var prev=obj.getPrevious(); %>'
+                    + ' <div class="row-fluid">'
+                    + '     <div class="span1">'
+                    + '         <% if (prev){%><a href="javascript:void(0);" class="btn btn-mini" data-action-click="! var o=obj.getPrevious();if(o)o.activateLayer()">&laquo;</a><% } %>'
+                    + '     </div>'
+                    + '     <div class="span10">'
+                    + '         <%=feature.properties.description%>'
+                    + '     </div>'
+                    + '     <div class="span1">'
+                    + '         <% if (next){ %><a href="javascript:void(0);" class="btn btn-mini" data-action-click="! var o=obj.getNext();if(o)o.activateLayer()">&raquo;</a><% } %>'
+                    + '     </div>'
+                    + ' </div>'
+                    + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
+                    + '</div>' + '</div>',
             updateLayer : function(info) {
                 var layer = info.getLayer();
                 _.extend(layer.options, {
@@ -420,20 +464,25 @@
             return this.options.group;
         },
 
+        /** Process the specified template and returns the result */
+        _processTemplate : function(str) {
+            if (!str)
+                return null;
+            var feature = this.getFeature();
+            var result = _.template(str, {
+                obj : this,
+                feature : feature
+            })
+            return result;
+        },
+
         /** Renders this feature using the specified field of the template */
         render : function(field) {
             var template = this.getTemplate();
             if (!template)
                 return null;
             var str = template[field];
-            if (!str)
-                return null;
-            var feature = this.getFeature();
-            var html = _.template(str, {
-                info : this,
-                feature : feature,
-                template : template
-            })
+            var html = this._processTemplate(str);
             html = $(html);
 
             var that = this;
@@ -441,9 +490,19 @@
                 var action = e.attr('data-action-' + event);
                 if (!action)
                     return;
-                var method = that[action];
+                var method = null;
+                if (action.indexOf('!') == 0) {
+                    var actionCode = '<%' + action.substring(1) + '%>';
+                    method = function() {
+                        that._processTemplate(actionCode);
+                    }
+                } else {
+                    method = that[action];
+                }
                 if (_.isFunction(method)) {
-                    e.on(event, function(evt) {
+                    e.on(event, function(event) {
+                        event.preventDefault();
+                        event.stopPropagation();
                         method.call(that);
                     });
                 }
@@ -537,14 +596,19 @@
             // return;
             var html = this.render('dialog');
             if (html) {
-                $(html).modal('show');
+                _.defer(function() {
+                    $(html).modal('show');
+                })
             }
         },
 
         /** Closes already opened popups */
         closeDialog : function() {
-            var dialogId = this.getId('-dialog');
-            $('#' + dialogId).modal('hide');
+            var that = this;
+            var dialogId = that.getId('-dialog');
+            var elm = $('#' + dialogId);
+            elm.modal('hide');
+            elm.remove();
         },
 
         /**
@@ -612,6 +676,36 @@
             });
             return event;
         },
+
+        /* ------------------------------------------------------------------ */
+        // Next/previous
+        /**
+         * Returns a next feature in the parent group.
+         */
+        getNext : function() {
+            return this._getSiblingFeature(+1);
+        },
+
+        /**
+         * Returns <a previous feature in the parent group.
+         */
+        getPrevious : function() {
+            return this._getSiblingFeature(-1);
+        },
+
+        /** Returns the position of this feature in the parent group */
+        getPosition : function() {
+            var group = this.getGroup();
+            return group.getFeaturePosition(this);
+        },
+
+        /** Returns a sibling feature at the specified shift position */
+        _getSiblingFeature : function(shift) {
+            var pos = this.getPosition();
+            var group = this.getGroup();
+            var result = group.getFeatureAt(pos + shift);
+            return result;
+        },
     })
 
     /* ---------------------------------------------------------------------- */
@@ -651,6 +745,7 @@
             this.hide();
             delete this.groupLayer;
             var that = this;
+            this._keys = null;
             this.groupLayer = L.geoJson(data, {
                 pointToLayer : function(featureData, latlng) {
                     var layer;
@@ -737,6 +832,36 @@
             this.visible = false;
         },
 
+        /** Returns the number of features in this group */
+        getLength : function() {
+            var featureIds = this.getFeatureIds();
+            return featureIds.length;
+        },
+
+        /** Returns the position of the specified feature */
+        getFeaturePosition : function(feature) {
+            var featureId = feature.getId();
+            var featureIds = this.getFeatureIds();
+            var pos = _.indexOf(featureIds, featureId);
+            return pos;
+        },
+
+        /** Returns a list of identifiers of all features managed by this group */
+        getFeatureIds : function() {
+            if (!this._keys) {
+                this._keys = _.keys(this.features);
+            }
+            return this._keys;
+        },
+
+        /** Returns a feature from the specified position */
+        getFeatureAt : function(pos) {
+            var featureIds = this.getFeatureIds();
+            if (pos < 0 || pos >= featureIds.length)
+                return null;
+            var featureId = featureIds[pos];
+            return this.features[featureId];
+        },
     });
 
     /* ---------------------------------------------------------------------- */
@@ -991,11 +1116,14 @@
         },
         /** Focus the specified layer */
         _activateLayer : function(e) {
+            e = e || {};
+            e.center = true;
             this._focusLayer(e);
             this._fireLayerEvent('layer:active', '_activeLayer', e);
         },
         /** Expand layer information */
         _expandLayer : function(e) {
+            this._activateLayer(e);
             this._fireLayerEvent('layer:expand', '_expandedLayer', e);
         },
         /** An internal method used to activate/deactivate layers */
