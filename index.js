@@ -41,8 +41,53 @@
         description : TEMPLATE_DEFAULT_DESCRIPTION,
         dialog : TEMPLATE_DEFAULT_DIALOG
     }
+    var TEMPLATE_DEFAULT_SLIDABLE = {
+        dialog : '<% var dialogId=obj.getId("-dialog"); %>'
+                + '<div id="<%=dialogId%>" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="<%=dialogId%>-title" aria-hidden="true">'
+                + ' <div class="modal-header">'
+                + ' <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'
+                + ' <h3 id="<%=dialogId%>-title"><%=feature.properties.label%></h3>'
+                + ' </div>'
+                + ' <div class="modal-body">'
+                + ' <% var next=obj.getNext();  var prev=obj.getPrevious(); %>'
+                + ' <div class="row-fluid">'
+                + '     <div class="span1">'
+                + '         <% if (prev){%><button class="btn btn-mini" data-action-click="! var o=obj.getPrevious();if(o)o.expandLayer()">&laquo;</button><% } %>'
+                + '     </div>'
+                + '     <div class="span10">'
+                + '         <%=feature.properties.fullContent%>'
+                + '     </div>'
+                + '     <div class="span1">'
+                + '         <% if (next){ %><button class="btn btn-mini" data-action-click="! var o=obj.getNext();if(o)o.expandLayer()">&raquo;</button><% } %>'
+                + '     </div>'
+                + ' </div>'
+                + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
+                + ' </div>'
+                + '<div class="modal-footer">'
+                + '<button class="btn" data-dismiss="modal" aria-hidden="true">OK</button>'
+                + '</div>' + '</div>',
+        description : ''
+                + '<div data-type="<%=feature.geometry.type%>:<%=feature.properties.type%>">'
+                + '<h3><a href="javascript:void(0);" data-action-click="activateLayer"><%=feature.properties.label||feature.properties.name%></a></h3>'
+                + '<div class="visible-when-active">'
+                + ' <% var next=obj.getNext();  var prev=obj.getPrevious(); %>'
+                + ' <div class="row-fluid">'
+                + '     <div class="span1">'
+                + '         <% if (prev){%><a href="javascript:void(0);" class="btn btn-mini" data-action-click="! var o=obj.getPrevious();if(o)o.activateLayer()">&laquo;</a><% } %>'
+                + '     </div>'
+                + '     <div class="span10">'
+                + '         <%=feature.properties.description%>'
+                + '     </div>'
+                + '     <div class="span1">'
+                + '         <% if (next){ %><a href="javascript:void(0);" class="btn btn-mini" data-action-click="! var o=obj.getNext();if(o)o.activateLayer()">&raquo;</a><% } %>'
+                + '     </div>'
+                + ' </div>'
+                + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
+                + '</div>' + '</div>',
+    }
     function tmpl(options) {
-        return _.extend({}, TEMPLATE_DEFAULT, options)
+        var array = [ {}, TEMPLATE_DEFAULT ].concat(_.toArray(arguments));
+        return _.extend.apply(null, array);
 
     }
     function setDivIcon(layer, html) {
@@ -116,7 +161,7 @@
                 });
             }
         },
-        'LineString:passage' : tmpl({
+        'LineString:passage' : tmpl(TEMPLATE_DEFAULT_SLIDABLE, {
             updateLayer : function(info) {
                 var layer = info.getLayer();
                 _.extend(layer.options, {
@@ -127,50 +172,7 @@
                 });
             }
         }),
-        'LineString:rue' : tmpl({
-            popup : '<strong data-action-click="activateLayer"><%=feature.properties.label||feature.properties.name%></strong>',
-            dialog : '<% var dialogId=obj.getId("-dialog"); %>'
-                    + '<div id="<%=dialogId%>" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="<%=dialogId%>-title" aria-hidden="true">'
-                    + ' <div class="modal-header">'
-                    + ' <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'
-                    + ' <h3 id="<%=dialogId%>-title"><%=feature.properties.label%></h3>'
-                    + ' </div>'
-                    + ' <div class="modal-body">'
-                    + ' <% var next=obj.getNext();  var prev=obj.getPrevious(); %>'
-                    + ' <div class="row-fluid">'
-                    + '     <div class="span1">'
-                    + '         <% if (prev){%><button class="btn btn-mini" data-action-click="! var o=obj.getPrevious();if(o)o.expandLayer()">&laquo;</button><% } %>'
-                    + '     </div>'
-                    + '     <div class="span10">'
-                    + '         <%=feature.properties.fullContent%>'
-                    + '     </div>'
-                    + '     <div class="span1">'
-                    + '         <% if (next){ %><button class="btn btn-mini" data-action-click="! var o=obj.getNext();if(o)o.expandLayer()">&raquo;</button><% } %>'
-                    + '     </div>'
-                    + ' </div>'
-                    + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
-                    + ' </div>'
-                    + '<div class="modal-footer">'
-                    + '<button class="btn" data-dismiss="modal" aria-hidden="true">OK</button>'
-                    + '</div>' + '</div>',
-            description : ''
-                    + '<div data-type="<%=feature.geometry.type%>:<%=feature.properties.type%>">'
-                    + '<h3><a href="javascript:void(0);" data-action-click="activateLayer"><%=feature.properties.label||feature.properties.name%></a></h3>'
-                    + '<div class="visible-when-active">'
-                    + ' <% var next=obj.getNext();  var prev=obj.getPrevious(); %>'
-                    + ' <div class="row-fluid">'
-                    + '     <div class="span1">'
-                    + '         <% if (prev){%><a href="javascript:void(0);" class="btn btn-mini" data-action-click="! var o=obj.getPrevious();if(o)o.activateLayer()">&laquo;</a><% } %>'
-                    + '     </div>'
-                    + '     <div class="span10">'
-                    + '         <%=feature.properties.description%>'
-                    + '     </div>'
-                    + '     <div class="span1">'
-                    + '         <% if (next){ %><a href="javascript:void(0);" class="btn btn-mini" data-action-click="! var o=obj.getNext();if(o)o.activateLayer()">&raquo;</a><% } %>'
-                    + '     </div>'
-                    + ' </div>'
-                    + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
-                    + '</div>' + '</div>',
+        'LineString:rue' : tmpl(TEMPLATE_DEFAULT_SLIDABLE, {
             updateLayer : function(info) {
                 var layer = info.getLayer();
                 _.extend(layer.options, {
@@ -182,6 +184,17 @@
         }),
         'Polygon' : tmpl({
             description : '<div><%=feature.properties.label%></div>',
+            updateLayer : function(info) {
+                var layer = info.getLayer();
+                _.extend(layer.options, {
+                    color : "yellow",
+                    weight : 1,
+                    fillOpacity : 0.7,
+                    opacity : 0.8
+                });
+            }
+        }),
+        'Polygon:place' : tmpl(TEMPLATE_DEFAULT_SLIDABLE, {
             updateLayer : function(info) {
                 var layer = info.getLayer();
                 _.extend(layer.options, {
