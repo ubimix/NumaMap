@@ -1,4 +1,5 @@
 var ImageMagick = require('imagemagick');
+var GraphicsMagick = require('gm');
 var _ = require('underscore');
 var Q = require('q');
 var fs = require("fs");
@@ -6,6 +7,14 @@ var path = require("path");
 
 var sourceDir = '../data/images/street-art';
 var targetFile = '../data/street-art.json';
+
+// ImageMagick.convert([ '../data/images/street-art/23-ruedeslunettes.JPG',
+// '-rotate', '270', 'kittens-small-1.jpg' ], function(err,
+// stdout) {
+// if (err)
+// throw err;
+// console.log('stdout:', stdout);
+// });
 
 readImages(sourceDir).then(function(metadata) {
     console.log('Files metadata association...')
@@ -21,7 +30,13 @@ readImages(sourceDir).then(function(metadata) {
     _.each(metadata, function(data, file) {
         var name = file + '';
         var id = name.replace(/^.*?\/([\d]+).*$/gim, '$1')
-        console.log(' * ', name, id)
+        console.log(' * ', name, id, 'orientation', data.orientation);
+        var basename = path.basename(name);
+//        GraphicsMagick(name).autoOrient().resize(500, 500).write(basename, function(err) {
+//            if (err)
+//                console.log(err);
+//        });
+
         var info = index[id];
         if (!info) {
             info = index[id] = {
@@ -37,8 +52,8 @@ readImages(sourceDir).then(function(metadata) {
             };
             features.push(info);
         }
-        if (data) {
-            info.geometry.coordinates = data;
+        if (data && data.coordinates) {
+            info.geometry.coordinates = data.coordinates;
         } else {
             info.properties.urls.push(name);
         }
@@ -71,11 +86,18 @@ function toDegrees(gpsInfo) {
 function readCoordinates(imagePath) {
     return Q.nfcall(ImageMagick.readMetadata, imagePath).then(function(metadata) {
         if (metadata.exif.gpsLatitude) {
+            var orientation = metadata.exif.orientation;
             var lat = toDegrees(metadata.exif.gpsLatitude);
             var lng = toDegrees(metadata.exif.gpsLongitude);
-            return [ lng, lat ];
+            return {
+                'coordinates' : [ lng, lat ],
+                'orientation' : orientation
+            };
         } else {
-            return null;
+            var orientation = metadata.exif.orientation;
+            return {
+                'orientation' : orientation
+            };
         }
     });
 }
@@ -111,6 +133,3 @@ function readImages(dir) {
         });
     })
 }
-
-// 
-
