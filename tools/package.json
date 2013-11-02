@@ -1,13 +1,13 @@
 {
-    "name" : "NumaMap",
+    "name" : "ImageProcessing",
     "version" : "1.0.0",
     "private" : true,
     "scripts" : {
-        "start" : "node ./server.js"
+        "start" : "node ./ImageProcessing.js"
     },
     "dependencies" : {
-        "express": "latest",
         "imagemagick": "latest",
-        "underscore": "latest"
+        "underscore": "latest",
+        "q": "latest"
     }
 }

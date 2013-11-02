@@ -1,6 +1,6 @@
 {
-  "type": "FeatureCollection",
   "label": "Street Art",
+  "type": "FeatureCollection",
   "features": [
     {
       "type": "Feature",
@@ -14,11 +14,11 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/2-4.JPG",
-          "street-art/2-2.jpg",
-          "street-art/2-3.JPG",
-          "street-art/2-1.JPG",
-          "street-art/2-5.JPG"
+          "../data/images/street-art/2-4.JPG",
+          "../data/images/street-art/2-2.jpg",
+          "../data/images/street-art/2-3.JPG",
+          "../data/images/street-art/2-1.JPG",
+          "../data/images/street-art/2-5.JPG"
         ]
       }
     },
@@ -34,7 +34,7 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/21-sticker.JPG"
+          "../data/images/street-art/21-sticker.JPG"
         ]
       }
     },
@@ -50,8 +50,8 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/17-3DT-2.JPG",
-          "street-art/17-3dt.JPG"
+          "../data/images/street-art/17-3DT-2.JPG",
+          "../data/images/street-art/17-3dt.JPG"
         ]
       }
     },
@@ -67,7 +67,7 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/24-tras.JPG"
+          "../data/images/street-art/24-tras.JPG"
         ]
       }
     },
@@ -83,7 +83,7 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/15-horphe.JPG"
+          "../data/images/street-art/15-horphe.JPG"
         ]
       }
     },
@@ -99,7 +99,7 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/12-GZUP.JPG"
+          "../data/images/street-art/12-GZUP.JPG"
         ]
       }
     },
@@ -115,7 +115,7 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/9-combo.JPG"
+          "../data/images/street-art/9-combo.JPG"
         ]
       }
     },
@@ -131,8 +131,8 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/1-Abraham Clet-2.JPG",
-          "street-art/1-Abraham Clet-1.JPG"
+          "../data/images/street-art/1-Abraham Clet-2.JPG",
+          "../data/images/street-art/1-Abraham Clet-1.JPG"
         ]
       }
     },
@@ -148,8 +148,8 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/7-detail.JPG",
-          "street-art/7-unknown.JPG"
+          "../data/images/street-art/7-detail.JPG",
+          "../data/images/street-art/7-unknown.JPG"
         ]
       }
     },
@@ -165,7 +165,7 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/18-unknown.JPG"
+          "../data/images/street-art/18-unknown.JPG"
         ]
       }
     },
@@ -181,7 +181,7 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/22-above aniston.JPG"
+          "../data/images/street-art/22-above aniston.JPG"
         ]
       }
     },
@@ -197,8 +197,8 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/13-unkown.JPG",
-          "street-art/13-unknown-detail.JPG"
+          "../data/images/street-art/13-unkown.JPG",
+          "../data/images/street-art/13-unknown-detail.JPG"
         ]
       }
     },
@@ -214,7 +214,7 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/25-Abraham Clet.JPG"
+          "../data/images/street-art/25-Abraham Clet.JPG"
         ]
       }
     },
@@ -230,9 +230,9 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/3-Hermes.JPG",
-          "street-art/3-2.JPG",
-          "street-art/3-3.JPG"
+          "../data/images/street-art/3-Hermes.JPG",
+          "../data/images/street-art/3-2.JPG",
+          "../data/images/street-art/3-3.JPG"
         ]
       }
     },
@@ -248,7 +248,7 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/14-tags.JPG"
+          "../data/images/street-art/14-tags.JPG"
         ]
       }
     },
@@ -264,8 +264,8 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/8-life-large.JPG",
-          "street-art/8-life.JPG"
+          "../data/images/street-art/8-life-large.JPG",
+          "../data/images/street-art/8-life.JPG"
         ]
       }
     },
@@ -281,7 +281,7 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/23-ruedeslunettes.JPG"
+          "../data/images/street-art/23-ruedeslunettes.JPG"
         ]
       }
     },
@@ -297,8 +297,8 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/4-Gregos-1.JPG",
-          "street-art/4-gregos-2.JPG"
+          "../data/images/street-art/4-Gregos-1.JPG",
+          "../data/images/street-art/4-gregos-2.JPG"
         ]
       }
     },
@@ -314,7 +314,7 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/20-anser.JPG"
+          "../data/images/street-art/20-anser.JPG"
         ]
       }
     },
@@ -330,7 +330,7 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/6-tag-abrahamclet.JPG"
+          "../data/images/street-art/6-tag-abrahamclet.JPG"
         ]
       }
     },
@@ -346,8 +346,8 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/5-GZUP-2.JPG",
-          "street-art/5-GZUP.JPG"
+          "../data/images/street-art/5-GZUP-2.JPG",
+          "../data/images/street-art/5-GZUP.JPG"
         ]
       }
     },
@@ -363,7 +363,7 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/10-lavieestamour.JPG"
+          "../data/images/street-art/10-lavieestamour.JPG"
         ]
       }
     },
@@ -393,7 +393,7 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/19-lavieenrose.JPG"
+          "../data/images/street-art/19-lavieenrose.JPG"
         ]
       }
     },
@@ -409,7 +409,7 @@
       "properties": {
         "type": "photo",
         "urls": [
-          "street-art/16-chiottes.JPG"
+          "../data/images/street-art/16-chiottes.JPG"
         ]
       }
     }
