@@ -1,0 +1,417 @@
+{
+  "type": "FeatureCollection",
+  "label": "Street Art",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.348802777777778,
+          48.86790833333333
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/2-4.JPG",
+          "street-art/2-2.jpg",
+          "street-art/2-3.JPG",
+          "street-art/2-1.JPG",
+          "street-art/2-5.JPG"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3503611111111113,
+          48.86861666666667
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/21-sticker.JPG"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3491472222222223,
+          48.86693611111111
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/17-3DT-2.JPG",
+          "street-art/17-3dt.JPG"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3519083333333333,
+          48.86896388888889
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/24-tras.JPG"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3496555555555556,
+          48.86683611111111
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/15-horphe.JPG"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3487944444444446,
+          48.86822222222222
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/12-GZUP.JPG"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3476805555555558,
+          48.86792777777778
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/9-combo.JPG"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3496972222222223,
+          48.867694444444446
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/1-Abraham Clet-2.JPG",
+          "street-art/1-Abraham Clet-1.JPG"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3475444444444444,
+          48.86783888888889
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/7-detail.JPG",
+          "street-art/7-unknown.JPG"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3513111111111114,
+          48.8667
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/18-unknown.JPG"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.350413888888889,
+          48.86855833333333
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/22-above aniston.JPG"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3501416666666666,
+          48.86832777777778
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/13-unkown.JPG",
+          "street-art/13-unknown-detail.JPG"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.349638888888889,
+          48.8677
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/25-Abraham Clet.JPG"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3490222222222226,
+          48.867925
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/3-Hermes.JPG",
+          "street-art/3-2.JPG",
+          "street-art/3-3.JPG"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.350977777777778,
+          48.86808055555556
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/14-tags.JPG"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3474222222222223,
+          48.86808888888889
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/8-life-large.JPG",
+          "street-art/8-life.JPG"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.351586111111111,
+          48.86889166666667
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/23-ruedeslunettes.JPG"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3487694444444447,
+          48.86804166666667
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/4-Gregos-1.JPG",
+          "street-art/4-gregos-2.JPG"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.349627777777778,
+          48.86853888888889
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/20-anser.JPG"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3485444444444448,
+          48.868008333333336
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/6-tag-abrahamclet.JPG"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3482555555555558,
+          48.86815277777778
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/5-GZUP-2.JPG",
+          "street-art/5-GZUP.JPG"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3476805555555558,
+          48.8679
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/10-lavieestamour.JPG"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.347525,
+          48.86815
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": []
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3471583333333337,
+          48.86781388888889
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/19-lavieenrose.JPG"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3494361111111113,
+          48.867016666666665
+        ]
+      },
+      "properties": {
+        "type": "photo",
+        "urls": [
+          "street-art/16-chiottes.JPG"
+        ]
+      }
+    }
+  ]
+}
