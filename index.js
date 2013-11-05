@@ -13,8 +13,8 @@
         ],
         tilesLayer : 'http://{s}.tile.cloudmade.com/d4fc77ea4a63471cab2423e66626cbb6/997/256/{z}/{x}/{y}.png',
         tilesLayer : 'http://{s}.tiles.mapbox.com/v3/guilhemoreau.map-057le4on/{z}/{x}/{y}.png',
-        zone : [ [ 2.347303032875061, 48.86909749404887 ],
-                [ 2.352399230003357, 48.86683207168444 ] ]
+        zone : [ [ 2.3474317789077754, 48.86851174046499 ],
+                [ 2.350752353668213, 48.86728022412167 ] ]
     };
 
     var TEMPLATE_DEFAULT_DESCRIPTION = ''
@@ -260,7 +260,7 @@
                 _.extend(layer.options, {
                     color : 'yellow',
                     dashArray : '5,5',
-                    opacity : 0.1,
+                    opacity : 0.5,
                     weight : 5
                 });
             }
@@ -269,9 +269,19 @@
             updateLayer : function(info) {
                 var layer = info.getMapLayer();
                 _.extend(layer.options, {
-                    opacity : 0.1,
+                    opacity : 0.5,
                     color : 'yellow',
                     weight : 10
+                });
+            }
+        }),
+        'LineString:installation' : tmpl(TEMPLATE_DEFAULT_SLIDABLE, {
+            updateLayer : function(info) {
+                var layer = info.getMapLayer();
+                _.extend(layer.options, {
+                    opacity : 1,
+                    color : 'green',
+                    weight : 3
                 });
             }
         }),
@@ -717,7 +727,6 @@
          * Opens a dialog box with additional information about this feature.
          */
         openDialog : function() {
-            console.log('openDialog')
             // var feature = this.getFeature();
             // if (!feature.properties.fullContent)
             // return;
@@ -797,8 +806,6 @@
         },
         /** Expand layer information */
         expandLayer : function(e) {
-            console.log('expandLayer')
-
             var app = this.getApp();
             app._expandLayer(this._expandEvent(e));
         },
@@ -1201,6 +1208,8 @@
             var map = L.map(element[0], {
                 loadingControl : true
             });
+            map.scrollWheelZoom.disable();
+            map.boxZoom.disable();
 
             L.tileLayer(that.config.tilesLayer, {
                 attribution : that.config.attribution,
