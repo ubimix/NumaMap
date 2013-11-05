@@ -38,6 +38,33 @@ html,body {
 	padding: 0;
 }
 
+#map-container .navbar {
+	margin: 0;
+	margin-top: 1em;
+}
+
+#map-container .navbar .navbar-inner {
+	background: none;
+	border: none;
+}
+
+#map-container .navbar .navbar-inner ul.nav li {
+	text-transform: uppercase;
+}
+
+#map-container .navbar .navbar-inner ul.nav li a {
+	border: none;
+	border-top: 2px solid white;
+	box-shadow: none;
+	-webkit-box-shadow: none;
+	background: none;
+	box-shadow: none;
+}
+
+#map-container .navbar .navbar-inner ul.nav li.active a {
+	border-color: black;
+}
+
 #map-container .map-block {
 	height: 500px;
 	overflow: hidden;
@@ -53,13 +80,27 @@ html,body {
 }
 
 #map-container .info .feature {
-    margin-right: 0.5em;
+	margin: 0.5em 0;
 	padding: 0 0.5em;
-	border: 3px solid white;
+	border-bottom: 1px solid #eee;
+}
+
+#map-container .info .feature h3,#map-container .info .feature h3>a {
+	margin: 0;
+	font-size: 1.17em;
+	line-height: 1.8em;
+	color: #00AEEF;
+	text-transform: uppercase;
+	color: #00AEEF;
+}
+
+#map-container .info .feature.feature-active h3,#map-container .info .feature.feature-active h3>a
+	{
+	color: black;
 }
 
 #map-container .info .feature.feature-active {
-    border-color: #eee;
+	
 }
 
 #map-container .info .feature .visible-when-active {
@@ -113,7 +154,6 @@ html,body {
 	-moz-border-radius-bottomleft: 0;
 	border-bottom-left-radius: 0;
 }
-
 </style>
 
 <!-- The main code of the application -->
@@ -135,7 +175,7 @@ html,body {
 			<div class="span3 map-block info"></div>
 		</div>
 	</div>
-
+	<!-- 
 	<p>Quisque feugiat, nibh sit amet ultricies ultrices, risus mauris
 		tincidunt enim, eget dignissim enim mi vel elit. Curabitur vel
 		placerat nisl, id rhoncus eros. Aenean accumsan, diam ac adipiscing
@@ -201,5 +241,6 @@ html,body {
 		tempus id nisl. Vestibulum sed justo id nunc tincidunt hendrerit in
 		sed urna. Sed ultrices nibh viverra lorem varius, non euismod leo
 		ornare.</p>
+		 -->
 </body>
 </html>

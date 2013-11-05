@@ -4,18 +4,21 @@
         debug : false,
         maxZoom : 20,
         container : '#map-container',
-        dataUrls : [ './data/numa.html', './data/program.html', './data/history.html', './data/info.html',
-                //'data/street-art.json', 
+        dataUrls : [ './data/numa.html', './data/program.html',
+                './data/history.html', './data/info.html',
+                './data/street-art.json', './data/example.html',
                 './data/partners.html' ],
         tilesLayer : 'http://{s}.tile.cloudmade.com/d4fc77ea4a63471cab2423e66626cbb6/997/256/{z}/{x}/{y}.png',
         tilesLayer : 'http://{s}.tiles.mapbox.com/v3/guilhemoreau.map-057le4on/{z}/{x}/{y}.png',
-        zone : [ [ 2.347303032875061, 48.86909749404887 ], [ 2.352399230003357, 48.86683207168444 ] ]
+        zone : [ [ 2.347303032875061, 48.86909749404887 ],
+                [ 2.352399230003357, 48.86683207168444 ] ]
     };
 
     var TEMPLATE_DEFAULT_DESCRIPTION = ''
             + '<div data-type="<%=feature.geometry.type%>:<%=feature.properties.type%>">'
             + '<h3><a href="javascript:void(0);" data-action-click="activateLayer"><%=feature.properties.label||feature.properties.name%></a></h3>'
-            + '<div class="visible-when-active">' + ' <%=feature.properties.description%>'
+            + '<div class="visible-when-active">'
+            + ' <%=feature.properties.description%>'
             + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
             + '</div>' + '</div>';
     var TEMPLATE_DEFAULT_POPUP = '<strong data-action-click="activateLayer"><%=feature.properties.label||feature.properties.name%></strong>';
@@ -23,11 +26,15 @@
             + '<div id="<%=dialogId%>" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="<%=dialogId%>-title" aria-hidden="true">'
             + ' <div class="modal-header">'
             + ' <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'
-            + ' <h3 id="<%=dialogId%>-title"><%=feature.properties.label%></h3>' + ' </div>' + ' <div class="modal-body">'
+            + ' <h3 id="<%=dialogId%>-title"><%=feature.properties.label%></h3>'
+            + ' </div>'
+            + ' <div class="modal-body">'
             + ' <%=feature.properties.fullContent%>'
             + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
-            + ' </div>' + '<div class="modal-footer">'
-            + '<button class="btn" data-dismiss="modal" aria-hidden="true">OK</button>' + '</div>' + '</div>';
+            + ' </div>'
+            + '<div class="modal-footer">'
+            + '<button class="btn" data-dismiss="modal" aria-hidden="true">OK</button>'
+            + '</div>' + '</div>';
     var TEMPLATE_DEFAULT = {
         popup : TEMPLATE_DEFAULT_POPUP,
         description : TEMPLATE_DEFAULT_DESCRIPTION,
@@ -44,18 +51,20 @@
                 + ' <% var next=obj.getNext();  var prev=obj.getPrevious(); %>'
                 + ' <div class="row-fluid">'
                 + '     <div class="span1">'
-                + '         <% if (prev){%><button class="btn btn-mini" data-action-click="! var o=obj.getPrevious();if(o)o.expandLayer()">&laquo;</button><% } %>'
+                + '         <% if (prev){%><a href="javascript:void(0);" data-action-click="! var o=obj.getPrevious();if(o)o.expandLayer()"><i class="fa fa-chevron-left"></i></a>&nbsp;<% } %>'
                 + '     </div>'
                 + '     <div class="span10">'
-                + '         <%=feature.properties.fullContent%>'
+                + '         <%=feature.properties.fullContent?feature.properties.fullContent:feature.properties.description%>'
                 + '     </div>'
                 + '     <div class="span1">'
-                + '         <% if (next){ %><button class="btn btn-mini" data-action-click="! var o=obj.getNext();if(o)o.expandLayer()">&raquo;</button><% } %>'
+                + '         <% if (next){ %><a href="javascript:void(0);" data-action-click="! var o=obj.getNext();if(o)o.expandLayer()"><i class="fa fa-chevron-right"></i></a>&nbsp;<% } %>'
                 + '     </div>'
                 + ' </div>'
                 + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
-                + ' </div>' + '<div class="modal-footer">'
-                + '<button class="btn" data-dismiss="modal" aria-hidden="true">OK</button>' + '</div>' + '</div>',
+                + ' </div>'
+                + '<div class="modal-footer">'
+                + '<button class="btn" data-dismiss="modal" aria-hidden="true">OK</button>'
+                + '</div>' + '</div>',
         description : ''
                 + '<div data-type="<%=feature.geometry.type%>:<%=feature.properties.type%>">'
                 + '<h3><a href="javascript:void(0);" data-action-click="activateLayer"><%=feature.properties.label||feature.properties.name%></a></h3>'
@@ -63,13 +72,13 @@
                 + ' <% var next=obj.getNext();  var prev=obj.getPrevious(); %>'
                 + ' <div class="row-fluid">'
                 + '     <div class="span1">'
-                + '         <% if (prev){%><a href="javascript:void(0);" class="btn btn-mini" data-action-click="! var o=obj.getPrevious();if(o)o.activateLayer()">&laquo;</a><% } %>'
+                + '         <% if (prev){%><a href="javascript:void(0);" data-action-click="! var o=obj.getPrevious();if(o)o.activateLayer()"><i class="fa fa-chevron-left"></i></a>&nbsp;<% } %>'
                 + '     </div>'
                 + '     <div class="span10">'
                 + '         <%=feature.properties.description%>'
                 + '     </div>'
                 + '     <div class="span1">'
-                + '         <% if (next){ %><a href="javascript:void(0);" class="btn btn-mini" data-action-click="! var o=obj.getNext();if(o)o.activateLayer()">&raquo;</a><% } %>'
+                + '         <% if (next){ %><a href="javascript:void(0);" data-action-click="! var o=obj.getNext();if(o)o.activateLayer()"><i class="fa fa-chevron-right"></i></a>&nbsp;<% } %>'
                 + '     </div>'
                 + ' </div>'
                 + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
@@ -93,50 +102,76 @@
         'Point' : tmpl({
             updateLayer : function(info) {
                 var layer = info.getLayer();
-                setDivIcon(layer, '<i class="fa fa-map-marker fa-lg"' + ' style="color: #00adef;"></i>');
+                setDivIcon(layer, '<i class="fa fa-map-marker fa-lg"'
+                        + ' style="color: #00adef;"></i>');
             }
         }),
         'Point:wc' : {
             popup : '<strong>WC</strong>',
             updateLayer : function(info) {
                 var layer = info.getLayer();
-                setDivIcon(layer, '<span style="color: maroon; white-space: nowrap;">' + '<i class="fa fa-male fa-lg"></i>'
-                        + '<i class="fa fa-female fa-lg"></i></span>');
+                setDivIcon(layer,
+                        '<span style="color: maroon; white-space: nowrap;">'
+                                + '<i class="fa fa-male fa-lg"></i>'
+                                + '<i class="fa fa-female fa-lg"></i></span>');
             }
         },
         'Point:security' : {
             popup : '<div><strong>Agent de sécurité</strong></div>',
             updateLayer : function(info) {
                 var layer = info.getLayer();
-                setDivIcon(layer, '<i class="fa fa-star-o" style="color: red;"></i>');
+                setDivIcon(layer,
+                        '<i class="fa fa-star-o" style="color: red;"></i>');
             }
         },
         'Point:sos' : {
             popup : '<strong>Poste de secours</strong>',
             updateLayer : function(info) {
                 var layer = info.getLayer();
-                setDivIcon(layer, '<i class="fa fa-plus-square" style="color: red;"></i>');
+                setDivIcon(layer,
+                        '<i class="fa fa-plus-square" style="color: red;"></i>');
             }
         },
         'Point:screen' : tmpl({
             updateLayer : function(info) {
                 var layer = info.getLayer();
-                setDivIcon(layer, '<i class="fa fa-film fa-lg" style="color: #00adef;"></i>');
+                setDivIcon(layer,
+                        '<i class="fa fa-film fa-lg" style="color: #00adef;"></i>');
+            }
+        }),
+        'Point:sculpture' : tmpl(
+                TEMPLATE_DEFAULT_SLIDABLE,
+                {
+                    updateLayer : function(info) {
+                        var layer = info.getLayer();
+                        setDivIcon(layer,
+                                '<i class="fa fa-star fa-lg" style="color: #00adef;"></i>');
+                    }
+                }),
+        'Point:address' : tmpl(
+        // TEMPLATE_DEFAULT_SLIDABLE,
+        {
+            updateLayer : function(info) {
+                var layer = info.getLayer();
+                setDivIcon(layer,
+                        '<i class="fa fa-star fa-lg" style="color: #00adef;"></i>');
             }
         }),
         'Point:cafe' : tmpl({
             updateLayer : function(info) {
                 var layer = info.getLayer();
-                setDivIcon(layer, '<i class="fa fa-glass fa-lg" style="color: white;"></i>');
+                setDivIcon(layer,
+                        '<i class="fa fa-glass fa-lg" style="color: white;"></i>');
             }
         }),
         'Point:atelier' : tmpl({
             updateLayer : function(info) {
                 var layer = info.getLayer();
-                var icon = L.divIcon({
-                    className : '',
-                    html : '<i class="fa fa-lightbulb-o fa-lg" style="color: #fff200;"></i>'
-                });
+                var icon = L
+                        .divIcon({
+                            className : '',
+                            html : '<i class="fa fa-lightbulb-o fa-lg" style="color: #fff200;"></i>'
+                        });
                 layer.setIcon(icon);
             }
         }),
@@ -150,41 +185,53 @@
                     + '</div>' + '</div>',
             updateLayer : function(info) {
                 var layer = info.getLayer();
-                var icon = L.divIcon({
-                    className : '',
-                    html : '<i class="fa fa-glass fa-lg" style="color: white;"></i>'
-                });
+                var icon = L
+                        .divIcon({
+                            className : '',
+                            html : '<i class="fa fa-glass fa-lg" style="color: white;"></i>'
+                        });
                 layer.setIcon(icon);
             }
         }),
         'Point:photo' : {
-            popup : '<span><a href="javascript:void(0);" data-action-click="expandLayer"><img src="./data/images/<%= feature.properties.urls[0] %>" style="width:200px;"/></a></span>',
+            baseUrl : 'http://ubimix.com:8040/data/images/', // '/data/images/',
+            popup : '<span><a href="javascript:void(0);" data-action-click="expandLayer"><img src="<%=template.baseUrl%><%= feature.properties.urls[0] %>" style="width:200px;"/></a></span>',
             dialog : '<% var dialogId=obj.getId("-dialog"); %>'
-                + '<div id="<%=dialogId%>" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="<%=dialogId%>-title" aria-hidden="true">'
-                + ' <div class="modal-header">'
-                + ' <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'
-                + ' <h3 id="<%=dialogId%>-title"><%=feature.properties.label%></h3>'
-                + ' </div>'
-                + ' <div class="modal-body">'
-                + ' <% var next=obj.getNext();  var prev=obj.getPrevious(); %>'
-                + ' <div class="row-fluid">'
-                + '     <div class="span1">'
-                + '         <% if (prev){%><button class="btn btn-mini" data-action-click="! var o=obj.getPrevious();if(o)o.expandLayer()">&laquo;</button><% } %>'
-                + '     </div>'
-                + '     <div class="span10 thumbnails">'
-                + '         <img src="./data/images/<%= feature.properties.urls[0] %>" class="thumbnail"/>'
-                + '     </div>'
-                + '     <div class="span1">'
-                + '         <% if (next){ %><button class="btn btn-mini" data-action-click="! var o=obj.getNext();if(o)o.expandLayer()">&raquo;</button><% } %>'
-                + '     </div>'
-                + ' </div>'
-                + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
-                + ' </div>' + '<div class="modal-footer">'
-                + '<button class="btn" data-dismiss="modal" aria-hidden="true">OK</button>' + '</div>' + '</div>',
+                    + '<div id="<%=dialogId%>" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="<%=dialogId%>-title" aria-hidden="true">'
+                    + ' <% var next=obj.getNext();  var prev=obj.getPrevious(); %>'
+                    + ' <div class="modal-header">'
+                    + ' <div class="row-fluid">'
+                    + '     <div class="span10 thumbnails">'
+                    + '         <% if (feature.properties.label) { %>'
+                    + '         <h3 id="<%=dialogId%>-title"><%=feature.properties.label%></h3>'
+                    + '         <% } %>'
+                    + '     </div>'
+                    + '     <div class="span2">'
+                    + '         <span class="pull-right">'
+                    + '         <% if (prev){%><a href="javascript:void(0);" data-action-click="! var o=obj.getPrevious();if(o)o.expandLayer()"><i class="fa fa-chevron-left"></i></a>&nbsp;<% } %>'
+                    + '         <% if (next){ %><a href="javascript:void(0);" data-action-click="! var o=obj.getNext();if(o)o.expandLayer()"><i class="fa fa-chevron-right"></i></a>&nbsp;<% } %>'
+                    + '         <a type="button" data-dismiss="modal" aria-hidden="true" href="javascript:void(0);"><i class="fa fa-times"></i></a>'
+                    + '         </span>'
+                    + '     </div>'
+                    + ' </div>'
+                    + ' </div>'
+                    + ' <div class="modal-body">'
+                    + ' <div class="row-fluid">'
+                    + '     <div class="span12 pagination-centered text-center well">'
+                    + '         <img src="<%=template.baseUrl%><%= feature.properties.urls[0] %>"/>'
+                    + '     </div>'
+                    + ' </div>'
+                    + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
+                    + ' </div>'
+                    + '<div class="modal-footer">'
+                    + '<button class="btn" data-dismiss="modal" aria-hidden="true">OK</button>'
+                    + '</div>' + '</div>',
             updateLayer : function(info) {
                 var layer = info.getLayer();
-                setDivIcon(layer, '<span style="color: white; white-space: nowrap;">'
-                        + '<i class="fa fa-picture-o fa-lg"></i></span>');
+                setDivIcon(
+                        layer,
+                        '<span style="color: white; white-space: nowrap;">'
+                                + '<i class="fa fa-picture-o fa-lg"></i></span>');
             }
         },
         'LineString' : {
@@ -237,10 +284,9 @@
             updateLayer : function(info) {
                 var layer = info.getLayer();
                 _.extend(layer.options, {
-                    color : "yellow",
-                    weight : 1,
-                    fillOpacity : 0.7,
-                    opacity : 0.8
+                    opacity : 0.1,
+                    fillOpacity : 0.1,
+                    color : 'yellow'
                 });
             }
         }),
@@ -314,7 +360,8 @@
             if (value === undefined)
                 return null;
             if (_.isString(value)) {
-                value = value.replace(/^\s*|\s*$/gim, '').replace(/\s+/gim, ' ');
+                value = value.replace(/^\s*|\s*$/gim, '')
+                        .replace(/\s+/gim, ' ');
                 if (value == '')
                     return null;
             }
@@ -517,14 +564,15 @@
         },
 
         /** Process the specified template and returns the result */
-        _processTemplate : function(str) {
+        _processTemplate : function(str, options) {
             if (!str)
                 return null;
             var feature = this.getFeature();
-            var result = _.template(str, {
+            options = _.extend({
                 obj : this,
                 feature : feature
-            })
+            }, (options || {}));
+            var result = _.template(str, options)
             return result;
         },
 
@@ -534,7 +582,9 @@
             if (!template)
                 return null;
             var str = template[field];
-            var html = this._processTemplate(str);
+            var html = this._processTemplate(str, {
+                template : template
+            });
             html = $(html);
 
             var that = this;
@@ -604,7 +654,8 @@
             container.find('.' + cls).each(function() {
                 $(this).removeClass(cls);
             })
-            var top = element.position().top + container.scrollTop() - container.position().top;
+            var top = element.position().top + container.scrollTop()
+                    - container.position().top;
             container.animate({
                 scrollTop : top
             }, 300);
@@ -816,7 +867,8 @@
                         var str = array[0];
                         for ( var i = 1; i < array.length; i++) {
                             var segment = array[i];
-                            str += segment[0].toUpperCase() + segment.substring(1);
+                            str += segment[0].toUpperCase()
+                                    + segment.substring(1);
                         }
                         layer.options[str] = value;
                     })
@@ -972,7 +1024,8 @@
             // FIXME:
             var nav = $(this.config.container).find('.navbar .nav');
             if (data.label) {
-                var ref = $('<a href="javascript:void(0);"></a>').text(data.label);
+                var ref = $('<a href="javascript:void(0);"></a>').text(
+                        data.label);
                 var li = $('<li data-ref="' + groupId + '"></li>').append(ref);
                 nav.append(li);
                 ref.click(function(e) {
@@ -1101,7 +1154,8 @@
                     return L.latLng(point[1], point[0]);
                 }
                 var zone = that.config.zone || [];
-                var bounds = L.latLngBounds(getLatLng(zone[0]), getLatLng(zone[1]));
+                var bounds = L.latLngBounds(getLatLng(zone[0]),
+                        getLatLng(zone[1]));
                 return bounds;
             }
             var element = $(that.config.container).find('.map');
@@ -1150,8 +1204,9 @@
             if (this.config.debug) {
                 var popup = L.popup();
                 map.on('click', function(e) {
-                    popup.setLatLng(e.latlng).setContent("<strong>" + e.latlng.lng + ',' + e.latlng.lat + "</strong>")
-                            .openOn(map);
+                    popup.setLatLng(e.latlng).setContent(
+                            "<strong>" + e.latlng.lng + ',' + e.latlng.lat
+                                    + "</strong>").openOn(map);
                 });
 
             }
