@@ -5,9 +5,12 @@
         maxZoom : 20,
         container : '#map-container',
         dataUrls : [ './data/numa.html', './data/program.html',
-                './data/history.html', './data/info.html',
-                './data/street-art.json', './data/example.html',
-                './data/partners.html' ],
+                './data/history.html',
+        // './data/info.html',
+        // './data/street-art.json',
+        // './data/example.html',
+        // './data/partners.html'
+        ],
         tilesLayer : 'http://{s}.tile.cloudmade.com/d4fc77ea4a63471cab2423e66626cbb6/997/256/{z}/{x}/{y}.png',
         tilesLayer : 'http://{s}.tiles.mapbox.com/v3/guilhemoreau.map-057le4on/{z}/{x}/{y}.png',
         zone : [ [ 2.347303032875061, 48.86909749404887 ],
@@ -16,7 +19,7 @@
 
     var TEMPLATE_DEFAULT_DESCRIPTION = ''
             + '<div data-type="<%=feature.geometry.type%>:<%=feature.properties.type%>">'
-            + '<h3><a href="javascript:void(0);" data-action-click="activateLayer"><%=feature.properties.label||feature.properties.name%></a></h3>'
+            + '<h3><a href="javascript:void(0);" data-action-click="activateLayer"><%=feature.properties.label%></a></h3>'
             + '<div class="visible-when-active">'
             + ' <%=feature.properties.description%>'
             + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
@@ -294,6 +297,12 @@
             }
         }),
         'Polygon:numa' : tmpl({
+            description : '<div class="numa" data-type="<%=feature.geometry.type%>:<%=feature.properties.type%>">'
+                    + '<h3><a href="javascript:void(0);" data-action-click="activateLayer"><img src="./data/images/numa/Logo_NUMA.png" /></a></h3>'
+                    + '<div class="visible-when-active">'
+                    + ' <%=feature.properties.description%>'
+                    + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
+                    + '</div>' + '</div>',
             popup : '<div><h3 data-action-click="activateLayer">NUMA</h3></div>',
             updateLayer : function(info) {
                 var layer = info.getMapLayer();
@@ -603,7 +612,6 @@
             var that = this;
             function bindActions(e, event) {
                 var action = e.attr('data-action-' + event);
-                console.log('ACTION:', e, action)
                 if (!action)
                     return;
                 var method = null;
@@ -912,9 +920,6 @@
                 if (feature.geometry && feature.geometry.coordinates
                         && feature.geometry.type) {
                     that.groupLayer.addData([ feature ]);
-                } else {
-                    var t = info._getFeatureTypeArray();
-                    console.log('FEATURE TYPE', t.join(':'));
                 }
             });
         },
