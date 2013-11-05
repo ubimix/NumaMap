@@ -29,6 +29,12 @@
 <script type="text/javascript" src="./libs/q/q.js"></script>
 <script type="text/javascript" src="./libs/underscore/underscore-min.js"></script>
 
+<link href="http://clients.pauletienney.net/numa/css/custom-fonts.css"
+	rel="stylesheet" />
+<link
+	href="http://clients.pauletienney.net/numa/css/MyFontsWebfontsKit.css"
+	rel="stylesheet" />
+
 <!-- Specific CSS styles -->
 <style type="text/css">
 html,body {
@@ -50,6 +56,7 @@ html,body {
 
 #map-container .navbar .navbar-inner ul.nav li {
 	text-transform: uppercase;
+	margin-right: 0.5em;
 }
 
 #map-container .navbar .navbar-inner ul.nav li a {
@@ -81,17 +88,33 @@ html,body {
 
 #map-container .info .feature {
 	margin: 0.5em 0;
-	padding: 0 0.5em;
+	padding: 0.5em;
 	border-bottom: 1px solid #eee;
 }
 
-#map-container .info .feature h3,#map-container .info .feature h3>a {
+#map-container .info .feature h2 {
+	color: #080808;
 	margin: 0;
-	font-size: 1.17em;
-	line-height: 1.8em;
-	color: #00AEEF;
+	margin-top: 1em;
+	font-family: UniversLTPro-Condensed;
+	font-style: normal;
+	letter-spacing: 1px;
 	text-transform: uppercase;
+	font-weight: normal;
+	font-size: 1.7em;
+}
+
+#map-container .info .feature h3,#map-container .info .feature h3>a {
 	color: #00AEEF;
+	margin: 0;
+	font-family: UniversLTPro-Condensed;
+	font-style: normal;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	font-weight: normal;
+	/* color: #080808; */
+	font-size: 1.2em;
+	line-height: 1.3em;
 }
 
 #map-container .info .feature.feature-active h3,#map-container .info .feature.feature-active h3>a
@@ -100,7 +123,7 @@ html,body {
 }
 
 #map-container .info .feature.feature-active {
-	
+	padding-bottom: 1.5em;
 }
 
 #map-container .info .feature .visible-when-active {
@@ -109,6 +132,11 @@ html,body {
 
 #map-container .info .feature.feature-active .visible-when-active {
 	display: block;
+}
+
+/* Bootstrap styles re-definition */
+.modal-backdrop {
+	opacity: 0.3;
 }
 
 /* Content styles */

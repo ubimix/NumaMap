@@ -42,7 +42,7 @@
     }
     var TEMPLATE_DEFAULT_SLIDABLE = {
         dialog : '<% var dialogId=obj.getId("-dialog"); %>'
-                + '<div id="<%=dialogId%>" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="<%=dialogId%>-title" aria-hidden="true">'
+                + '<div id="<%=dialogId%>" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="<%=dialogId%>-title" aria-hidden="true">'
                 + ' <div class="modal-header">'
                 + ' <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'
                 + ' <h3 id="<%=dialogId%>-title"><%=feature.properties.label%></h3>'
@@ -99,9 +99,12 @@
         }
     }
     var TEMPLATES = {
+        ':group' : {
+            description : '<div><h2><%=feature.properties.label%></h2></div>'
+        },
         'Point' : tmpl({
             updateLayer : function(info) {
-                var layer = info.getLayer();
+                var layer = info.getMapLayer();
                 setDivIcon(layer, '<i class="fa fa-map-marker fa-lg"'
                         + ' style="color: #00adef;"></i>');
             }
@@ -109,7 +112,7 @@
         'Point:wc' : {
             popup : '<strong>WC</strong>',
             updateLayer : function(info) {
-                var layer = info.getLayer();
+                var layer = info.getMapLayer();
                 setDivIcon(layer,
                         '<span style="color: maroon; white-space: nowrap;">'
                                 + '<i class="fa fa-male fa-lg"></i>'
@@ -119,7 +122,7 @@
         'Point:security' : {
             popup : '<div><strong>Agent de sécurité</strong></div>',
             updateLayer : function(info) {
-                var layer = info.getLayer();
+                var layer = info.getMapLayer();
                 setDivIcon(layer,
                         '<i class="fa fa-star-o" style="color: red;"></i>');
             }
@@ -127,14 +130,14 @@
         'Point:sos' : {
             popup : '<strong>Poste de secours</strong>',
             updateLayer : function(info) {
-                var layer = info.getLayer();
+                var layer = info.getMapLayer();
                 setDivIcon(layer,
                         '<i class="fa fa-plus-square" style="color: red;"></i>');
             }
         },
         'Point:screen' : tmpl({
             updateLayer : function(info) {
-                var layer = info.getLayer();
+                var layer = info.getMapLayer();
                 setDivIcon(layer,
                         '<i class="fa fa-film fa-lg" style="color: #00adef;"></i>');
             }
@@ -143,7 +146,7 @@
                 TEMPLATE_DEFAULT_SLIDABLE,
                 {
                     updateLayer : function(info) {
-                        var layer = info.getLayer();
+                        var layer = info.getMapLayer();
                         setDivIcon(layer,
                                 '<i class="fa fa-star fa-lg" style="color: #00adef;"></i>');
                     }
@@ -152,21 +155,21 @@
         // TEMPLATE_DEFAULT_SLIDABLE,
         {
             updateLayer : function(info) {
-                var layer = info.getLayer();
+                var layer = info.getMapLayer();
                 setDivIcon(layer,
                         '<i class="fa fa-star fa-lg" style="color: #00adef;"></i>');
             }
         }),
         'Point:cafe' : tmpl({
             updateLayer : function(info) {
-                var layer = info.getLayer();
+                var layer = info.getMapLayer();
                 setDivIcon(layer,
                         '<i class="fa fa-glass fa-lg" style="color: white;"></i>');
             }
         }),
         'Point:atelier' : tmpl({
             updateLayer : function(info) {
-                var layer = info.getLayer();
+                var layer = info.getMapLayer();
                 var icon = L
                         .divIcon({
                             className : '',
@@ -184,7 +187,7 @@
                     + '<% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
                     + '</div>' + '</div>',
             updateLayer : function(info) {
-                var layer = info.getLayer();
+                var layer = info.getMapLayer();
                 var icon = L
                         .divIcon({
                             className : '',
@@ -227,7 +230,7 @@
                     + '<button class="btn" data-dismiss="modal" aria-hidden="true">OK</button>'
                     + '</div>' + '</div>',
             updateLayer : function(info) {
-                var layer = info.getLayer();
+                var layer = info.getMapLayer();
                 setDivIcon(
                         layer,
                         '<span style="color: white; white-space: nowrap;">'
@@ -240,7 +243,7 @@
         'LineString:barrage' : {
             popup : '<div>Barrage</div>',
             updateLayer : function(info) {
-                var layer = info.getLayer();
+                var layer = info.getMapLayer();
                 _.extend(layer.options, {
                     color : 'red',
                     dashArray : '5,5',
@@ -250,7 +253,7 @@
         },
         'LineString:passage' : tmpl(TEMPLATE_DEFAULT_SLIDABLE, {
             updateLayer : function(info) {
-                var layer = info.getLayer();
+                var layer = info.getMapLayer();
                 _.extend(layer.options, {
                     color : 'yellow',
                     dashArray : '5,5',
@@ -261,7 +264,7 @@
         }),
         'LineString:rue' : tmpl(TEMPLATE_DEFAULT_SLIDABLE, {
             updateLayer : function(info) {
-                var layer = info.getLayer();
+                var layer = info.getMapLayer();
                 _.extend(layer.options, {
                     opacity : 0.1,
                     color : 'yellow',
@@ -271,7 +274,7 @@
         }),
         'Polygon' : tmpl({
             updateLayer : function(info) {
-                var layer = info.getLayer();
+                var layer = info.getMapLayer();
                 _.extend(layer.options, {
                     color : 'yellow',
                     weight : 1,
@@ -282,7 +285,7 @@
         }),
         'Polygon:place' : tmpl(TEMPLATE_DEFAULT_SLIDABLE, {
             updateLayer : function(info) {
-                var layer = info.getLayer();
+                var layer = info.getMapLayer();
                 _.extend(layer.options, {
                     opacity : 0.1,
                     fillOpacity : 0.1,
@@ -293,7 +296,7 @@
         'Polygon:numa' : tmpl({
             popup : '<div><h3 data-action-click="activateLayer">NUMA</h3></div>',
             updateLayer : function(info) {
-                var layer = info.getLayer();
+                var layer = info.getMapLayer();
                 _.extend(layer.options, {
                     color : '#ec008c',
                     weight : 1,
@@ -308,7 +311,7 @@
             // + '<%=feature.properties.label%>'
             // + '</a></strong></div></div>',
             updateLayer : function(info) {
-                var layer = info.getLayer();
+                var layer = info.getMapLayer();
                 _.extend(layer.options, {
                     color : '#00adef',
                     fillColor : '#00adef',
@@ -373,7 +376,7 @@
             var address = article.find('address');
             var geometry = {};
             // Copies the type of this marker
-            copy(address.data('geometry') || 'Point', geometry, 'type');
+            copy(address.data('geometry'), geometry, 'type');
             // Copies coordinates
             copy(address.data('coordinates'), geometry, 'coordinates');
 
@@ -381,14 +384,17 @@
             // into a set of options
             var options = {};
             var hasOptions = false;
-            $.each(address[0].attributes, function(index, attr) {
-                var name = attr.name;
-                if (name != 'data-geometry' && name != 'data-coordinates') {
-                    hasOptions = true;
-                    name = name.substring('data-'.length);
-                    options[name] = attr.value;
-                }
-            })
+            var addrElm = address[0];
+            if (addrElm) {
+                $.each(addrElm.attributes, function(index, attr) {
+                    var name = attr.name;
+                    if (name != 'data-geometry' && name != 'data-coordinates') {
+                        hasOptions = true;
+                        name = name.substring('data-'.length);
+                        options[name] = attr.value;
+                    }
+                })
+            }
             if (hasOptions) {
                 copy(options, geometry, 'options');
             }
@@ -471,24 +477,7 @@
     function FeatureInfo(options) {
         var that = this;
         this.options = options;
-        var template = that.getTemplate();
-        if (template && template.updateLayer) {
-            template.updateLayer(that);
-        }
-        var layer = this.getLayer();
-        layer.on('mouseover', function(e) {
-            that.setLatLng(e.latlng);
-            that.focusLayer({
-                layer : that
-            });
-        });
-        layer.on('click', function(e) {
-            that.setLatLng(e.latlng);
-            that.activateLayer({
-                layer : that
-            });
-        })
-
+        this.setMapLayer(options.layer);
     }
     _.extend(FeatureInfo.prototype, {
 
@@ -543,8 +532,32 @@
         },
 
         /** Returns a map layer associated with this feature */
-        getLayer : function() {
+        getMapLayer : function() {
             return this.options.layer;
+        },
+
+        /** Sets a new map layer */
+        setMapLayer : function(layer) {
+            var that = this;
+            that.options.layer = layer;
+            if (layer) {
+                layer.on('mouseover', function(e) {
+                    that.setLatLng(e.latlng);
+                    that.focusLayer({
+                        layer : that
+                    });
+                });
+                layer.on('click', function(e) {
+                    that.setLatLng(e.latlng);
+                    that.activateLayer({
+                        layer : that
+                    });
+                })
+                var template = that.getTemplate();
+                if (template && template.updateLayer) {
+                    template.updateLayer(that);
+                }
+            }
         },
 
         /** Returns the internal feature (as a JSON object) */
@@ -683,8 +696,10 @@
 
         /** Closes already opened popups */
         closePopup : function() {
-            var layer = this.getLayer();
-            layer.closePopup();
+            var layer = this.getMapLayer();
+            if (layer) {
+                layer.closePopup();
+            }
             // ???
             var map = this.getMap();
             map.closePopup();
@@ -746,7 +761,12 @@
             if (!feature)
                 return [];
             var geometry = feature.geometry || {};
-            var array = [ (geometry.type || '') ];
+            var array = [];
+            if (geometry && geometry.type) {
+                array.push(geometry.type);
+            } else {
+                array.push('');
+            }
             var properties = feature.properties || {};
             var type = properties.type || '';
             if (type != '') {
@@ -852,7 +872,7 @@
             delete this.groupLayer;
             var that = this;
             this._keys = null;
-            this.groupLayer = L.geoJson(data, {
+            this.groupLayer = L.geoJson(null, {
                 pointToLayer : function(featureData, latlng) {
                     var layer;
                     var options = featureData.geometry.options || {};
@@ -875,13 +895,26 @@
                     return layer;
                 },
                 onEachFeature : function(feature, layer) {
-                    var info = new FeatureInfo({
-                        group : that,
-                        feature : feature,
-                        layer : layer
-                    });
-                    var id = info.getId();
-                    that.features[id] = info;
+                    var info = that.features[feature.id];
+                    if (info) {
+                        info.setMapLayer(layer);
+                    }
+                }
+            });
+            _.each(data.features, function(feature) {
+                var info = new FeatureInfo({
+                    group : that,
+                    feature : feature
+                });
+                var id = info.getId();
+                that.features[id] = info;
+                feature.id = id;
+                if (feature.geometry && feature.geometry.coordinates
+                        && feature.geometry.type) {
+                    that.groupLayer.addData([ feature ]);
+                } else {
+                    var t = info._getFeatureTypeArray();
+                    console.log('FEATURE TYPE', t.join(':'));
                 }
             });
         },
