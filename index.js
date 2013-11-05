@@ -109,7 +109,7 @@
             updateLayer : function(info) {
                 var layer = info.getMapLayer();
                 setDivIcon(layer, '<div class="fa fa-map-marker fa-lg"'
-                        + ' style="color: #00adef;"></div>');
+                        + ' style="color: yellow;"></div>');
             }
         }),
         'Point:wc' : {
@@ -152,7 +152,7 @@
                     updateLayer : function(info) {
                         var layer = info.getMapLayer();
                         setDivIcon(layer,
-                                '<div class="fa fa-star fa-lg" style="color: #00adef;"></div>');
+                                '<div class="fa fa-star fa-lg" style="color: yellow;"></div>');
                     }
                 }),
         'Point:address' : tmpl(
@@ -161,7 +161,7 @@
             updateLayer : function(info) {
                 var layer = info.getMapLayer();
                 setDivIcon(layer,
-                        '<div class="fa fa-star fa-lg" style="color: #00adef;"></div>');
+                        '<div class="fa fa-star fa-lg" style="color: yellow;"></div>');
             }
         }),
         'Point:cafe' : tmpl({
