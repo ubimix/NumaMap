@@ -54,13 +54,13 @@
                 + ' <% var next=obj.getNext();  var prev=obj.getPrevious(); %>'
                 + ' <div class="row-fluid">'
                 + '     <div class="span1">'
-                + '         <% if (prev){%><a href="javascript:void(0);" data-action-click="! var o=obj.getPrevious();if(o)o.expandLayer()"><i class="fa fa-chevron-left"></i></a>&nbsp;<% } %>'
+                + '         <% if (prev){%><a href="javascript:void(0);" data-action-click="! var o=obj.getPrevious();if(o)o.expandLayer()"><div class="fa fa-chevron-left"></div></a>&nbsp;<% } %>'
                 + '     </div>'
                 + '     <div class="span10">'
                 + '         <%=feature.properties.fullContent?feature.properties.fullContent:feature.properties.description%>'
                 + '     </div>'
                 + '     <div class="span1">'
-                + '         <% if (next){ %><a href="javascript:void(0);" data-action-click="! var o=obj.getNext();if(o)o.expandLayer()"><i class="fa fa-chevron-right"></i></a>&nbsp;<% } %>'
+                + '         <% if (next){ %><a href="javascript:void(0);" data-action-click="! var o=obj.getNext();if(o)o.expandLayer()"><div class="fa fa-chevron-right"></div></a>&nbsp;<% } %>'
                 + '     </div>'
                 + ' </div>'
                 + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
@@ -75,13 +75,13 @@
                 + ' <% var next=obj.getNext();  var prev=obj.getPrevious(); %>'
                 + ' <div class="row-fluid">'
                 + '     <div class="span1">'
-                + '         <% if (prev){%><a href="javascript:void(0);" data-action-click="! var o=obj.getPrevious();if(o)o.activateLayer()"><i class="fa fa-chevron-left"></i></a>&nbsp;<% } %>'
+                + '         <% if (prev){%><a href="javascript:void(0);" data-action-click="! var o=obj.getPrevious();if(o)o.activateLayer()"><div class="fa fa-chevron-left"></div></a>&nbsp;<% } %>'
                 + '     </div>'
                 + '     <div class="span10">'
                 + '         <%=feature.properties.description%>'
                 + '     </div>'
                 + '     <div class="span1">'
-                + '         <% if (next){ %><a href="javascript:void(0);" data-action-click="! var o=obj.getNext();if(o)o.activateLayer()"><i class="fa fa-chevron-right"></i></a>&nbsp;<% } %>'
+                + '         <% if (next){ %><a href="javascript:void(0);" data-action-click="! var o=obj.getNext();if(o)o.activateLayer()"><div class="fa fa-chevron-right"></div></a>&nbsp;<% } %>'
                 + '     </div>'
                 + ' </div>'
                 + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
@@ -108,18 +108,19 @@
         'Point' : tmpl({
             updateLayer : function(info) {
                 var layer = info.getMapLayer();
-                setDivIcon(layer, '<i class="fa fa-map-marker fa-lg"'
-                        + ' style="color: #00adef;"></i>');
+                setDivIcon(layer, '<div class="fa fa-map-marker fa-lg"'
+                        + ' style="color: #00adef;"></div>');
             }
         }),
         'Point:wc' : {
             popup : '<strong>WC</strong>',
             updateLayer : function(info) {
                 var layer = info.getMapLayer();
-                setDivIcon(layer,
+                setDivIcon(
+                        layer,
                         '<span style="color: maroon; white-space: nowrap;">'
-                                + '<i class="fa fa-male fa-lg"></i>'
-                                + '<i class="fa fa-female fa-lg"></i></span>');
+                                + '<div class="fa fa-male fa-lg"></div>'
+                                + '<div class="fa fa-female fa-lg"></div></span>');
             }
         },
         'Point:security' : {
@@ -127,7 +128,7 @@
             updateLayer : function(info) {
                 var layer = info.getMapLayer();
                 setDivIcon(layer,
-                        '<i class="fa fa-star-o" style="color: red;"></i>');
+                        '<div class="fa fa-star-o" style="color: red;"></div>');
             }
         },
         'Point:sos' : {
@@ -135,14 +136,14 @@
             updateLayer : function(info) {
                 var layer = info.getMapLayer();
                 setDivIcon(layer,
-                        '<i class="fa fa-plus-square" style="color: red;"></i>');
+                        '<div class="fa fa-plus-square" style="color: red;"></div>');
             }
         },
         'Point:screen' : tmpl({
             updateLayer : function(info) {
                 var layer = info.getMapLayer();
                 setDivIcon(layer,
-                        '<i class="fa fa-film fa-lg" style="color: #00adef;"></i>');
+                        '<div class="fa fa-film fa-lg" style="color: white;"></div>');
             }
         }),
         'Point:sculpture' : tmpl(
@@ -151,7 +152,7 @@
                     updateLayer : function(info) {
                         var layer = info.getMapLayer();
                         setDivIcon(layer,
-                                '<i class="fa fa-star fa-lg" style="color: #00adef;"></i>');
+                                '<div class="fa fa-star fa-lg" style="color: #00adef;"></div>');
                     }
                 }),
         'Point:address' : tmpl(
@@ -160,14 +161,14 @@
             updateLayer : function(info) {
                 var layer = info.getMapLayer();
                 setDivIcon(layer,
-                        '<i class="fa fa-star fa-lg" style="color: #00adef;"></i>');
+                        '<div class="fa fa-star fa-lg" style="color: #00adef;"></div>');
             }
         }),
         'Point:cafe' : tmpl({
             updateLayer : function(info) {
                 var layer = info.getMapLayer();
                 setDivIcon(layer,
-                        '<i class="fa fa-glass fa-lg" style="color: white;"></i>');
+                        '<div class="fa fa-glass fa-lg" style="color: white;"></div>');
             }
         }),
         'Point:artist' : tmpl({
@@ -176,7 +177,7 @@
                 var icon = L
                         .divIcon({
                             className : '',
-                            html : '<i class="fa fa-lightbulb-o fa-lg" style="color: #fff200;"></i>'
+                            html : '<div class="fa fa-lightbulb-o fa-lg" style="color: #fff200;"></div>'
                         });
                 layer.setIcon(icon);
             }
@@ -187,7 +188,7 @@
                 var icon = L
                         .divIcon({
                             className : '',
-                            html : '<i class="fa fa-lightbulb-o fa-lg" style="color: #fff200;"></i>'
+                            html : '<div class="fa fa-lightbulb-o fa-lg" style="color: #fff200;"></div>'
                         });
                 layer.setIcon(icon);
             }
@@ -205,7 +206,7 @@
                 var icon = L
                         .divIcon({
                             className : '',
-                            html : '<i class="fa fa-glass fa-lg" style="color: white;"></i>'
+                            html : '<div class="fa fa-glass fa-lg" style="color: white;"></div>'
                         });
                 layer.setIcon(icon);
             }
@@ -225,9 +226,9 @@
                     + '     </div>'
                     + '     <div class="span2">'
                     + '         <span class="pull-right">'
-                    + '         <% if (prev){%><a href="javascript:void(0);" data-action-click="! var o=obj.getPrevious();if(o)o.expandLayer()"><i class="fa fa-chevron-left"></i></a>&nbsp;<% } %>'
-                    + '         <% if (next){ %><a href="javascript:void(0);" data-action-click="! var o=obj.getNext();if(o)o.expandLayer()"><i class="fa fa-chevron-right"></i></a>&nbsp;<% } %>'
-                    + '         <a type="button" data-dismiss="modal" aria-hidden="true" href="javascript:void(0);"><i class="fa fa-times"></i></a>'
+                    + '         <% if (prev){%><a href="javascript:void(0);" data-action-click="! var o=obj.getPrevious();if(o)o.expandLayer()"><div class="fa fa-chevron-left"></div></a>&nbsp;<% } %>'
+                    + '         <% if (next){ %><a href="javascript:void(0);" data-action-click="! var o=obj.getNext();if(o)o.expandLayer()"><div class="fa fa-chevron-right"></div></a>&nbsp;<% } %>'
+                    + '         <a type="button" data-dismiss="modal" aria-hidden="true" href="javascript:void(0);"><div class="fa fa-times"></div></a>'
                     + '         </span>'
                     + '     </div>'
                     + ' </div>'
@@ -248,7 +249,7 @@
                 setDivIcon(
                         layer,
                         '<span style="color: white; white-space: nowrap;">'
-                                + '<i class="fa fa-picture-o fa-lg"></i></span>');
+                                + '<div class="fa fa-picture-o fa-lg"></div></span>');
             }
         },
         'LineString' : {
@@ -710,7 +711,7 @@
             var html = this.render('popup');
             if (html) {
                 var latlng = this.getLatLng();
-                var offset = new L.Point(0, -10);
+                var offset = new L.Point(9, -5);
                 var map = this.getMap();
                 new L.Rrose({
                     offset : offset,
