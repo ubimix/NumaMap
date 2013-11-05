@@ -170,6 +170,17 @@
                         '<i class="fa fa-glass fa-lg" style="color: white;"></i>');
             }
         }),
+        'Point:artist' : tmpl({
+            updateLayer : function(info) {
+                var layer = info.getMapLayer();
+                var icon = L
+                        .divIcon({
+                            className : '',
+                            html : '<i class="fa fa-lightbulb-o fa-lg" style="color: #fff200;"></i>'
+                        });
+                layer.setIcon(icon);
+            }
+        }),
         'Point:atelier' : tmpl({
             updateLayer : function(info) {
                 var layer = info.getMapLayer();
@@ -275,7 +286,7 @@
                 });
             }
         }),
-        'LineString:installation' : tmpl(TEMPLATE_DEFAULT_SLIDABLE, {
+        'LineString:installation' : tmpl({
             updateLayer : function(info) {
                 var layer = info.getMapLayer();
                 _.extend(layer.options, {
