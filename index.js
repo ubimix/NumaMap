@@ -2,7 +2,7 @@
 
     var CONFIG = {
         debug : false,
-        maxZoom : 20,
+        maxZoom : 21,
         container : '#map-container',
         dataUrls : [ './data/numa.html', './data/program.html',
                 './data/history.html',
@@ -39,6 +39,8 @@
             + '<button class="btn" data-dismiss="modal" aria-hidden="true">OK</button>'
             + '</div>' + '</div>';
     var TEMPLATE_DEFAULT = {
+        iconName : 'svg-icon',
+        iconUrl : './data/icons/etoile.svg',
         popup : TEMPLATE_DEFAULT_POPUP,
         description : TEMPLATE_DEFAULT_DESCRIPTION,
         dialog : TEMPLATE_DEFAULT_DIALOG,
@@ -145,22 +147,9 @@
             popup : '<div><strong>Agent de sécurité</strong></div>',
             iconStyle : ' color: red;'
         },
-        'Point:sos' : {
-            popup : '<strong>Poste de secours</strong>'
-        },
         'Point:screen' : tmpl({
             iconName : 'svg-icon',
             iconUrl : './data/icons/projection.svg'
-        }),
-        'Point:sculpture' : tmpl(TEMPLATE_DEFAULT_SLIDABLE, {
-            iconName : 'fa fa-star fa-lg',
-            iconStyle : 'color: yellow;'
-        }),
-        'Point:address' : tmpl(
-        // TEMPLATE_DEFAULT_SLIDABLE,
-        {
-            iconName : 'fa fa-star fa-lg',
-            iconStyle : 'color: yellow;'
         }),
         'Point:cafe' : tmpl({
             iconName : 'svg-icon',
@@ -171,8 +160,8 @@
             iconUrl : './data/icons/boissons.svg'
         }),
         'Point:artist' : tmpl({
-            iconName : 'fa fa-lightbulb-o fa-lg',
-            iconStyle : 'color:#fff200;'
+            iconName : 'svg-icon',
+            iconUrl : './data/icons/artiste.svg'
         }),
         'Point:atelier' : tmpl({
             iconName : 'svg-icon',
@@ -298,7 +287,7 @@
                     + ' <%=feature.properties.description%>'
                     + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
                     + '</div>' + '</div>',
-            popup : '<div><h3 data-action-click="activateLayer">NUMA</h3></div>',
+            popup : '<div style="width:150px"><a href="javascript:void(0);" data-action-click="activateLayer"><img style="width:150px" src="./data/images/numa/Logo_NUMA.png" title="NUMA"/></a></div>',
             updateLayer : function(info) {
                 var layer = info.getMapLayer();
                 _.extend(layer.options, {
@@ -596,10 +585,18 @@
             that.options.layer = layer;
             if (layer) {
                 layer.on('mouseover', function(e) {
+                    if (layer.setZIndexOffset) {
+                        layer.setZIndexOffset(1000);
+                    }
                     that.setLatLng(e.latlng);
                     that.focusLayer({
                         layer : that
                     });
+                });
+                layer.on('mouseout', function(e) {
+                    if (layer.setZIndexOffset) {
+                        layer.setZIndexOffset(10);
+                    }
                 });
                 layer.on('click', function(e) {
                     that.setLatLng(e.latlng);
@@ -1237,17 +1234,30 @@
             map.scrollWheelZoom.disable();
             map.boxZoom.disable();
 
+            var maxZoom = that.config.maxZoom || 18;
             L.tileLayer(that.config.tilesLayer, {
                 attribution : that.config.attribution,
-                maxZoom : that.config.maxZoom
+                maxZoom : maxZoom
             }).addTo(map);
 
             var bounds = getLatLngBounds(that.config.zone);
             var center = bounds.getCenter();
             map.fitBounds(bounds);
-            var minZoom = map.getZoom();
+            var minZoom = map.getZoom() - 1;
             var layersVisible = true;
+            function _updateZoomClassNames() {
+                var zoom = map.getZoom();
+                for ( var i = 0; i < maxZoom; i++) {
+                    var className = 'zoom-' + i;
+                    if (i < zoom) {
+                        element.addClass(className);
+                    } else {
+                        element.removeClass(className);
+                    }
+                }
+            }
             map.on('zoomend', function() {
+                _updateZoomClassNames();
                 var zoom = map.getZoom();
                 var update = false;
                 if (zoom < minZoom) {
@@ -1283,6 +1293,7 @@
                 });
 
             }
+            _updateZoomClassNames();
             return map;
         },
 

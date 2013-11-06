@@ -29,13 +29,12 @@
 <script type="text/javascript" src="./libs/q/q.js"></script>
 <script type="text/javascript" src="./libs/underscore/underscore-min.js"></script>
 
-<!--
- <link href="http://clients.pauletienney.net/numa/css/custom-fonts.css"
+<link href="http://clients.pauletienney.net/numa/css/custom-fonts.css"
 	rel="stylesheet" />
 <link
 	href="http://clients.pauletienney.net/numa/css/MyFontsWebfontsKit.css"
 	rel="stylesheet" />
- -->
+
 <!-- Specific CSS styles -->
 <style type="text/css">
 html,body {
@@ -80,6 +79,7 @@ html,body {
 
 #map-container .info {
 	overflow-y: auto;
+	padding-right: 1em;
 }
 
 #map-container  .loading {
@@ -154,13 +154,46 @@ html,body {
 }
 
 #map-container .leaflet-marker-icon .svg-icon {
+	width: 10px;
+	height: 10px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	background-color: black;
+	color: white;
+	border: 1px solid gray;
+}
+
+#map-container .zoom-17 .leaflet-marker-icon .svg-icon {
+	width: 16px;
+	height: 16px;
+	-webkit-border-radius: 16px;
+	-moz-border-radius: 16px;
+	border-radius: 16px;
+}
+
+#map-container .zoom-18 .leaflet-marker-icon .svg-icon {
 	width: 24px;
 	height: 24px;
 	-webkit-border-radius: 24px;
 	-moz-border-radius: 24px;
 	border-radius: 24px;
-	background-color: black;
-	color: white;
+}
+
+#map-container .zoom-19 .leaflet-marker-icon .svg-icon {
+	width: 36px;
+	height: 36px;
+	-webkit-border-radius: 36px;
+	-moz-border-radius: 36px;
+	border-radius: 36px;
+}
+
+#map-container .zoom-19 .leaflet-marker-icon .svg-icon {
+	width: 48px;
+	height: 48px;
+	-webkit-border-radius: 48px;
+	-moz-border-radius: 48px;
+	border-radius: 48px;
 }
 
 /* Bootstrap styles re-definition */
