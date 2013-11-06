@@ -282,12 +282,12 @@
         }),
         'Polygon:numa' : tmpl({
             description : '<div class="numa" data-type="<%=feature.geometry.type%>:<%=feature.properties.type%>">'
-                    + '<h3><a href="javascript:void(0);" data-action-click="activateLayer"><img src="./data/images/numa/Logo_NUMA.png" /></a></h3>'
+                    + '<h3 style="margin-bottom: 1em;"><a href="javascript:void(0);" data-action-click="activateLayer"><img src="./data/images/numagenta.svg" style="width-max: 100%"/></a></h3>'
                     + '<div class="visible-when-active">'
                     + ' <%=feature.properties.description%>'
                     + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
                     + '</div>' + '</div>',
-            popup : '<div style="width:150px"><a href="javascript:void(0);" data-action-click="activateLayer"><img style="width:150px" src="./data/images/numa/Logo_NUMA.png" title="NUMA"/></a></div>',
+            popup : '<div style="width:150px"><a href="javascript:void(0);" data-action-click="activateLayer"><img style="width:150px" src="./data/images/numagenta.svg" style="width-max: 100%" title="NUMA"/></a></div>',
             updateLayer : function(info) {
                 var layer = info.getMapLayer();
                 _.extend(layer.options, {
