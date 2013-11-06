@@ -41,7 +41,10 @@
     var TEMPLATE_DEFAULT = {
         popup : TEMPLATE_DEFAULT_POPUP,
         description : TEMPLATE_DEFAULT_DESCRIPTION,
-        dialog : TEMPLATE_DEFAULT_DIALOG
+        dialog : TEMPLATE_DEFAULT_DIALOG,
+        updateLayer : function(info) {
+            doUpdateLayer(this, info)
+        }
     }
     var TEMPLATE_DEFAULT_SLIDABLE = {
         dialog : '<% var dialogId=obj.getId("-dialog"); %>'
@@ -92,6 +95,35 @@
         return _.extend.apply(null, array);
 
     }
+    function doUpdateLayer(template, info, options) {
+        if (info.isPoint()) {
+            var feature = info.getFeature();
+            options = options || {};
+            options = _.extend({}, template,
+                    feature.geometry ? feature.geometry.options : {});
+            var iconName = options.iconName;
+            if (!iconName) {
+                if (!options.iconUrl) {
+                    iconName = 'fa fa-map-marker fa-lg';
+                } else {
+                    iconName = '';
+                }
+            }
+            var iconStyle = options.iconStyle || '';
+            var html = '';
+            if (options.iconUrl) {
+                html += '<img src="' + options.iconUrl + '" ';
+            } else {
+                html += '<div ';
+            }
+            html += 'class="map-icon ' + iconName + '" style="' + iconStyle
+                    + '"';
+            html += ' />';
+            // console.log('ICON : ', html, feature.geometry.options)
+            var layer = info.getMapLayer();
+            setDivIcon(layer, html);
+        }
+    }
     function setDivIcon(layer, html) {
         if (layer.setIcon) {
             var icon = L.divIcon({
@@ -105,114 +137,62 @@
         ':group' : {
             description : '<div><h2><%=feature.properties.label%></h2></div>'
         },
-        'Point' : tmpl({
-            updateLayer : function(info) {
-                var layer = info.getMapLayer();
-                setDivIcon(layer, '<div class="fa fa-map-marker fa-lg"'
-                        + ' style="color: yellow;"></div>');
-            }
-        }),
+        'Point' : tmpl({}),
         'Point:wc' : {
-            popup : '<strong>WC</strong>',
-            updateLayer : function(info) {
-                var layer = info.getMapLayer();
-                setDivIcon(
-                        layer,
-                        '<span style="color: maroon; white-space: nowrap;">'
-                                + '<div class="fa fa-male fa-lg"></div>'
-                                + '<div class="fa fa-female fa-lg"></div></span>');
-            }
+            popup : '<strong>WC</strong>'
         },
         'Point:security' : {
             popup : '<div><strong>Agent de sécurité</strong></div>',
-            updateLayer : function(info) {
-                var layer = info.getMapLayer();
-                setDivIcon(layer,
-                        '<div class="fa fa-star-o" style="color: red;"></div>');
-            }
+            iconStyle : ' color: red;'
         },
         'Point:sos' : {
-            popup : '<strong>Poste de secours</strong>',
-            updateLayer : function(info) {
-                var layer = info.getMapLayer();
-                setDivIcon(layer,
-                        '<div class="fa fa-plus-square" style="color: red;"></div>');
-            }
+            popup : '<strong>Poste de secours</strong>'
         },
         'Point:screen' : tmpl({
-            updateLayer : function(info) {
-                var layer = info.getMapLayer();
-                setDivIcon(layer,
-                        '<div class="fa fa-film fa-lg" style="color: white;"></div>');
-            }
+            iconName : 'svg-icon',
+            iconUrl : './data/icons/projection.svg'
         }),
-        'Point:sculpture' : tmpl(
-                TEMPLATE_DEFAULT_SLIDABLE,
-                {
-                    updateLayer : function(info) {
-                        var layer = info.getMapLayer();
-                        setDivIcon(layer,
-                                '<div class="fa fa-star fa-lg" style="color: yellow;"></div>');
-                    }
-                }),
+        'Point:sculpture' : tmpl(TEMPLATE_DEFAULT_SLIDABLE, {
+            iconName : 'fa fa-star fa-lg',
+            iconStyle : 'color: yellow;'
+        }),
         'Point:address' : tmpl(
         // TEMPLATE_DEFAULT_SLIDABLE,
         {
-            updateLayer : function(info) {
-                var layer = info.getMapLayer();
-                setDivIcon(layer,
-                        '<div class="fa fa-star fa-lg" style="color: yellow;"></div>');
-            }
+            iconName : 'fa fa-star fa-lg',
+            iconStyle : 'color: yellow;'
         }),
         'Point:cafe' : tmpl({
-            updateLayer : function(info) {
-                var layer = info.getMapLayer();
-                setDivIcon(layer,
-                        '<div class="fa fa-glass fa-lg" style="color: white;"></div>');
-            }
+            iconName : 'svg-icon',
+            iconUrl : './data/icons/nourriture.svg'
+        }),
+        'Point:bar' : tmpl({
+            iconName : 'svg-icon',
+            iconUrl : './data/icons/boissons.svg'
         }),
         'Point:artist' : tmpl({
-            updateLayer : function(info) {
-                var layer = info.getMapLayer();
-                var icon = L
-                        .divIcon({
-                            className : '',
-                            html : '<div class="fa fa-lightbulb-o fa-lg" style="color: #fff200;"></div>'
-                        });
-                layer.setIcon(icon);
-            }
+            iconName : 'fa fa-lightbulb-o fa-lg',
+            iconStyle : 'color:#fff200;'
         }),
         'Point:atelier' : tmpl({
-            updateLayer : function(info) {
-                var layer = info.getMapLayer();
-                var icon = L
-                        .divIcon({
-                            className : '',
-                            html : '<div class="fa fa-lightbulb-o fa-lg" style="color: #fff200;"></div>'
-                        });
-                layer.setIcon(icon);
-            }
+            iconName : 'svg-icon',
+            iconUrl : './data/icons/projection.svg'
         }),
         'Point:organization' : tmpl({
+            iconName : 'fa fa-glass fa-lg',
+            iconStyle : 'color:white;',
             description : '<div data-type="<%=feature.geometry.type%>:<%=feature.properties.type%>">'
                     + '<h3><a href="javascript:void(0);" data-action-click="activateLayer"><%=feature.properties.label||feature.properties.name%></a></h3>'
                     + '<div class="visible-when-active">'
                     + '<div class="pull-right"><%=feature.properties.address%></div>'
                     + '<div style="clear:both;"><%=feature.properties.description%></div>'
                     + '<% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
-                    + '</div>' + '</div>',
-            updateLayer : function(info) {
-                var layer = info.getMapLayer();
-                var icon = L
-                        .divIcon({
-                            className : '',
-                            html : '<div class="fa fa-glass fa-lg" style="color: white;"></div>'
-                        });
-                layer.setIcon(icon);
-            }
+                    + '</div>' + '</div>'
         }),
         'Point:photo' : {
             baseUrl : 'http://ubimix.com:8040/data/images/', // '/data/images/',
+            iconName : 'fa fa-picture-o fa-lg',
+            iconStyle : 'color:white;',
             popup : '<span><a href="javascript:void(0);" data-action-click="expandLayer"><img src="<%=template.baseUrl%><%= feature.properties.urls[0] %>" style="width:200px;"/></a></span>',
             dialog : '<% var dialogId=obj.getId("-dialog"); %>'
                     + '<div id="<%=dialogId%>" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="<%=dialogId%>-title" aria-hidden="true">'
@@ -243,14 +223,7 @@
                     + ' </div>'
                     + '<div class="modal-footer">'
                     + '<button class="btn" data-dismiss="modal" aria-hidden="true">OK</button>'
-                    + '</div>' + '</div>',
-            updateLayer : function(info) {
-                var layer = info.getMapLayer();
-                setDivIcon(
-                        layer,
-                        '<span style="color: white; white-space: nowrap;">'
-                                + '<div class="fa fa-picture-o fa-lg"></div></span>');
-            }
+                    + '</div>' + '</div>'
         },
         'LineString' : {
             description : '<div><%=feature.properties.description%></div>'
@@ -371,7 +344,7 @@
 
     /**
      * Parses the specified HTML content and transforms it into a valid GeoJSON
-     * feature object
+     * feature object.
      */
     function parseHTML(url, data) {
         var str = '' + data;
@@ -390,56 +363,75 @@
         function isEmpty(str) {
             return !str || str.replace(/^s+|\s+$/gi, '') == '';
         }
-        function copy(value, to, toProperty) {
-            if (value === undefined)
-                return null;
-            if (_.isString(value)) {
+        function trimValue(value) {
+            if (value == undefined)
+                value = null;
+            else if (value && _.isString(value)) {
                 value = value.replace(/^\s*|\s*$/gim, '')
                         .replace(/\s+/gim, ' ');
                 if (value == '')
-                    return null;
+                    value = null;
             }
-            to[toProperty] = value;
             return value;
+        }
+        function copy(value, to, toProperty) {
+            value = trimValue(value);
+            if (value !== null) {
+                to[toProperty] = value;
+            }
+            return value;
+        }
+        function getProperties(elm, obj) {
+            elm = $(elm);
+            obj = obj || {};
+            var e = elm[0];
+            if (e && e.attributes) {
+                $.each(e.attributes, function(index, attr) {
+                    var name = attr.name;
+                    var property = name.substring('data-'.length);
+                    var value = elm.data(property);
+                    value = trimValue(value);
+                    if (value !== null) {
+                        var propertyName = toPropertyName(property);
+                        obj[propertyName] = value;
+                    }
+                })
+            }
+            return obj;
+        }
+        function replaceProperties(obj, mapping) {
+            _.each(mapping, function(newProperty, oldProperty) {
+                if (newProperty == oldProperty)
+                    return;
+                if (newProperty) {
+                    obj[newProperty] = obj[oldProperty];
+                }
+                delete obj[oldProperty];
+            })
         }
         e.find('article').each(function() {
             article = $(this);
             var address = article.find('address');
             var geometry = {};
-            // Copies the type of this marker
             copy(address.data('geometry'), geometry, 'type');
-            // Copies coordinates
             copy(address.data('coordinates'), geometry, 'coordinates');
 
-            // Transforms all 'data-xxx' attributes of the "address" element
-            // into a set of options
             var options = {};
-            var hasOptions = false;
-            var addrElm = address[0];
-            if (addrElm) {
-                $.each(addrElm.attributes, function(index, attr) {
-                    var name = attr.name;
-                    if (name != 'data-geometry' && name != 'data-coordinates') {
-                        hasOptions = true;
-                        name = name.substring('data-'.length);
-                        options[name] = attr.value;
-                    }
-                })
-            }
-            if (hasOptions) {
-                copy(options, geometry, 'options');
-            }
+            getProperties(address, options);
+            replaceProperties(options, {
+                'geometry' : null,
+                'coordinates' : null
+            });
+            geometry.options = options;
 
-            var properties = {
-                type : article.data('type')
-            } // 
+            var properties = {};
             var feature = {
                 type : "Feature",
                 geometry : geometry,
                 properties : properties
             };
             features.push(feature);
-            // Fill individual properties
+            getProperties(article, properties);
             copy(address.html(), properties, 'address');
             copy(article.find('header').text(), properties, 'label');
             copy(article.find('aside').html(), properties, 'description');
@@ -503,6 +495,37 @@
     });
 
     /* ---------------------------------------------------------------------- */
+
+    /**
+     * An utility method transforming the specified HTML attribute name into an
+     * object property name. Example: 'test-field' is transformed to
+     * 'testField'.
+     */
+    function toPropertyName(key) {
+        if (!key)
+            return key;
+        var array = key.split('-');
+        var str = array[0];
+        for ( var i = 1; i < array.length; i++) {
+            var segment = array[i];
+            str += segment[0].toUpperCase() + segment.substring(1);
+        }
+        return str;
+    }
+
+    /**
+     * An utility method replacing transforming fields from the specified object
+     * to CSS-like property names. Example: 'test-field' is transformed to
+     * 'testField'.
+     */
+    function toProperties(options) {
+        var result = {};
+        _.each(options, function(value, key) {
+            var str = toPropertyName(key);
+            result[str] = value;
+        })
+        return result;
+    }
 
     /** Class representation of a feature visualized on the map. */
     function FeatureInfo(options) {
@@ -586,7 +609,7 @@
                 })
                 var template = that.getTemplate();
                 if (template && template.updateLayer) {
-                    template.updateLayer(that);
+                    template.updateLayer.call(template, that);
                 }
             }
         },
@@ -909,16 +932,7 @@
                     } else {
                         layer = new L.Marker(latlng);
                     }
-                    _.each(options, function(value, key) {
-                        var array = key.split('-');
-                        var str = array[0];
-                        for ( var i = 1; i < array.length; i++) {
-                            var segment = array[i];
-                            str += segment[0].toUpperCase()
-                                    + segment.substring(1);
-                        }
-                        layer.options[str] = value;
-                    })
+                    _.extend(layer.options, toProperties(options));
                     return layer;
                 },
                 onEachFeature : function(feature, layer) {

@@ -29,12 +29,13 @@
 <script type="text/javascript" src="./libs/q/q.js"></script>
 <script type="text/javascript" src="./libs/underscore/underscore-min.js"></script>
 
-<link href="http://clients.pauletienney.net/numa/css/custom-fonts.css"
+<!--
+ <link href="http://clients.pauletienney.net/numa/css/custom-fonts.css"
 	rel="stylesheet" />
 <link
 	href="http://clients.pauletienney.net/numa/css/MyFontsWebfontsKit.css"
 	rel="stylesheet" />
-
+ -->
 <!-- Specific CSS styles -->
 <style type="text/css">
 html,body {
@@ -138,18 +139,28 @@ html,body {
 	display: block;
 }
 
-.leaflet-marker-icon .fa {
+#map-container .leaflet-marker-icon .fa {
 	text-align: center;
 	background-color: #00aeef;
 	border: 1px solid white;
 	width: 1.23em;
-    height: 1.23em;
-    ligne-height: 1.23em;
-    padding: 3px;
-    padding-top: 4px;
+	height: 1.23em;
+	ligne-height: 1.23em;
+	padding: 3px;
+	padding-top: 4px;
 	-webkit-border-radius: 1.23em;
 	-moz-border-radius: 1.23em;
 	border-radius: 1.23em;
+}
+
+#map-container .leaflet-marker-icon .svg-icon {
+	width: 24px;
+	height: 24px;
+	-webkit-border-radius: 24px;
+	-moz-border-radius: 24px;
+	border-radius: 24px;
+	background-color: black;
+	color: white;
 }
 
 /* Bootstrap styles re-definition */
