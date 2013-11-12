@@ -183,7 +183,7 @@
                 TEMPLATE_DEFAULT_SLIDABLE,
                 {
                     iconName : 'svg-icon',
-                    iconUrl : './data/icons/projection.svg',
+                    iconUrl : './data/icons/photo.svg',
                     baseUrl : './data/',
                     popup : '<span><a href="javascript:void(0);" data-action-click="expandLayer"><img src="<%=template.baseUrl%><%= feature.properties.urls[0] %>" style="width:200px;"/></a></span>',
                     description : ''
