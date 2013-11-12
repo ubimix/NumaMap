@@ -7,166 +7,161 @@
 
     /* ---------------------------------------------------------------------- */
     // Utility methods
-    function InteractiveUtils() {
+    function InteractiveUtils() {
     }
-    _.extend(InteractiveUtils, {
 
-        /**
-         * Return a promise for the data loaded from the specified URL
-         */
-        load : function(url) {
-            var deferred = Q.defer();
-            $.get(url, function(data) {
-                deferred.resolve(data);
-            }).fail(function(error) {
-                deferred.reject(error);
-            });
-            return deferred.promise.then(function(data) {
-                return data;
-            });
-        },
+    /**
+     * Return a promise for the data loaded from the specified URL
+     */
+    InteractiveUtils.load = function(url) {
+        var deferred = Q.defer();
+        $.get(url, function(data) {
+            deferred.resolve(data);
+        }).fail(function(error) {
+            deferred.reject(error);
+        });
+        return deferred.promise.then(function(data) {
+            return data;
+        });
+    }
 
-        /**
-         * Parses the specified HTML content and transforms it into a valid
-         * GeoJSON feature object.
-         */
-        parseHTML : function(url, data) {
-            var str = '' + data;
-            var e = $('<div></div>').append(data);
-            var features = [];
-            var json = {
-                id : url,
-                type : "FeatureCollection",
-                features : features
-            };
-            var label = e.find('title').text();
-            json.label = label;
-            var meta = e.find('meta[name="visible"]');
-            var visible = meta.attr('content') == 'true';
-            json.visible = visible;
-            function isEmpty(str) {
-                return !str || str.replace(/^s+|\s+$/gi, '') == '';
-            }
-            function trimValue(value) {
-                if (value == undefined)
+    /**
+     * Parses the specified HTML content and transforms it into a valid GeoJSON
+     * feature object.
+     */
+    InteractiveUtils.parseHTML = function(url, data) {
+        var str = '' + data;
+        var e = $('<div></div>').append(data);
+        var features = [];
+        var json = {
+            id : url,
+            type : "FeatureCollection",
+            features : features
+        };
+        var label = e.find('title').text();
+        json.label = label;
+        var meta = e.find('meta[name="visible"]');
+        var visible = meta.attr('content') == 'true';
+        json.visible = visible;
+        function isEmpty(str) {
+            return !str || str.replace(/^s+|\s+$/gi, '') == '';
+        }
+        function trimValue(value) {
+            if (value == undefined)
+                value = null;
+            else if (value && _.isString(value)) {
+                value = value.replace(/^\s*|\s*$/gim, '')
+                        .replace(/\s+/gim, ' ');
+                if (value == '')
                     value = null;
-                else if (value && _.isString(value)) {
-                    value = value.replace(/^\s*|\s*$/gim, '').replace(/\s+/gim,
-                            ' ');
-                    if (value == '')
-                        value = null;
-                }
-                return value;
             }
-            function copy(value, to, toProperty) {
-                value = trimValue(value);
-                if (value !== null) {
-                    to[toProperty] = value;
-                }
-                return value;
+            return value;
+        }
+        function copy(value, to, toProperty) {
+            value = trimValue(value);
+            if (value !== null) {
+                to[toProperty] = value;
             }
-            function getProperties(elm, obj) {
-                elm = $(elm);
-                obj = obj || {};
-                var e = elm[0];
-                if (e && e.attributes) {
-                    $.each(e.attributes, function(index, attr) {
-                        var name = attr.name;
-                        var property = name.substring('data-'.length);
-                        var value = elm.data(property);
-                        value = trimValue(value);
-                        if (value !== null) {
-                            var propertyName = InteractiveUtils.toPropertyName(property);
-                            obj[propertyName] = value;
-                        }
-                    })
-                }
-                return obj;
-            }
-            function replaceProperties(obj, mapping) {
-                _.each(mapping, function(newProperty, oldProperty) {
-                    if (newProperty == oldProperty)
-                        return;
-                    if (newProperty) {
-                        obj[newProperty] = obj[oldProperty];
+            return value;
+        }
+        function getProperties(elm, obj) {
+            elm = $(elm);
+            obj = obj || {};
+            var e = elm[0];
+            if (e && e.attributes) {
+                $.each(e.attributes, function(index, attr) {
+                    var name = attr.name;
+                    var property = name.substring('data-'.length);
+                    var value = elm.data(property);
+                    value = trimValue(value);
+                    if (_.isString(value)
+                            && (value[0] == '{' || value[0] == '[')) {
+                        value = eval(value);
                     }
-                    delete obj[oldProperty];
+                    if (value !== null) {
+                        var propertyName = InteractiveUtils
+                                .toPropertyName(property);
+                        obj[propertyName] = value;
+                    }
                 })
             }
-            e
-                    .find('article')
-                    .each(
-                            function() {
-                                article = $(this);
-                                var address = article.find('address');
-                                var geometry = {};
-                                copy(address.data('geometry'), geometry, 'type');
-                                copy(address.data('coordinates'), geometry,
-                                        'coordinates');
-
-                                var options = {};
-                                getProperties(address, options);
-                                replaceProperties(options, {
-                                    'geometry' : null,
-                                    'coordinates' : null
-                                });
-                                geometry.options = options;
-
-                                var properties = {};
-                                var feature = {
-                                    type : "Feature",
-                                    geometry : geometry,
-                                    properties : properties
-                                };
-                                features.push(feature);
-                                getProperties(article, properties);
-                                copy(address.html(), properties, 'address');
-                                copy(article.find('header').text(), properties,
-                                        'label');
-                                copy(article.find('aside').html(), properties,
-                                        'description');
-                                copy(article.find('section').html(),
-                                        properties, 'fullContent');
-                                copy(article.find('footer').html(), properties,
-                                        'references');
-                                // console.log(' * ',
-                                // JSON.stringify(feature))
-                            })
-            return json;
-        },
-
-        /**
-         * An utility method transforming the specified HTML attribute name into
-         * an object property name. Example: 'test-field' is transformed to
-         * 'testField'.
-         */
-        toPropertyName : function(key) {
-            if (!key)
-                return key;
-            var array = key.split('-');
-            var str = array[0];
-            for ( var i = 1; i < array.length; i++) {
-                var segment = array[i];
-                str += segment[0].toUpperCase() + segment.substring(1);
-            }
-            return str;
-        },
-
-        /**
-         * An utility method replacing transforming fields from the specified
-         * object to CSS-like property names. Example: 'test-field' is
-         * transformed to 'testField'.
-         */
-        toProperties : function(options) {
-            var result = {};
-            _.each(options, function(value, key) {
-                var str = InteractiveUtils.toPropertyName(key);
-                result[str] = value;
-            })
-            return result;
+            return obj;
         }
+        function replaceProperties(obj, mapping) {
+            _.each(mapping, function(newProperty, oldProperty) {
+                if (newProperty == oldProperty)
+                    return;
+                if (newProperty) {
+                    obj[newProperty] = obj[oldProperty];
+                }
+                delete obj[oldProperty];
+            })
+        }
+        function handleArticle() {
+            article = $(this);
+            var address = article.find('address');
+            var geometry = {};
+            copy(address.data('geometry'), geometry, 'type');
+            copy(address.data('coordinates'), geometry, 'coordinates');
 
-    });
+            var options = {};
+            getProperties(address, options);
+            replaceProperties(options, {
+                'geometry' : null,
+                'coordinates' : null
+            });
+            geometry.options = options;
+
+            var properties = {};
+            var feature = {
+                type : "Feature",
+                geometry : geometry,
+                properties : properties
+            };
+            features.push(feature);
+            getProperties(article, properties);
+            copy(address.html(), properties, 'address');
+            copy(article.find('header').text(), properties, 'label');
+            copy(article.find('aside').html(), properties, 'description');
+            copy(article.find('section').html(), properties, 'fullContent');
+            copy(article.find('footer').html(), properties, 'references');
+            // console.log(' * ',
+            // JSON.stringify(feature))
+        }
+        e.find('article').each(handleArticle);
+        return json;
+    }
+
+    /**
+     * An utility method transforming the specified HTML attribute name into an
+     * object property name. Example: 'test-field' is transformed to
+     * 'testField'.
+     */
+    InteractiveUtils.toPropertyName = function(key) {
+        if (!key)
+            return key;
+        var array = key.split('-');
+        var str = array[0];
+        for ( var i = 1; i < array.length; i++) {
+            var segment = array[i];
+            str += segment[0].toUpperCase() + segment.substring(1);
+        }
+        return str;
+    }
+
+    /**
+     * An utility method replacing transforming fields from the specified object
+     * to CSS-like property names. Example: 'test-field' is transformed to
+     * 'testField'.
+     */
+    InteractiveUtils.toProperties = function(options) {
+        var result = {};
+        _.each(options, function(value, key) {
+            var str = InteractiveUtils.toPropertyName(key);
+            result[str] = value;
+        })
+        return result;
+    }
 
     /* ---------------------------------------------------------------------- */
 
@@ -883,9 +878,11 @@
             }
             var element = $(that.config.container).find('.map');
             element.html('');
-            var map = L.map(element[0], {
+            var mapOptions = that.config.mapOptions || {};
+            mapOptions = _.extend(mapOptions, {
                 loadingControl : true
             });
+            var map = L.map(element[0], mapOptions);
             map.scrollWheelZoom.disable();
             map.boxZoom.disable();
 

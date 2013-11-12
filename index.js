@@ -4,6 +4,7 @@
         debug : false,
         maxZoom : 21,
         container : '#map-container',
+        navbar : '#map-container .navbar .nav',
         dataUrls : [ './data/numa.html', './data/program.html',
                 './data/history.html',
         // './data/info.html',
@@ -178,13 +179,19 @@
                     + '<% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
                     + '</div>' + '</div>'
         }),
-        'Point:photo' : {
-            baseUrl : 'http://ubimix.com:8040/data/images/', // '/data/images/',
-            iconName : 'fa fa-picture-o fa-lg',
-            iconStyle : 'color:white;',
+        'Point:photo' :  tmpl({
+            iconName : 'svg-icon',
+            iconUrl : './data/icons/projection.svg',
+            baseUrl : './data/',
             popup : '<span><a href="javascript:void(0);" data-action-click="expandLayer"><img src="<%=template.baseUrl%><%= feature.properties.urls[0] %>" style="width:200px;"/></a></span>',
+            description : '<div data-type="<%=feature.geometry.type%>:<%=feature.properties.type%>">'
+                + '<h3><a href="javascript:void(0);" data-action-click="activateLayer"><%=feature.properties.label||feature.properties.name%></a></h3>'
+                + '<div class="visible-when-active">'
+                + '<div><% for(var i=0, urls=feature.properties.urls; i<urls.length; i++) {%><p><img src="<%=template.baseUrl%><%=urls[i]%>" /></p><%}%></div>'
+                + '<% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
+                + '</div>' + '</div>',
             dialog : '<% var dialogId=obj.getId("-dialog"); %>'
-                    + '<div id="<%=dialogId%>" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="<%=dialogId%>-title" aria-hidden="true">'
+                    + '<div id="<%=dialogId%>" class="modal hide photoviewer" tabindex="-1" role="dialog" aria-labelledby="<%=dialogId%>-title" aria-hidden="true">'
                     + ' <% var next=obj.getNext();  var prev=obj.getPrevious(); %>'
                     + ' <div class="modal-header">'
                     + ' <div class="row-fluid">'
@@ -205,7 +212,7 @@
                     + ' <div class="modal-body">'
                     + ' <div class="row-fluid">'
                     + '     <div class="span12 pagination-centered text-center well">'
-                    + '         <img src="<%=template.baseUrl%><%= feature.properties.urls[0] %>"/>'
+                    + '         <a href="javascript:void(0);" data-action-click="expandLayer"><img src="<%=template.baseUrl%><%= feature.properties.urls[0] %>"/></a>'
                     + '     </div>'
                     + ' </div>'
                     + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
@@ -213,7 +220,7 @@
                     + '<div class="modal-footer">'
                     + '<button class="btn" data-dismiss="modal" aria-hidden="true">OK</button>'
                     + '</div>' + '</div>'
-        },
+        }),
         'LineString' : {
             description : '<div><%=feature.properties.description%></div>'
         },

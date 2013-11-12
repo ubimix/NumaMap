@@ -1,0 +1,213 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "4-rue-d-alexandrie"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3512861132621765,
+          48.86802125477958
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "44-rue-du-caire"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.349148392677307,
+          48.86796479568708
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "2-place-du-caire"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.348799705505371,
+          48.868060070368706
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "117-passage-du-caire"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3499289155006404,
+          48.86796832438222
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "aboukir-petits-carreaux"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.347383499145508,
+          48.86786422777078
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "aboukir"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3494112491607666,
+          48.868465867906835
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "angle-caire-forge-1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.348818480968475,
+          48.86797714611901
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "caire-entree-passage"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.348681688308716,
+          48.86807418512093
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "course-porteurs-dussoubs"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.349770665168762,
+          48.867566051532656
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "passage-caire"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3505163192749023,
+          48.8678201189718
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "place-du-caire-kiosque"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3483598232269287,
+          48.86812358672236
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "place-et-rue-du-caire"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3485368490219116,
+          48.86809888592776
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "32-rue-du-caire"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.349926233291626,
+          48.86773542996875
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "rue-du-nil"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3473727703094482,
+          48.867604867474896
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "33-rue-du-sentier"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3462194204330444,
+          48.869983168674175
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "rue-sainte-foy"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3504412174224854,
+          48.86851174046499
+        ]
+      }
+    }
+  ]
+}
