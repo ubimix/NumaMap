@@ -241,9 +241,7 @@
                             + ' </div>'
                             + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
                             + ' </div>'
-                            + '<div class="modal-footer">'
-                            + '<button class="btn" data-dismiss="modal" aria-hidden="true">OK</button>'
-                            + '</div>' + '</div>'
+                            + '</div>'
                 }),
         'LineString' : {
             description : '<div><%=feature.properties.description%></div>'

@@ -46,8 +46,24 @@ html,body {
 
 .photoviewer {
 	top: 1%;
-	margin-left: -48%;
-	width: 96%;
+	left: 1%;
+	right: 1%;
+	bottom: 1%;
+	margin: 0;
+	width: auto;
+}
+
+.photoviewer .modal-body {
+	position: absolute;
+	top: 50px;
+	bottom: 10px;
+	left: 10px;
+	right: 10px;
+	max-height: none;
+}
+
+#map-container {
+	overflow: hidden;
 }
 
 #map-container .navbar {
@@ -276,6 +292,6 @@ html,body {
 			<div class="span3 map-block info"></div>
 		</div>
 	</div>
-	
+
 </body>
 </html>
