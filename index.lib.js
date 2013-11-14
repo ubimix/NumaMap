@@ -724,7 +724,9 @@
             return this.templates;
         },
 
-        /** Returns the DOM element using as a container for list items */
+        /**
+         * Returns the DOM element using as a container for list items
+         */
         getListContainer : function() {
             var htmlContainer = $(this.config.container).find('.info');
             return htmlContainer;
@@ -763,16 +765,22 @@
             return group;
         },
 
-        /** Returns the visibility of the group with the specified identifier */
+        /**
+         * Returns the visibility of the group with the specified identifier
+         */
         getGroupVisibility : function(groupId) {
             return this._groupVisibility[groupId] ? true : false;
         },
-        /** Toggles the visibility of a group with the specified identifier. */
+        /**
+         * Toggles the visibility of a group with the specified identifier.
+         */
         toggleGroupVisibility : function(groupId) {
             var visible = this._groupVisibility[groupId] ? true : false;
             this.setGroupVisibility(groupId, !visible);
         },
-        /** Changes the visibility of the group with the specified identifier. */
+        /**
+         * Changes the visibility of the group with the specified identifier.
+         */
         setGroupVisibility : function(groupId, visible) {
             var alreadyVisible = this._groupVisibility[groupId];
             this._groupVisibility[groupId] = visible;
@@ -791,17 +799,20 @@
             that.on('layer:focus:on', function(e) {
                 e.layer.openPopup(e.center);
             }, that);
-            // Hide popup when user removes the focus from the currently active
+            // Hide popup when user removes the focus from the
+            // currently active
             // feature/layer
             that.on('layer:focus:off', function(e) {
                 e.layer.closePopup();
             }, that);
-            // Shows description associated with the activated feature.
+            // Shows description associated with the activated
+            // feature.
             // (Corresponds to user's clicks)
             that.on('layer:active:on', function(e) {
                 e.layer.focusDescription();
             }, that)
-            // Expand (open a popup) with additional information about the
+            // Expand (open a popup) with additional information
+            // about the
             // feature.
             that.on('layer:expand:on', function(e) {
                 e.layer.openDialog();
@@ -811,7 +822,8 @@
                 e.layer.closeDialog();
             }, that)
 
-            // Adds a circle allowing to re-zoom to the required region
+            // Adds a circle allowing to re-zoom to the required
+            // region
             that.on('layers:show', function(e) {
                 if (!that._centerMarker)
                     return;
@@ -839,7 +851,8 @@
                 })
                 var myIcon = L.divIcon({
                     className : '',
-                // html : "<strong style='color: white; white-space:
+                // html : "<strong style='color: white;
+                // white-space:
                 // nowrap;'>C'est ici!</strong>"
                 });
                 var label = L.marker(center, {
@@ -880,9 +893,18 @@
             element.html('');
             var mapOptions = that.config.mapOptions || {};
             mapOptions = _.extend(mapOptions, {
-                loadingControl : true
+                loadingControl : true,
+                attributionControl : false
             });
             var map = L.map(element[0], mapOptions);
+            if (map.attributionControl) {
+                map.removeLayer(map.attributionControl);
+            }
+            var attribution = mapOptions.attribution||'';
+            map.attributionControl = (new L.Control.Attribution({
+                prefix : attribution
+            })).addTo(map);
+
             map.scrollWheelZoom.disable();
             map.boxZoom.disable();
 
