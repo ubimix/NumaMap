@@ -1,8 +1,16 @@
 (function(context) {
 
+    var attribution = '#map-container .numa-attribution';
+    var attributionRef = '#map-container .numa-attribution-ref';
+
     var CONFIG = {
         debug : false,
         maxZoom : 21,
+        attribution : '<div style="padding:0.3em;"><a href="http://www.ubimix.com/" target="_blank">'
+                + '<img src="http://ubimix.com/logo/ubimix-00AEEF.svg" '
+                + 'style="height: 1.1em;"/></a> '
+                + '| '
+                + '<a  class="numa-attribution-ref" href="javascript:void(0);">Crédits</a></div>',
         container : '#map-container',
         navbar : '#map-container .navbar .nav',
         dataUrls : [ './data/numa.html', './data/program.html',
@@ -353,6 +361,7 @@
      */
     $(function() {
         var map = new InteractiveView(CONFIG, TEMPLATES);
+
         /**
          * This method is used to re-size the map element to fit to the screen.
          * It is called each time when the main window changes its size.
@@ -392,6 +401,16 @@
         // Refresh the map size after the data loading is finished
         .then(function() {
             updateSize();
+        })
+        // Bind attribution dialog box
+        .then(function() {
+            var r = $(attributionRef);
+            r.on('click', function(event) {
+                var elm = $(attribution);
+                elm.modal('show');
+                event.preventDefault();
+                event.stopPropagation();
+            })
         })
         // Handle errors
         .fail(function(error) {
