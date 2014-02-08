@@ -905,7 +905,7 @@
                 prefix : attribution
             })).addTo(map);
 
-            map.scrollWheelZoom.disable();
+            //map.scrollWheelZoom.disable();
             map.boxZoom.disable();
 
             var maxZoom = that.config.maxZoom || 18;
@@ -934,15 +934,15 @@
                 _updateZoomClassNames();
                 var zoom = map.getZoom();
                 var update = false;
-                if (zoom < minZoom) {
-                    update = true;
-                    layersVisible = false;
-                } else {
-                    if (!layersVisible) {
-                        update = true;
-                    }
-                    layersVisible = true;
-                }
+//                if (zoom < minZoom) {
+//                    update = true;
+//                    layersVisible = false;
+//                } else {
+//                    if (!layersVisible) {
+//                        update = true;
+//                    }
+//                    layersVisible = true;
+//                }
                 if (update) {
                     var event = {
                         center : center,

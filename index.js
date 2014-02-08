@@ -6,15 +6,10 @@
     var CONFIG = {
         debug : false,
         maxZoom : 21,
-        attribution : '<div style="padding:0.3em;"><a href="http://www.ubimix.com/" target="_blank">'
-                + '<img src="http://ubimix.com/logo/ubimix-00AEEF.svg" '
-                + 'style="height: 1.1em;"/></a> '
-                + '| '
-                + '<a  class="numa-attribution-ref" href="javascript:void(0);">Crédits</a></div>',
         container : '#map-container',
         navbar : '#map-container .navbar .nav',
-        dataUrls : [ './data/numa.html', './data/program.html',
-                './data/history.html',
+        dataUrls : [ './data/environnement.html',
+                './data/solidarite.html', './data/emploi.html',  './data/formation.html'
         // './data/info.html',
         // './data/street-art.json',
         // './data/example.html',
@@ -22,8 +17,8 @@
         ],
         tilesLayer : 'http://{s}.tile.cloudmade.com/d4fc77ea4a63471cab2423e66626cbb6/997/256/{z}/{x}/{y}.png',
         tilesLayer : 'http://{s}.tiles.mapbox.com/v3/guilhemoreau.map-057le4on/{z}/{x}/{y}.png',
-        zone : [ [ 2.3474317789077754, 48.86851174046499 ],
-                [ 2.350752353668213, 48.86728022412167 ] ]
+        zone : [ [ 0.3474317789077754, 42.86851174046499 ],
+                [ 8.350752353668213, 49.86728022412167 ] ]
     };
 
     var TEMPLATE_DEFAULT_DESCRIPTION = ''
@@ -49,7 +44,6 @@
             + '</div>' + '</div>';
     var TEMPLATE_DEFAULT = {
         iconName : 'svg-icon',
-        iconUrl : './data/icons/etoile.svg',
         popup : TEMPLATE_DEFAULT_POPUP,
         description : TEMPLATE_DEFAULT_DESCRIPTION,
         dialog : TEMPLATE_DEFAULT_DIALOG,
@@ -160,10 +154,13 @@
             iconName : 'svg-icon',
             iconUrl : './data/icons/projection.svg'
         }),
-        'Point:cafe' : tmpl({
+        'Point:cafe' : {
             iconName : 'svg-icon',
-            iconUrl : './data/icons/nourriture.svg'
-        }),
+            popup : '<span><a href="javascript:void(0);" data-action-click="expandLayer"><img src="./images/bloc.png" style="width:200px;"/></a></span><strong><%=feature.properties.label||feature.properties.name%></strong>',
+            updateLayer : function(info) {
+                doUpdateLayer(this, info)
+            }
+        },
         'Point:bar' : tmpl({
             iconName : 'svg-icon',
             iconUrl : './data/icons/boissons.svg'
@@ -319,12 +316,12 @@
         }),
         'Polygon:numa' : tmpl({
             description : '<div class="numa" data-type="<%=feature.geometry.type%>:<%=feature.properties.type%>">'
-                    + '<h3 style="margin-bottom: 1em;"><a href="javascript:void(0);" data-action-click="activateLayer"><img src="./data/images/numagenta.svg" style="width-max: 100%"/></a></h3>'
+                    + '<h3 style="margin-bottom: 1em;"><a href="javascript:void(0);" data-action-click="activateLayer"><img src="./data/images/mediapost.jpg" style="width-max: 100%"/></a></h3>'
                     + '<div class="visible-when-active">'
                     + ' <%=feature.properties.description%>'
                     + ' <% if(feature.properties.references){ %><div class="references"><%=feature.properties.references%></div><% } %>'
                     + '</div>' + '</div>',
-            popup : '<div style="width:150px"><a href="javascript:void(0);" data-action-click="activateLayer"><img style="width:150px" src="./data/images/numagenta.svg" style="width-max: 100%" title="NUMA"/></a></div>',
+            popup : '<div style="width:150px"><a href="javascript:void(0);" data-action-click="activateLayer"><img style="width:150px" src="./data/images/mediapost.jpg" style="width-max: 100%" title="NUMA"/></a></div>',
             updateLayer : function(info) {
                 var layer = info.getMapLayer();
                 _.extend(layer.options, {
