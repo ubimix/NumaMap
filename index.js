@@ -8,6 +8,7 @@
         maxZoom : 21,
         container : '#map-container',
         navbar : '#map-container .navbar .nav',
+        attribution : '<div style="padding:0.3em;"><a  class="numa-attribution-ref" href="javascript:void(0);">Crédits</a></div>',
         dataUrls : [ './data/environnement.html',
                 './data/solidarite.html', './data/emploi.html',  './data/formation.html'
         // './data/info.html',
