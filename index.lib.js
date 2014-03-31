@@ -905,7 +905,7 @@
                 prefix : attribution
             })).addTo(map);
 
-            map.scrollWheelZoom.disable();
+            //map.scrollWheelZoom.disable();
             map.boxZoom.disable();
 
             var maxZoom = that.config.maxZoom || 18;
